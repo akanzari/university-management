@@ -1,0 +1,47 @@
+<div class="row mx-0" *ngIf="pager.pages && pager.pages.length">
+    <div class="col-3">
+        <input type="text" class="width-40 text-center mr-2 h-75" [placeholder]="pager?.totalItems" disabled>
+        <span class="font-size-12">éléments</span>
+    </div>
+    <div class="col-6 col-md-4 d-flex justify-content-center pt-2">
+        <ul class="pagination pagination-small m-0">
+            <li class="page-item previous" title="Première">
+                <a class="page-link" (click)="setPage(1)">
+                    <i class="pi pi-step-backward size-16 color-primary"></i>
+                </a>
+            </li>
+
+            <li class="page-item previous" title="Précédent">
+                <a class="page-link" (click)="setPage(pager.currentPage - 1)">
+                    <i class="pi pi-caret-left size-16 color-primary"></i>
+                </a>
+            </li>
+
+            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}"
+                class="page-item number px-1">
+                <a class="page-link" (click)="setPage(page)">{{page}}</a>
+            </li>
+
+            <li class="page-item next" title="Suivant">
+                <a class="page-link" (click)="setPage(pager.currentPage + 1)">
+                    <i class="pi pi-caret-right size-16 color-primary"></i>
+                </a>
+            </li>
+
+            <li class="page-item next" title="Dernière">
+                <a class="page-link" (click)="setPage(pager.totalPages)">
+                    <i class="pi pi-step-forward size-16 color-primary"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-3 col-md-5 text-right">
+        <span class="font-size-12">Nombre de résultats par page </span>
+        <select class="width-50 ml-2 h-75" (change)="setPage(1, $event.target.value)">
+            <option *ngFor="let option of rowsPerPageOptions" [value]="option"
+                [attr.selected]="option==5 ? true : null">
+                {{option}}
+            </option>
+        </select>
+    </div>
+</div>

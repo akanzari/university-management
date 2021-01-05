@@ -1,0 +1,45 @@
+version: '3'
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+
+  oracle:
+    image: jaspeen/oracle-xe-11g
+    container_name: oracle11g
+    volumes:
+      - ~/docker/data:/u01/app/oracle jaspeen/oracle-xe-11g
+    ports:
+      - "1529:1521"
+      - "8081:8080"
+      - "2222:22"
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloak
+
+  keycloak:
+      image: quay.io/keycloak/keycloak:latest
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+      ports:
+        - "8089:8080"
+      depends_on:
+        - postgres

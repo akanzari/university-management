@@ -1,0 +1,14 @@
+<div id="site" [ngClass]="{'sidebar-close': !ls.isSideBarDisplay}" style="overflow: unset;">
+
+  <be-navbar></be-navbar>
+
+
+  <be-sidebar [items]="items" *ngIf="hideSidebar | async"></be-sidebar>
+
+  <main id="page-sidebar-left" class="px-4" role="main">
+    <div class="container-fluid">
+      <br />
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

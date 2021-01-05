@@ -1,0 +1,35 @@
+<nav class="sidebar sidebar-nav sidebar-nav-top sidebar-left bg-white" role="navigation"
+  aria-label="Nav Primary">
+  <ul>
+    <li class="sub-menu {{currentMenu && currentMenu === item?.code ? 'opened':''}}" *ngFor="let item of items">
+      <ng-container>
+        <a *ngIf="item?.subMenus && item?.subMenus?.length > 0" (click)="selectMenu(item?.code); false"
+          [id]="item?.code" [hidden]="getNavLinkRouteStyle(item?.appAuthz)">
+          <i aria-hidden="true" class="icons icon-{{item?.icon}} size-16"></i>
+          <span>{{item?.defaultLabel | translate}}</span>
+        </a>
+        <a *ngIf="!item?.subMenus" [routerLink]="item?.routerLink" (click)="selectMenu(item?.code); false"
+          [id]="item?.code" [hidden]="getNavLinkRouteStyle(item?.appAuthz)">
+          <i aria-hidden="true" class="icons icon-{{item?.icon}} size-16"></i>
+          <span>{{item?.defaultLabel | translate}}</span>
+        </a>
+      </ng-container>
+      <!-- SubMenu definition -->
+      <ul [@subMenuContent]="(currentMenu && currentMenu === item?.code && displaySub) ? 'visible' : 'hidden'"
+        [ngStyle]="currentMenu && currentMenu === item?.code ? {'display' : 'block'} : null">
+        <h4>{{item?.defaultLabel | translate}}</h4>
+        <li *ngFor="let subItem of item?.subMenus">
+          <a *ngIf="subItem?.subMenus && subItem?.subMenus.length > 0" (click)="selectSubMenu(subItem, item); true"
+            [id]="subItem?.code">
+            <span>{{subItem?.defaultLabel | translate}}</span>
+          </a>
+          <a *ngIf="!subItem?.subMenus" [routerLink]="subItem?.routerLink"
+            [hidden]="getNavLinkRouteStyle(subItem?.appAuthz)" (click)="selectSubMenu(subItem, item); false"
+            [id]="subItem?.code">
+            <span>{{subItem?.defaultLabel | translate}}</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

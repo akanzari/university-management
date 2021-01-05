@@ -1,0 +1,52 @@
+<div class="modal-header mt-3">
+    <h2 *ngIf="!editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un étudiant
+    </h2>
+    <h2 *ngIf="editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un étudiant
+    </h2>
+    <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
+        <span aria-hidden="true">&times;</span>
+    </span>
+</div>
+
+<form [formGroup]="form">
+    <div class="modal-body mb-2">
+        <div class="row pt-1" style="padding-right: 5%;">
+            <div class="col-12 px-0 mb-2">
+
+                <div class="row mt-4">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Nom et Prénom: </label>
+                    </div>
+                    <div class="col-9">
+                        <ng-select [items]="users$ | async" formControlName="role" bindLabel="fullName"
+                        (change)="onChangeFullName($event)"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">E-mail : </label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="email" [attr.disabled]="true">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Classe : </label>
+                    </div>
+                    <div class="col-9">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+        <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+            [disabled]="!form.valid">Confirmer</button>
+    </div>
+</form>
