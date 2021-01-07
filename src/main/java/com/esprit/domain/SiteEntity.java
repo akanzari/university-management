@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class SiteEntity implements Serializable {
+public class SiteEntity extends Auditable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

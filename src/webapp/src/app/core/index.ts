@@ -1,6 +1,6 @@
 import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { LayoutService, TitleService, TokenService, IAMService } from './services';
+import { LayoutService, TitleService, TokenService, IAMService, ClassService, RoomService, RefService } from './services';
 
 
 @NgModule({
@@ -22,7 +22,10 @@ export class CoreModule {
         TitleService,
         TokenService,
         LayoutService,
-        IAMService
+        RefService,
+        IAMService,
+        ClassService,
+        RoomService
       ]
     };
   }

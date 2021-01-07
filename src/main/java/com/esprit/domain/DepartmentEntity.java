@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class DepartmentEntity implements Serializable {
+public class DepartmentEntity extends Auditable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

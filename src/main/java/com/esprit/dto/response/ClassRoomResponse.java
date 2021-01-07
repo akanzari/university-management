@@ -1,5 +1,6 @@
 package com.esprit.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ClassRoomResponse {
@@ -25,6 +26,8 @@ public class ClassRoomResponse {
 	private String reason;
 
 	private DepartmentResponse department;
+
+	protected LocalDateTime createdDate;
 
 	public String getClassRoomId() {
 		return classRoomId;
@@ -112,6 +115,14 @@ public class ClassRoomResponse {
 
 	public void setDepartment(DepartmentResponse department) {
 		this.department = department;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 
 }

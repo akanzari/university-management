@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class ClassEntity implements Serializable {
+public class ClassEntity extends Auditable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

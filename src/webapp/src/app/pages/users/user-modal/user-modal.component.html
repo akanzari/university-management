@@ -13,7 +13,7 @@
 
                 <div class="row mt-4">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Nom : </label>
+                        <label class="float-right">Nom : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
                         <input type="text" formControlName="firstname" [attr.disabled]="editUser">
@@ -22,7 +22,7 @@
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Prénom : </label>
+                        <label class="float-right">Prénom : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
                         <input type="text" formControlName="lastname" [attr.disabled]="editUser">
@@ -31,7 +31,7 @@
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Email : </label>
+                        <label class="float-right">Email : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
                         <input type="text" formControlName="email">
@@ -40,7 +40,7 @@
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Role : </label>
+                        <label class="float-right">Role : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
                         <ng-select [items]="roles$ | async" formControlName="role"></ng-select>

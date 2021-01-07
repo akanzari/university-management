@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.esprit.domain.ClassRoomEntity;
 import com.esprit.domain.SiteEntity;
 import com.esprit.dto.request.CreateClassRoomRequest;
+import com.esprit.dto.request.UpdateClassRoomRequest;
 import com.esprit.dto.response.ClassRoomResponse;
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.error.exception.EntityNotFoundException;
@@ -48,6 +49,25 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 		});
 
 		classRoomEntity = classRoomRepository.save(classRoomEntity);
+		return mapper.classRoomEntityToClassRoomResponse(classRoomEntity);
+	}
+
+	@Override
+	public ClassRoomResponse updateClassRoom(UpdateClassRoomRequest updateClassRoomRequest) {
+		ClassRoomEntity classRoomEntity;
+		Optional<ClassRoomEntity> classRoomEntityOptional = classRoomRepository
+				.findById(updateClassRoomRequest.getClassRoomId());
+		if (classRoomEntityOptional.isPresent()) {
+			classRoomEntity = mapper.updateClassRoomRequestToClassRoomEntity(updateClassRoomRequest, siteRepository);
+			updateClassRoomRequest.getSiteIds().forEach(id -> {
+				if (siteRepository.getOne(id) == null) {
+					throw new EntityNotFoundException(SiteEntity.class, "id", id);
+				}
+			});
+			classRoomEntity = classRoomRepository.save(classRoomEntity);
+		} else {
+			throw new EntityNotFoundException(ClassRoomEntity.class, "Id", updateClassRoomRequest.getClassRoomId());
+		}
 		return mapper.classRoomEntityToClassRoomResponse(classRoomEntity);
 	}
 

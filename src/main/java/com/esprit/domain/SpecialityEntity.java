@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class SpecialityEntity implements Serializable {
+public class SpecialityEntity extends Auditable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

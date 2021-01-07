@@ -28,9 +28,6 @@ const routes: Routes = [
     path: 'trials', loadChildren: () => import('./pages/trials/trials.module').then(m => m.TrialsModule), data: { title: 'Gestion des epreuves' }
   },
   {
-    path: 'available-rooms', loadChildren: () => import('./pages/available-rooms/available-rooms.module').then(m => m.AvailableRoomsModule), data: { title: 'Gestion des salles dispo' }
-  },
-  {
     path: 'exams', loadChildren: () => import('./pages/exams/exams.module').then(m => m.ExamsModule), data: { title: 'Gestion des examens' }
   }
 ];

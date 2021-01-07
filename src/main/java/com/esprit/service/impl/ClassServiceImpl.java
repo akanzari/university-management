@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.esprit.domain.ClassEntity;
 import com.esprit.domain.SpecialityEntity;
 import com.esprit.dto.request.CreateClassRequest;
+import com.esprit.dto.request.UpdateClassRequest;
 import com.esprit.dto.response.ClassResponse;
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.error.exception.EntityNotFoundException;
@@ -34,18 +35,35 @@ public class ClassServiceImpl implements ClassService {
 
 	@Override
 	public ClassResponse addClass(CreateClassRequest createClassRequest) {
-		ClassEntity classEntity = mapper.createClassRoomRequestToClassEntity(createClassRequest, specialityRepository);
+		ClassEntity classEntity = mapper.createClassRequestRequestToClassEntity(createClassRequest,
+				specialityRepository);
 
 		if (classRepository.findByCode(createClassRequest.getCode()) != null) {
 			throw new EntityAlreadyExistsExeption(ClassEntity.class, "code", createClassRequest.getCode());
 		}
 
 		if (specialityRepository.getOne(createClassRequest.getSpecialityId()) == null) {
-			throw new EntityNotFoundException(SpecialityEntity.class, "Id",
-					createClassRequest.getSpecialityId());
+			throw new EntityNotFoundException(SpecialityEntity.class, "Id", createClassRequest.getSpecialityId());
 		}
 
 		classEntity = classRepository.save(classEntity);
+		return mapper.classEntityToClassResponse(classEntity);
+	}
+
+	@Override
+	public ClassResponse updateClass(UpdateClassRequest updateClassRequest) {
+		ClassEntity classEntity;
+		Optional<ClassEntity> classEntityOptional = classRepository.findById(updateClassRequest.getClassId());
+		if (classEntityOptional.isPresent()) {
+			classEntity = mapper.updateClassRequestRequestToClassEntity(updateClassRequest, specialityRepository);
+			if (specialityRepository.getOne(updateClassRequest.getSpecialityId()) == null) {
+				throw new EntityNotFoundException(SpecialityEntity.class, "Id", updateClassRequest.getSpecialityId());
+			}
+			classEntity.setCode(classEntityOptional.get().getCode());
+			classEntity = classRepository.save(classEntity);
+		} else {
+			throw new EntityNotFoundException(ClassEntity.class, "Id", updateClassRequest.getClassId());
+		}
 		return mapper.classEntityToClassResponse(classEntity);
 	}
 

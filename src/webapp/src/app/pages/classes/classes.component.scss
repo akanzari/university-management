@@ -1,0 +1,40 @@
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  .btn-bg-add {
+      background: #ccb581;
+      border-radius: 20px;
+      height: 100%;
+  }
+  
+  :host ::ng-deep i.icons.icon-slider_horizontal:before {
+      vertical-align: middle;
+  }
+  
+  :host ::ng-deep i.icons.icon-search:before {
+      vertical-align: middle;
+  }
+  
+  :host ::ng-deep .accordion .collapsed i {
+      transform: none !important;
+  }
+  
+  :host ::ng-deep #headingOne > a:hover {
+      color:transparent !important;
+  }
+  
+  :host ::ng-deep #headingOne > a:focus, #headingOne > a:active {
+      outline: 0px !important;
+  }
+  
+  :host ::ng-deep #headingOne > a:hover {
+      color: transparent !important;
+      text-decoration: none !important;
+  }
+  
+  :host ::ng-deep input.ng-touched.ng-invalid {
+      outline: 0 !important;
+      border-bottom: 1px solid red;
+  }

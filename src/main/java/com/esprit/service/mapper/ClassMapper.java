@@ -9,13 +9,16 @@ import org.mapstruct.MappingTarget;
 
 import com.esprit.domain.ClassEntity;
 import com.esprit.dto.request.CreateClassRequest;
+import com.esprit.dto.request.UpdateClassRequest;
 import com.esprit.dto.response.ClassResponse;
 import com.esprit.repository.SpecialityRepository;
 
 @Mapper
 public interface ClassMapper {
 
-	ClassEntity createClassRoomRequestToClassEntity(CreateClassRequest createClassRoomRequest, @Context SpecialityRepository specialityRepository);
+	ClassEntity createClassRequestRequestToClassEntity(CreateClassRequest createClassRequest, @Context SpecialityRepository specialityRepository);
+
+	ClassEntity updateClassRequestRequestToClassEntity(UpdateClassRequest updateClassRequest, @Context SpecialityRepository specialityRepository);
 
 	ClassResponse classEntityToClassResponse(ClassEntity classEntity);
 
@@ -23,6 +26,11 @@ public interface ClassMapper {
 	
     @AfterMapping
 	static void after(CreateClassRequest source, @MappingTarget ClassEntity target, @Context SpecialityRepository specialityRepository) {
+    	target.setSpeciality(specialityRepository.getOne(source.getSpecialityId()));
+    }
+	
+    @AfterMapping
+	static void after(UpdateClassRequest source, @MappingTarget ClassEntity target, @Context SpecialityRepository specialityRepository) {
     	target.setSpeciality(specialityRepository.getOne(source.getSpecialityId()));
     }
 

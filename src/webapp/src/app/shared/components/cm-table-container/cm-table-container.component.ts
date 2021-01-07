@@ -86,7 +86,16 @@ export class CmTbaleContainerComponent implements OnChanges {
     public displayValue(value: string, column: Column): string {
         let result: string;
         if (column && value) {
-            result = this.getDataPipe(column.pipe, value[column.field]);
+            if (column.field.includes(".")) {
+                let array: string[] = column.field.split('.');
+                let str: string = value[array[0]];
+                for (let i = 1; i < array.length; i++) {
+                    str = str[array[i]];
+                }
+                result = this.getDataPipe(column.pipe, str);
+            } else {
+                result = this.getDataPipe(column.pipe, value[column.field]);
+            }
         }
         return result;
     }
@@ -97,7 +106,7 @@ export class CmTbaleContainerComponent implements OnChanges {
             if (params.length > 0) {
                 return pipe.function.transform(value, params);
             } else {
-                if(pipe.function instanceof DatePipe) {
+                if (pipe.function instanceof DatePipe) {
                     return pipe.function.transform(value, 'dd/MM/yyyy');
                 } else {
                     return pipe.function.transform(value);
