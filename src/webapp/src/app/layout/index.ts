@@ -11,4 +11,4 @@ export const COMPONENTS = [NavbarComponent, SiderbarComponent, FooterComponent];
   declarations: COMPONENTS,
   exports: COMPONENTS,
 })
-export class LayoutModule {}
+export class LayoutModule { }

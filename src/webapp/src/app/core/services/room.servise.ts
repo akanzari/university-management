@@ -12,7 +12,7 @@ export class RoomService {
 
     constructor(private config: ConfigService,
         private httpClient: HttpClient) {
-        this.domain = this.config.getSettings('environment.serviceBaseUrl') + "room/";
+        this.domain = this.config.getSettings('environment.serviceBaseUrl') + "class-room/";
     }
 
     addRoom(data): Observable<HttpResponse<HttpResponse<Room>>> {

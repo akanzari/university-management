@@ -36,47 +36,41 @@ export class UsersComponent implements OnInit {
         modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
             this.spinner.show();
             if (dataValue.action === ActionEnum.CREATE) {
-                this.createUser(dataValue.value as CreateUserRequest);
+                concat(
+                    this.iamService.addUser(dataValue.value as CreateUserRequest).pipe(switchMapTo(EMPTY)),
+                    timer(1000).pipe(switchMapTo(EMPTY)),
+                    this.iamService.getUsers()
+                ).subscribe((users: User[]) => {
+                    this.spinner.hide();
+                    modal.componentInstance.setIsSaved({ isSaved: true });
+                    this.config = { ...this.config, value: users };
+                })
             }
         });
     }
 
-    private createUser(event: CreateUserRequest): void {
-        concat(
-            this.iamService.addUser(event).pipe(switchMapTo(EMPTY)),
-            timer(1000).pipe(switchMapTo(EMPTY)),
-            this.iamService.getUsers()
-        ).subscribe((users: User[]) => {
-            this.spinner.hide();
-            this.modalService.dismissAll();
-            this.config = { ...this.config, value: users };
-        })
-    }
-
-    private updateUser(event: UpdateUserRequest): void {
-        concat(
-            this.iamService.updateUser(event).pipe(switchMapTo(EMPTY)),
-            timer(1000).pipe(switchMapTo(EMPTY)),
-            this.iamService.getUsers()
-        ).subscribe((users: User[]) => {
-            this.spinner.hide();
-            this.modalService.dismissAll();
-            this.config = { ...this.config, value: users };
-        })
-    }
-
     public getArrayForm(event: DataValue) {
+        console.log(event);
+        
         if (event.action === ActionEnum.DELETE) {
-            let modalRef = this.initPopUp(RemovePopupComponent);
-            modalRef.componentInstance.config = { title: "Confirmation de suppression", message: "Est-ce que vous confirmez la suppression définitive ?" };
-            modalRef.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteUser((event.value as User)) : null);
+            const modal: NgbModalRef = this.initPopUp(RemovePopupComponent);
+            modal.componentInstance.config = { title: "Confirmation de suppression", message: "Est-ce que vous confirmez la suppression définitive ?" };
+            modal.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteUser((event.value as User)) : null);
         } else {
-            let modalRef = this.initPopUp(UserModalComponent);
-            modalRef.componentInstance.editUser = event.value as User;
-            modalRef.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
+            const modal: NgbModalRef = this.initPopUp(UserModalComponent);
+            modal.componentInstance.editUser = event.value as User;
+            modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
                 this.spinner.show();
                 if (dataValue.action === ActionEnum.UPDATE) {
-                    this.updateUser(dataValue.value as UpdateUserRequest);
+                    concat(
+                        this.iamService.updateUser(dataValue.value as UpdateUserRequest).pipe(switchMapTo(EMPTY)),
+                        timer(1000).pipe(switchMapTo(EMPTY)),
+                        this.iamService.getUsers()
+                    ).subscribe((users: User[]) => {
+                        this.spinner.hide();
+                        modal.componentInstance.setIsSaved({ isSaved: true });
+                        this.config = { ...this.config, value: users };
+                    })
                 }
             });
         }
@@ -171,6 +165,14 @@ export class UsersComponent implements OnInit {
                     },
                     filterable: true,
                     sortable: true
+                },
+                {
+                    header: "Profil",
+                    field: "",
+                    icon: {
+                        class: "infos",
+                        tooltip: "Détail"
+                    }
                 }
             ]
         }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ArchwizardModule } from 'angular-archwizard';
 import { SharedModule } from 'src/app/shared';
 import { UserModalComponent } from './user-modal/user-modal.component';
 import { UsersComponent } from './users.component';
@@ -15,7 +16,7 @@ const MODULE_COMPONENT = [
 
 @NgModule({
     declarations: MODULE_COMPONENT,
-    imports: [RouterModule.forChild(routes), SharedModule],
+    imports: [RouterModule.forChild(routes), SharedModule, ArchwizardModule],
     entryComponents: [
         UserModalComponent
     ]

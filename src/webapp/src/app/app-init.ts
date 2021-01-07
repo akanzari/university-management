@@ -6,7 +6,7 @@ function getPageInfo(http: HttpClient): Promise<any> {
   return new Promise(async (resolve, reject) => {
     let infoUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/actuator/info';
     if (window.location.hostname === 'localhost') {
-      infoUrl = window.location.protocol + '//' + window.location.hostname + ':8989/actuator/info';
+      infoUrl = window.location.protocol + '//' + window.location.hostname + ':8997/actuator/info';
     }
     http.get<any>(infoUrl).subscribe(list => { resolve(list) });
   })

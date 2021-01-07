@@ -1,9 +1,11 @@
 package com.esprit.service.mapper;
 
 import com.esprit.domain.ClassRoomEntity;
+import com.esprit.domain.SiteEntity;
 import com.esprit.dto.request.CreateClassRoomRequest;
 import com.esprit.dto.request.UpdateClassRoomRequest;
 import com.esprit.dto.response.ClassRoomResponse;
+import com.esprit.dto.response.SiteResponse;
 import com.esprit.repository.SiteRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
         classRoomResponse.setCode( classRoomEntity.getCode() );
         classRoomResponse.setLabel( classRoomEntity.getLabel() );
         classRoomResponse.setCapacity( classRoomEntity.getCapacity() );
+        classRoomResponse.setSites( siteEntityListToSiteResponseList( classRoomEntity.getSites() ) );
         classRoomResponse.setStartDate( classRoomEntity.getStartDate() );
         classRoomResponse.setEndDate( classRoomEntity.getEndDate() );
         classRoomResponse.setStartHour( classRoomEntity.getStartHour() );
@@ -85,5 +88,32 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
         }
 
         return list;
+    }
+
+    protected SiteResponse siteEntityToSiteResponse(SiteEntity siteEntity) {
+        if ( siteEntity == null ) {
+            return null;
+        }
+
+        SiteResponse siteResponse = new SiteResponse();
+
+        siteResponse.setSiteId( siteEntity.getSiteId() );
+        siteResponse.setCode( siteEntity.getCode() );
+        siteResponse.setLabel( siteEntity.getLabel() );
+
+        return siteResponse;
+    }
+
+    protected List<SiteResponse> siteEntityListToSiteResponseList(List<SiteEntity> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<SiteResponse> list1 = new ArrayList<SiteResponse>( list.size() );
+        for ( SiteEntity siteEntity : list ) {
+            list1.add( siteEntityToSiteResponse( siteEntity ) );
+        }
+
+        return list1;
     }
 }

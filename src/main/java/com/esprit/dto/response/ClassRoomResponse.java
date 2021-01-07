@@ -2,6 +2,7 @@ package com.esprit.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class ClassRoomResponse {
 
@@ -13,7 +14,7 @@ public class ClassRoomResponse {
 
 	private int capacity;
 
-	private String site;
+	private List<SiteResponse> sites;
 
 	private Date startDate;
 
@@ -61,12 +62,12 @@ public class ClassRoomResponse {
 		this.capacity = capacity;
 	}
 
-	public String getSite() {
-		return site;
+	public List<SiteResponse> getSites() {
+		return sites;
 	}
 
-	public void setSite(String site) {
-		this.site = site;
+	public void setSites(List<SiteResponse> sites) {
+		this.sites = sites;
 	}
 
 	public Date getStartDate() {

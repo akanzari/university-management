@@ -26,10 +26,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.esprit.domain.ClassEntity;
 import com.esprit.dto.request.CreateUserRequest;
 import com.esprit.dto.request.UpdateUserRequest;
 import com.esprit.dto.response.SpecificUserResponse;
 import com.esprit.dto.response.UserResponse;
+import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.service.IAMService;
 import com.esprit.service.mapper.IAMMapper;
 import com.esprit.util.RandomPasswordGenerator;
@@ -77,6 +79,8 @@ public class IAMServiceImpl implements IAMService {
 						.toRepresentation();
 				userResource.roles().realmLevel().add(Arrays.asList(realmRoleUser));
 			}
+		} else {
+			throw new EntityAlreadyExistsExeption(ClassEntity.class, "email", createUserRequest.getEmail());
 		}
 	}
 

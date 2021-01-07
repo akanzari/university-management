@@ -34,9 +34,18 @@
                                     [id]="config?.id +'-'+ getIndex(j)">
                                     <!-- display ligne -->
                                     <td *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'">
+                                        <!-- icon -->
+                                        <ng-container *ngIf="column?.icon;else other_display">
+                                            <i [title]="column?.header"
+                                                [class]="'icons icon-' + column?.icon?.class + ' size-16' "
+                                                (click)="sendItem(null, value)"></i>
+                                        </ng-container>
+
                                         <!-- text -->
-                                        <span [title]="displayValue(value, column)">
-                                            {{displayValue(value, column)}}</span>
+                                        <ng-template #other_display>
+                                            <span [title]="displayValue(value, column)">
+                                                {{displayValue(value, column)}}</span>
+                                        </ng-template>
                                     </td>
                                     <!-- actions -->
                                     <td style="width: 8%" class="text-center px-0"

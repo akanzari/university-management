@@ -29,10 +29,22 @@
     <ul class="mr-auto"></ul>
     <ul class="nav navbar-nav navbar-right">
 
+      <!-- <li class="nav-item dropdown " (click)="changeLang()" (click)='animateLogo()'>
+        <a class="nav-link dropdown-toggle" id="Site" data-toggle="dropdown">
+          <span>{{site}}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-small dropdown-menu-right show" aria-labelledby="dropdownMenu1"
+          [style.display]=" displayL ? 'block': 'none'" [@logoState]='state'>
+          <li *ngFor="let site of (sites$ | async)">
+            <a (click)="switchSite(site)" class="dropdown-item ">{{site.label}}</a>
+          </li>
+        </ul>
+      </li> -->
+
       <li class="nav-item dropdown dropdown-mega" ngbDropdown
         placement="{{ ls.isDesktop() ? 'bottom-right' : 'bottom-left' }}">
-        <a title="Profile" class="nav-link dropdown-toggle" id="Support"
-          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a title="Profile" class="nav-link dropdown-toggle" id="Support" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
           <i aria-hidden="true" class="icons icon-user size-20 color-text"></i>
           <span class="d-block d-lg-none libelle-menu"></span>
         </a>

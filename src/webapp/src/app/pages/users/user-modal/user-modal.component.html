@@ -1,57 +1,199 @@
 <div class="modal-header mt-3">
-    <h2 *ngIf="!editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un utilisateur</h2>
-    <h2 *ngIf="editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un utilisateur</h2>
+    <h2 *ngIf="!editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un
+        utilisateur</h2>
+    <h2 *ngIf="editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un
+        utilisateur</h2>
     <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
         <span aria-hidden="true">&times;</span>
     </span>
 </div>
 
-<form [formGroup]="form">
-    <div class="modal-body mb-2">
-        <div class="row pt-1" style="padding-right: 5%;">
-            <div class="col-12 px-0 mb-2">
+<aw-wizard #wizard class="custom-step-css" [navBarLayout]="'large-empty-symbols'">
+    <aw-wizard-step>
+        <ng-template awWizardStepSymbol><i class="fa fa-user-circle-o size-16"></i></ng-template>
 
-                <div class="row mt-4">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Nom : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" formControlName="firstname" [attr.disabled]="editUser">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Prénom : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" formControlName="lastname" [attr.disabled]="editUser">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Email : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" formControlName="email">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Role : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="roles$ | async" formControlName="role"></ng-select>
-                    </div>
-                </div>
-
+        <form [formGroup]="userForm">
+            <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450" role="alert"
+                style="margin-left: auto; margin-right: auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <i class="icons icon-alert color-white" aria-hidden="true"></i>
+                {{saveError}}
             </div>
+            <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450" role="alert"
+                style="margin-left: auto; margin-right: auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+                {{saveSuccess}}
+            </div>
+
+            <div class="modal-body mb-2">
+                <div class="row pt-1" style="padding-right: 5%;">
+                    <div class="col-12 px-0 mb-2">
+
+                        <div class="row">
+                            <div class="col-2 py-2 px-0">
+                                <label class="float-right">Nom : <span class="color-error">*</span></label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" formControlName="firstName" [attr.disabled]="editUser">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2 py-2 px-0">
+                                <label class="float-right">Prénom : <span class="color-error">*</span></label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" formControlName="lastName" [attr.disabled]="editUser">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2 py-2 px-0">
+                                <label class="float-right">Email : <span class="color-error">*</span></label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" formControlName="email">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2 py-2 px-0">
+                                <label class="float-right">Role : <span class="color-error">*</span></label>
+                            </div>
+                            <div class="col-10">
+                                <ng-select [items]="roles$ | async" formControlName="role"
+                                    (change)="onChangeRole($event)" (clear)="onClearRole()"></ng-select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+                <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+                    [disabled]="!userForm.valid">Suivant</button>
+            </div>
+        </form>
+
+    </aw-wizard-step>
+    <aw-wizard-completion-step>
+        <ng-template awWizardStepSymbol><i class="fa fa-address-book-o size-16"></i></ng-template>
+        <div *ngIf="role === 'STUDENT'">
+            <form [formGroup]="userForm">
+                <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450"
+                    role="alert" style="margin-left: auto; margin-right: auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <i class="icons icon-alert color-white" aria-hidden="true"></i>
+                    {{saveError}}
+                </div>
+                <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450"
+                    role="alert" style="margin-left: auto; margin-right: auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+                    {{saveSuccess}}
+                </div>
+
+                <div class="modal-body mb-2">
+                    <div class="row pt-1" style="padding-right: 5%;">
+                        <div class="col-12 px-0 mb-2">
+
+                            <div class="row">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">N° CIN : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" formControlName="cin">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Classe : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <ng-select [items]="classes$ | async" formControlName="class"></ng-select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+                        [disabled]="!userForm.valid">Suivant</button>
+                </div>
+            </form>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-        <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()" [disabled]="!form.valid">Confirmer</button>
-    </div>
-</form>
+        <div *ngIf="role === 'TEACHER'">
+            <form [formGroup]="userForm">
+                <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450"
+                    role="alert" style="margin-left: auto; margin-right: auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <i class="icons icon-alert color-white" aria-hidden="true"></i>
+                    {{saveError}}
+                </div>
+                <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450"
+                    role="alert" style="margin-left: auto; margin-right: auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+                    {{saveSuccess}}
+                </div>
+
+                <div class="modal-body mb-2">
+                    <div class="row pt-1" style="padding-right: 5%;">
+                        <div class="col-12 px-0 mb-2">
+
+                            <div class="row">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Téléphone : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" formControlName="phone">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Grade : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" formControlName="grade">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Département : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <ng-select [items]="departments$ | async" formControlName="department"></ng-select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+                        [disabled]="!userForm.valid">Suivant</button>
+                </div>
+            </form>
+        </div>
+    </aw-wizard-completion-step>
+</aw-wizard>

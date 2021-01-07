@@ -141,7 +141,7 @@ export class ClassesComponent implements OnInit {
                     sortable: true
                 },
                 {
-                    header: "Nom",
+                    header: "Classe",
                     field: "label",
                     filterable: true,
                     sortable: true

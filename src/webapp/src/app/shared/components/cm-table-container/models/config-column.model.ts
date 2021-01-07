@@ -30,6 +30,7 @@ export class Column {
 	field: string;
 	width?: string;
 	pipe?: Pipe;
+	icon?: Icon;
 	filterable?: boolean = false;
 	sortable?: boolean = false;
 }
@@ -38,7 +39,6 @@ export class Pipe {
 	function: PipeTransform;
 	params?: any [];
 }
-
 
 export enum ActionEnum {
 	DISPLAY = "dispaly",

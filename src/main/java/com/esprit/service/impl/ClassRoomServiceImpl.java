@@ -64,6 +64,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 					throw new EntityNotFoundException(SiteEntity.class, "id", id);
 				}
 			});
+			classRoomEntity.setCode(classRoomEntityOptional.get().getCode());
 			classRoomEntity = classRoomRepository.save(classRoomEntity);
 		} else {
 			throw new EntityNotFoundException(ClassRoomEntity.class, "Id", updateClassRoomRequest.getClassRoomId());

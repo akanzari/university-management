@@ -18,81 +18,115 @@
     -webkit-appearance: none;
 }
 
-:host ::ng-deep .ng-select .ng-select-container {
+ .ng-select .ng-select-container {
     position: unset;
     border-radius: 0 !important;
     border: 1px solid #e4eaec;
   }
   
-  :host ::ng-deep .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+   .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
     box-shadow: 0 0 0 transparent !important;
     border: 1px solid #e4eaec;
     border-bottom: 1px solid #ccb581;
   }
   
-  :host ::ng-deep .ng-select .ng-arrow-wrapper .ng-arrow {
+   .ng-select .ng-arrow-wrapper .ng-arrow {
     margin-top: -4px;
   }
   
-  :host ::ng-deep .icone:before {
+   .icone:before {
     content: "\f127";
     font-family: "icons" !important;
   }
   
-  :host ::ng-deep .ng-input input {
+   .ng-input input {
     height: unset !important;
     margin: unset !important;
     padding: 5px 0px 0px 0px !important;
   }
   
-  :host ::ng-deep .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+   .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
     border-left: 2px solid #ccb581;
     background-color: unset !important;
     padding-left: 8px;
   }
   
-  :host ::ng-deep .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+   .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
     border-left: 2px solid #ccb581;
     background-color: unset !important;
     padding-left: 8px;
   }
   
-  :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-value {
+   .ng-select .ng-select-container .ng-value-container .ng-value {
     background-color: none;
     border: none;
     font-size: 13px;
   }
   
-  :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+   .ng-select .ng-select-container .ng-value-container .ng-placeholder {
     top: 9px !important;
   }
   
-  :host ::ng-deep .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked .ng-option-label {
+   .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked .ng-option-label {
     color: #000305 !important;
   }
   
-  :host ::ng-deep .icone:before {
+   .icone:before {
     content: "\f127";
     font-family: "icons" !important;
   }
   
-  :host ::ng-deep .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+   .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
     border-left: 2px solid #ccb581;
     background-color: unset !important;
     padding-left: 8px;
     font-size: 11px;
   }
   
-  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
     font-weight: unset;
     font-size: 11px !important;
   }
   
-  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option-label {
+   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option-label {
     font-weight: unset;
     font-size: 11px !important;
   }
   
-  :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
+   .ng-select .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
     border-right: 2px solid;
+  }
+
+aw-wizard.custom-step-css {
+
+  aw-wizard-navigation-bar.horizontal ul.steps-indicator li {
+    &.current {
+      .label {
+        color: #ccb581;
+      }
+    }
+
+    .label {
+      text-transform: none;
+    }
+  }
+    aw-wizard-navigation-bar.horizontal ul.steps-indicator li.done:not(.editing):not(:last-child):after {
+      background-color: #ccb581 !important;
+    }
+    aw-wizard-navigation-bar.horizontal ul.steps-indicator li {
+      &#customStep {
+        &.current .label, &.editing .label {
+          color: #ccb581;
+        }
+  
+        &.current .step-indicator, &.editing .step-indicator {
+          border-color: #ccb581 !important;
+          background-color: #ccb581 !important;
+        }
+  
+        .label {
+          text-transform: lowercase;
+        }
+      }
+    }
   }
