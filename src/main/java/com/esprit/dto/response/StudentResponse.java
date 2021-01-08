@@ -2,30 +2,18 @@ package com.esprit.dto.response;
 
 public class StudentResponse {
 
-	private String id;
-	
-	private String fullName;
-	
+	private String userId;
+
 	private String cin;
-	
-	private String mail;
-	
-	private String className;
 
-	public String getId() {
-		return id;
+	private ClassResponse classs;
+
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getCin() {
@@ -36,20 +24,12 @@ public class StudentResponse {
 		this.cin = cin;
 	}
 
-	public String getMail() {
-		return mail;
+	public ClassResponse getClasss() {
+		return classs;
 	}
 
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
-	public String getClassName() {
-		return className;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
+	public void setClasss(ClassResponse classs) {
+		this.classs = classs;
 	}
 
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
 )
 @Component
 public class ClassRoomMapperImpl implements ClassRoomMapper {
@@ -27,9 +27,9 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
 
         ClassRoomEntity classRoomEntity = new ClassRoomEntity();
 
+        classRoomEntity.setCapacity( createClassRoomRequest.getCapacity() );
         classRoomEntity.setCode( createClassRoomRequest.getCode() );
         classRoomEntity.setLabel( createClassRoomRequest.getLabel() );
-        classRoomEntity.setCapacity( createClassRoomRequest.getCapacity() );
 
         ClassRoomMapper.after( createClassRoomRequest, classRoomEntity, repository );
 
@@ -44,9 +44,14 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
 
         ClassRoomEntity classRoomEntity = new ClassRoomEntity();
 
-        classRoomEntity.setClassRoomId( updateClassRoomRequest.getClassRoomId() );
-        classRoomEntity.setLabel( updateClassRoomRequest.getLabel() );
         classRoomEntity.setCapacity( updateClassRoomRequest.getCapacity() );
+        classRoomEntity.setClassRoomId( updateClassRoomRequest.getClassRoomId() );
+        classRoomEntity.setEndDate( updateClassRoomRequest.getEndDate() );
+        classRoomEntity.setEndHour( updateClassRoomRequest.getEndHour() );
+        classRoomEntity.setLabel( updateClassRoomRequest.getLabel() );
+        classRoomEntity.setReason( updateClassRoomRequest.getReason() );
+        classRoomEntity.setStartDate( updateClassRoomRequest.getStartDate() );
+        classRoomEntity.setStartHour( updateClassRoomRequest.getStartHour() );
 
         ClassRoomMapper.after( updateClassRoomRequest, classRoomEntity, repository );
 
@@ -61,17 +66,17 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
 
         ClassRoomResponse classRoomResponse = new ClassRoomResponse();
 
+        classRoomResponse.setCapacity( classRoomEntity.getCapacity() );
         classRoomResponse.setClassRoomId( classRoomEntity.getClassRoomId() );
         classRoomResponse.setCode( classRoomEntity.getCode() );
+        classRoomResponse.setCreatedDate( classRoomEntity.getCreatedDate() );
+        classRoomResponse.setEndDate( classRoomEntity.getEndDate() );
+        classRoomResponse.setEndHour( classRoomEntity.getEndHour() );
         classRoomResponse.setLabel( classRoomEntity.getLabel() );
-        classRoomResponse.setCapacity( classRoomEntity.getCapacity() );
+        classRoomResponse.setReason( classRoomEntity.getReason() );
         classRoomResponse.setSites( siteEntityListToSiteResponseList( classRoomEntity.getSites() ) );
         classRoomResponse.setStartDate( classRoomEntity.getStartDate() );
-        classRoomResponse.setEndDate( classRoomEntity.getEndDate() );
         classRoomResponse.setStartHour( classRoomEntity.getStartHour() );
-        classRoomResponse.setEndHour( classRoomEntity.getEndHour() );
-        classRoomResponse.setReason( classRoomEntity.getReason() );
-        classRoomResponse.setCreatedDate( classRoomEntity.getCreatedDate() );
 
         return classRoomResponse;
     }
@@ -97,9 +102,9 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
 
         SiteResponse siteResponse = new SiteResponse();
 
-        siteResponse.setSiteId( siteEntity.getSiteId() );
         siteResponse.setCode( siteEntity.getCode() );
         siteResponse.setLabel( siteEntity.getLabel() );
+        siteResponse.setSiteId( siteEntity.getSiteId() );
 
         return siteResponse;
     }

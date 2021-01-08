@@ -32,35 +32,35 @@ public class IAMController {
 		this.iamService = iamService;
 	}
 
-	@PostMapping(path = "/create-user")
+	@PostMapping(path = "/user")
 	public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
 		iamService.addUser(createUserRequest);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@PutMapping(path = "/update-user")
+	@PutMapping(path = "/user")
 	public ResponseEntity<Void> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
 		iamService.updateUser(updateUserRequest);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping(path = "/delete-user/{userId}")
+	@DeleteMapping(path = "/user/{userId}")
 	public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
 		iamService.deleteUser(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/find-users")
+	@GetMapping(path = "/users")
 	public ResponseEntity<List<UserResponse>> findUsers() {
 		return new ResponseEntity<>(iamService.findUsers(), HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/find-users/{role}")
+	@GetMapping(path = "/users/{role}")
 	public ResponseEntity<List<SpecificUserResponse>> findUsersByRole(@PathVariable String role) {
 		return new ResponseEntity<>(iamService.findUsersByRole(role), HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/find-user/{username}")
+	@GetMapping(path = "/user/{username}")
 	public ResponseEntity<UserResponse> findUsers(@PathVariable String username) {
 		return new ResponseEntity<>(iamService.findUser(username), HttpStatus.OK);
 	}
@@ -70,7 +70,7 @@ public class IAMController {
 		return new ResponseEntity<>(iamService.findCurrentUser(principal), HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/find-roles")
+	@GetMapping(path = "/roles")
 	public ResponseEntity<List<String>> findRoles() {
 		return new ResponseEntity<>(iamService.findRoles(), HttpStatus.OK);
 	}

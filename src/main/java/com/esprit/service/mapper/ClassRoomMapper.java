@@ -7,6 +7,8 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 import com.esprit.domain.ClassRoomEntity;
 import com.esprit.domain.SiteEntity;
@@ -15,8 +17,10 @@ import com.esprit.dto.request.UpdateClassRoomRequest;
 import com.esprit.dto.response.ClassRoomResponse;
 import com.esprit.repository.SiteRepository;
 
-@Mapper(uses = DepartmentMapper.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ClassRoomMapper {
+
+	ClassRoomMapper INSTANCE = Mappers.getMapper(ClassRoomMapper.class);
 
 	ClassRoomEntity createClassRoomRequestToClassRoomEntity(CreateClassRoomRequest createClassRoomRequest,
 			@Context SiteRepository repository);

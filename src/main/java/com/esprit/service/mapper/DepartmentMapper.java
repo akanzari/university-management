@@ -7,6 +7,8 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 import com.esprit.domain.DepartmentEntity;
 import com.esprit.domain.SiteEntity;
@@ -16,8 +18,10 @@ import com.esprit.dto.response.DepartmentResponse;
 import com.esprit.repository.SiteRepository;
 import com.esprit.repository.SpecialityRepository;
 
-@Mapper(uses = SpecialityMapper.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DepartmentMapper {
+
+	DepartmentMapper INSTANCE = Mappers.getMapper(DepartmentMapper.class);
 
 	DepartmentEntity createDepartmentRequestToDepartmentEntity(CreateDepartmentRequest createDepartmentRoomRequest,
 			@Context SiteRepository siteRepository, @Context SpecialityRepository specialityRepository);

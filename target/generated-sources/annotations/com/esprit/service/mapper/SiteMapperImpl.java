@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
 )
 @Component
 public class SiteMapperImpl implements SiteMapper {
@@ -37,9 +37,9 @@ public class SiteMapperImpl implements SiteMapper {
 
         SiteResponse siteResponse = new SiteResponse();
 
-        siteResponse.setSiteId( siteEntity.getSiteId() );
         siteResponse.setCode( siteEntity.getCode() );
         siteResponse.setLabel( siteEntity.getLabel() );
+        siteResponse.setSiteId( siteEntity.getSiteId() );
 
         return siteResponse;
     }

@@ -41,8 +41,8 @@ public class SpecialityController {
 	}
 
 	@GetMapping("{specialityId}")
-	public ResponseEntity<SpecialityResponse> findSite(@PathVariable String specialityId) {
-		return new ResponseEntity<>(service.findSpecialitie(specialityId), HttpStatus.OK);
+	public ResponseEntity<SpecialityResponse> findSpeciality(@PathVariable String specialityId) {
+		return new ResponseEntity<>(service.findSpeciality(specialityId), HttpStatus.OK);
 	}
 
 	@GetMapping

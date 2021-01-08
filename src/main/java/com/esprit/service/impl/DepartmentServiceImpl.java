@@ -48,13 +48,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 
 		createDepartementRequest.getSpecialityIds().forEach(id -> {
-			if (specialityRepository.getOne(id) == null) {
+			if (!specialityRepository.findById(id).isPresent()) {
 				throw new EntityAlreadyExistsExeption(SpecialityEntity.class, "id", id);
 			}
 		});
 
 		createDepartementRequest.getSiteIds().forEach(id -> {
-			if (siteRepository.getOne(id) == null) {
+			if (!siteRepository.findById(id).isPresent()) {
 				throw new EntityAlreadyExistsExeption(SiteEntity.class, "id", id);
 			}
 		});

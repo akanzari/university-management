@@ -43,7 +43,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 		}
 
 		createClassRoomRequest.getSiteIds().forEach(id -> {
-			if (siteRepository.getOne(id) == null) {
+			if (!siteRepository.findById(id).isPresent()) {
 				throw new EntityNotFoundException(SiteEntity.class, "id", id);
 			}
 		});

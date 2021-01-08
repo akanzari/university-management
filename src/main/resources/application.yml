@@ -7,7 +7,7 @@ spring:
       name: university-management
    jpa:
       hibernate:
-         ddl-auto: none
+         ddl-auto: create-drop
          naming: 
            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       generate-ddl: true
@@ -20,7 +20,7 @@ spring:
                lob:
                   non_contextual_creation: true
    datasource:
-      url: jdbc:oracle:thin:@localhost:1529:xe
+      url: jdbc:oracle:thin:@172.29.190.76:1529:xe
       username: dev_user
       password: 1234
 #      initialization-mode: always

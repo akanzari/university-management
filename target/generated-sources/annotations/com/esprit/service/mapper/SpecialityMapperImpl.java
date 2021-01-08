@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
 )
 @Component
 public class SpecialityMapperImpl implements SpecialityMapper {
@@ -37,9 +37,9 @@ public class SpecialityMapperImpl implements SpecialityMapper {
 
         SpecialityResponse specialityResponse = new SpecialityResponse();
 
-        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
         specialityResponse.setCode( specialityEntity.getCode() );
         specialityResponse.setLabel( specialityEntity.getLabel() );
+        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
 
         return specialityResponse;
     }

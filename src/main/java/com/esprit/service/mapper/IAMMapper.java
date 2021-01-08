@@ -8,12 +8,16 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 import com.esprit.dto.response.SpecificUserResponse;
 import com.esprit.dto.response.UserResponse;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IAMMapper {
+
+	IAMMapper INSTANCE = Mappers.getMapper(IAMMapper.class);
 
 	UserResponse userRepresentationToUserResponse(UserRepresentation usersRepresentation);
 

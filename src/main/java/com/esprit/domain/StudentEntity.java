@@ -20,8 +20,8 @@ public class StudentEntity extends Auditable implements Serializable {
 	private String cin;
 
 	@ManyToOne(optional = false)
-    @JoinColumn(name="class_id")
-	private ClassEntity classEntity;
+	@JoinColumn(name = "class_id")
+	private ClassEntity classs;
 
 	public String getUserId() {
 		return userId;
@@ -39,12 +39,12 @@ public class StudentEntity extends Auditable implements Serializable {
 		this.cin = cin;
 	}
 
-	public ClassEntity getClassEntity() {
-		return classEntity;
+	public ClassEntity getClasss() {
+		return classs;
 	}
 
-	public void setClassEntity(ClassEntity classEntity) {
-		this.classEntity = classEntity;
+	public void setClasss(ClassEntity classs) {
+		this.classs = classs;
 	}
 
 }

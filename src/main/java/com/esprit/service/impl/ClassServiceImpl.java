@@ -42,7 +42,7 @@ public class ClassServiceImpl implements ClassService {
 			throw new EntityAlreadyExistsExeption(ClassEntity.class, "code", createClassRequest.getCode());
 		}
 
-		if (specialityRepository.getOne(createClassRequest.getSpecialityId()) == null) {
+		if (!specialityRepository.findById(createClassRequest.getSpecialityId()).isPresent()) {
 			throw new EntityNotFoundException(SpecialityEntity.class, "Id", createClassRequest.getSpecialityId());
 		}
 

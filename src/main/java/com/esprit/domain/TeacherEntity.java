@@ -30,7 +30,7 @@ public class TeacherEntity extends Auditable implements Serializable {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "department_id")
-	private DepartmentEntity departmentEntity;
+	private DepartmentEntity department;
 
 	public String getUserId() {
 		return userId;
@@ -88,12 +88,12 @@ public class TeacherEntity extends Auditable implements Serializable {
 		this.reason = reason;
 	}
 
-	public DepartmentEntity getDepartmentEntity() {
-		return departmentEntity;
+	public DepartmentEntity getDepartment() {
+		return department;
 	}
 
-	public void setDepartmentEntity(DepartmentEntity departmentEntity) {
-		this.departmentEntity = departmentEntity;
+	public void setDepartment(DepartmentEntity department) {
+		this.department = department;
 	}
 
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
 )
 @Component
 public class ClassMapperImpl implements ClassMapper {
@@ -29,8 +29,8 @@ public class ClassMapperImpl implements ClassMapper {
 
         classEntity.setCode( createClassRequest.getCode() );
         classEntity.setLabel( createClassRequest.getLabel() );
-        classEntity.setNbrStudents( createClassRequest.getNbrStudents() );
         classEntity.setNbrGroups( createClassRequest.getNbrGroups() );
+        classEntity.setNbrStudents( createClassRequest.getNbrStudents() );
 
         ClassMapper.after( createClassRequest, classEntity, specialityRepository );
 
@@ -47,8 +47,8 @@ public class ClassMapperImpl implements ClassMapper {
 
         classEntity.setClassId( updateClassRequest.getClassId() );
         classEntity.setLabel( updateClassRequest.getLabel() );
-        classEntity.setNbrStudents( updateClassRequest.getNbrStudents() );
         classEntity.setNbrGroups( updateClassRequest.getNbrGroups() );
+        classEntity.setNbrStudents( updateClassRequest.getNbrStudents() );
 
         ClassMapper.after( updateClassRequest, classEntity, specialityRepository );
 
@@ -65,11 +65,11 @@ public class ClassMapperImpl implements ClassMapper {
 
         classResponse.setClassId( classEntity.getClassId() );
         classResponse.setCode( classEntity.getCode() );
-        classResponse.setLabel( classEntity.getLabel() );
-        classResponse.setNbrStudents( classEntity.getNbrStudents() );
-        classResponse.setNbrGroups( classEntity.getNbrGroups() );
-        classResponse.setSpeciality( specialityEntityToSpecialityResponse( classEntity.getSpeciality() ) );
         classResponse.setCreatedDate( classEntity.getCreatedDate() );
+        classResponse.setLabel( classEntity.getLabel() );
+        classResponse.setNbrGroups( classEntity.getNbrGroups() );
+        classResponse.setNbrStudents( classEntity.getNbrStudents() );
+        classResponse.setSpeciality( specialityEntityToSpecialityResponse( classEntity.getSpeciality() ) );
 
         return classResponse;
     }
@@ -95,9 +95,9 @@ public class ClassMapperImpl implements ClassMapper {
 
         SpecialityResponse specialityResponse = new SpecialityResponse();
 
-        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
         specialityResponse.setCode( specialityEntity.getCode() );
         specialityResponse.setLabel( specialityEntity.getLabel() );
+        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
 
         return specialityResponse;
     }

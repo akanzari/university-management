@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
 )
 @Component
 public class IAMMapperImpl implements IAMMapper {
@@ -24,14 +24,14 @@ public class IAMMapperImpl implements IAMMapper {
 
         UserResponse userResponse = new UserResponse();
 
-        userResponse.id( usersRepresentation.getId() );
-        userResponse.username( usersRepresentation.getUsername() );
-        userResponse.firstName( usersRepresentation.getFirstName() );
-        userResponse.lastName( usersRepresentation.getLastName() );
-        userResponse.email( usersRepresentation.getEmail() );
         if ( usersRepresentation.getCreatedTimestamp() != null ) {
             userResponse.createdTimestamp( String.valueOf( usersRepresentation.getCreatedTimestamp() ) );
         }
+        userResponse.email( usersRepresentation.getEmail() );
+        userResponse.firstName( usersRepresentation.getFirstName() );
+        userResponse.id( usersRepresentation.getId() );
+        userResponse.lastName( usersRepresentation.getLastName() );
+        userResponse.username( usersRepresentation.getUsername() );
 
         return userResponse;
     }
@@ -74,8 +74,8 @@ public class IAMMapperImpl implements IAMMapper {
 
         SpecificUserResponse specificUserResponse = new SpecificUserResponse();
 
-        specificUserResponse.setId( userResponse.getId() );
         specificUserResponse.setEmail( userResponse.getEmail() );
+        specificUserResponse.setId( userResponse.getId() );
 
         setFullName( specificUserResponse, userResponse );
 

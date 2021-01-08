@@ -37,19 +37,19 @@ export function configFactory(http: HttpClient): ConfigLoader {
     LayoutModule,
     CoreModule.forRoot(),
     TranslateModule.forRoot(),
-    KeycloakAngularModule,
+    //KeycloakAngularModule,
     ConfigModule.forRoot({
       provide: ConfigLoader,
       useFactory: configFactory,
       deps: [HttpClient]
     }),
   ],
-  providers: [
+  /*providers: [
     {
       provide: APP_INITIALIZER, useFactory: initializer, multi: true,
       deps: [KeycloakService, HttpClient]
     }
-  ],
+  ],*/
   bootstrap: [AppComponent]
 })
 export class AppModule { }

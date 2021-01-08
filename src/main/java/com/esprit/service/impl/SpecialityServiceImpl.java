@@ -40,13 +40,13 @@ public class SpecialityServiceImpl implements SpecialityService {
 
 	@Override
 	public void deleteSpeciality(String specialityId) {
-		if (findSpecialitie(specialityId) != null) {
+		if (findSpeciality(specialityId) != null) {
 			repository.deleteById(specialityId);
 		}
 	}
 
 	@Override
-	public SpecialityResponse findSpecialitie(String specialityId) {
+	public SpecialityResponse findSpeciality(String specialityId) {
 		SpecialityResponse result = null;
 		Optional<SpecialityEntity> specialityEntityOptional = repository.findById(specialityId);
 		if (specialityEntityOptional.isPresent()) {

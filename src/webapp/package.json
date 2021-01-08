@@ -2,8 +2,8 @@
   "name": "webapp",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
+    "build:prd": "npm run install_assets && ng build --configuration=prd",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
