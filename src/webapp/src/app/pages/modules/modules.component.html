@@ -1,0 +1,62 @@
+<div class="row bg-default-200">
+    <div class="col-12 px-0">
+        <ol class="breadcrumb d-none d-lg-block">
+            <li class="breadcrumb-item">
+                <a href="/">
+                    <i class="icons icon-home size-20 color-text"></i> Accueil </a>
+            </li>
+            <li class="breadcrumb-item active">Modules</li>
+        </ol>
+    </div>
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ccb581" type="ball-circus" [fullScreen]="true">
+    <p class="color-white"> Loading... </p>
+</ngx-spinner>
+
+<div class="row bg-white" style="box-shadow: 10px 5px 5px #e6e6e6;">
+    <div class="col-12">
+
+        <div class="row border-bottom">
+            <div class="col-12">
+                <div class="search-criteria">
+
+                    <div class="py-2">
+                        <div class="float-left">
+                            <p class="bold color-title font-size-20 mb-0">Liste des modules</p>
+                        </div>
+                        <div class="dropdown float-right">
+                            <button type="button" class="btn btn-bg-add font-size-12 btn-add mb-0 color-white"
+                                (click)="openModal()">
+                                <span class="pl-1">Nouveau</span>
+                            </button>
+                            <span ngbTooltip="Rechercher">
+                                <a>
+                                    <i class="icon-search icons mx-2 my-1"></i>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="accordion mb-0" role="tablist" aria-multiselectable="true">
+                        <div class="card card-search">
+                            <div id="search-criteria-one" class="border-top collapse" role="tabpanel"
+                                aria-labelledby="headingOne">
+                                <div class="card-block bg-white py-4" style="overflow: visible;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-4 px-0">
+            <cm-table-container [currentConfig]="config" (sendData)="getArrayForm($event)"></cm-table-container>
+        </div>
+
+    </div>
+</div>

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, timer } from 'rxjs';
-import { Class, CreateClassRequest, UpdateClassRequest } from 'src/app/core/models';
+import { Classs, CreateClassRequest, UpdateClassRequest } from 'src/app/core/models';
 import { Speciality } from 'src/app/core/models/speciality.model';
 import { RefService } from 'src/app/core/services';
 import { ActionEnum } from 'src/app/shared/components/cm-table-container/models/config-column.model';
@@ -18,7 +18,7 @@ export class ClassModalComponent implements OnInit {
     public triggerSave: EventEmitter<DataValue> = new EventEmitter();
 
     @Input()
-    public editClass: Class;
+    public editClass: Classs;
 
     public form: FormGroup;
 
@@ -52,12 +52,13 @@ export class ClassModalComponent implements OnInit {
     public setIsSaved(event) {
         if (event.isSaved === true) {
             this.showLoaderSuccess = true;
-            this.saveSuccess = "La classe " + this.form.get("code").value + " ajouté avec succès";
+            this.saveSuccess = "La classe " + this.form.get("label").value + " ajouté avec succès";
             timer(1000).subscribe(() => this.reset());
         } else {
             if (event.code === 701) {
                 this.showLoaderError = true;
-                this.saveError = "La classe " + this.form.get("code").value + "  déjà existe";
+                this.saveError = "La classe " + this.form.get("label").value + "  déjà existe";
+                timer(2000).subscribe(() => this.showLoaderError = false);
             }
         }
     }
@@ -90,7 +91,6 @@ export class ClassModalComponent implements OnInit {
 
     private initForm(): void {
         this.form = this.fb.group({
-            code: [null, Validators.required],
             label: [null, Validators.required],
             nbrStudents: [null, Validators.required],
             nbrGroups: [null, Validators.required],

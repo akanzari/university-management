@@ -1,5 +1,7 @@
 package com.esprit.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -11,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateTeacherRequest;
-import com.esprit.dto.response.TeacherResponse;
+import com.esprit.dto.TeacherDTO;
 import com.esprit.service.TeacherService;
 
 @RestController
@@ -26,14 +27,19 @@ public class TeacherController {
 	};
 
 	@PostMapping
-	public ResponseEntity<Void> createTeacher(@RequestBody @Valid CreateTeacherRequest createTeacherRequest) {
-		service.addTeacher(createTeacherRequest);
+	public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherDTO teacherDTO) {
+		service.addTeacher(teacherDTO);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("{userId}")
-	public ResponseEntity<TeacherResponse> findTeacher(@PathVariable String userId) {
+	public ResponseEntity<TeacherDTO> findTeacher(@PathVariable String userId) {
 		return new ResponseEntity<>(service.findBydId(userId), HttpStatus.OK);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<TeacherDTO>> findTeachers() {
+		return new ResponseEntity<>(service.findTeachers(), HttpStatus.OK);
 	}
 
 }

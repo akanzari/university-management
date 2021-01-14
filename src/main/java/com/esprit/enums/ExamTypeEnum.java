@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -13,7 +11,7 @@ public enum ExamTypeEnum {
 
 	WRITTEN, PRACTICE, PRESENTATION;
 
-	private static Map<String, ExamTypeEnum> namesMap = new HashMap<>(2);
+	private static Map<String, ExamTypeEnum> namesMap = new HashMap<>(3);
 
 	static {
 		namesMap.put("Écrit", WRITTEN);
@@ -23,7 +21,18 @@ public enum ExamTypeEnum {
 
 	@JsonCreator
 	public static ExamTypeEnum forValue(String value) {
-		return namesMap.get(StringUtils.lowerCase(value));
+		return namesMap.get(value);
+	}
+
+	public static String forKey(ExamTypeEnum value) {
+		String key = null;
+		for (Map.Entry<String, ExamTypeEnum> entry : namesMap.entrySet()) {
+			if (value.equals(entry.getValue())) {
+				key = entry.getKey();
+				break;
+			}
+		}
+		return key;
 	}
 
 	@JsonValue

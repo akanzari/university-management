@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateClassRoomRequest;
-import com.esprit.dto.request.UpdateClassRoomRequest;
+import com.esprit.dto.request.rooms.CreateClassRoomRequest;
+import com.esprit.dto.request.rooms.UpdateClassRoomRequest;
 import com.esprit.dto.response.ClassRoomResponse;
 import com.esprit.service.ClassRoomService;
 
@@ -31,15 +31,15 @@ public class ClassRoomController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClassRoomResponse> createClassRoom(
-			@RequestBody @Valid CreateClassRoomRequest createClassRoomRequest) {
-		return new ResponseEntity<>(service.addClassRoom(createClassRoomRequest), HttpStatus.CREATED);
+	public ResponseEntity<Void> createClassRoom(@RequestBody @Valid CreateClassRoomRequest createClassRoomRequest) {
+		service.addClassRoom(createClassRoomRequest);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<ClassRoomResponse> updateClassRoom(
-			@RequestBody @Valid UpdateClassRoomRequest updateClassRoomRequest) {
-		return new ResponseEntity<>(service.updateClassRoom(updateClassRoomRequest), HttpStatus.CREATED);
+	public ResponseEntity<Void> updateClassRoom(@RequestBody @Valid UpdateClassRoomRequest updateClassRoomRequest) {
+		service.updateClassRoom(updateClassRoomRequest);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("{classRoomId}")

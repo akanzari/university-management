@@ -9,7 +9,8 @@
                             style="table-layout: fixed; word-wrap: break-word;">
                             <thead>
                                 <tr>
-                                    <th *ngFor="let column of columns; let x = index" rowspan="1" colspan="1"
+                                    <th [columnWidth]="column?.width" [columnsLength]="columns?.length"
+                                        *ngFor="let column of columns; let x = index" rowspan="1" colspan="1"
                                         style="padding: 10px 15px 0 !important;">
                                         <div [ngClass]="{'form-ui': column?.filterable && allItems?.length > 1}">
                                             <ng-container *ngIf="column?.filterable && allItems?.length > 1">
@@ -33,7 +34,8 @@
                                 <tr *ngFor="let value of arrayOfItems() | filter: valueForFilter: fieldForFilter | orderBy: fieldForSort:reverse:true; let j = index"
                                     [id]="config?.id +'-'+ getIndex(j)">
                                     <!-- display ligne -->
-                                    <td *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'">
+                                    <td [columnWidth]="column?.width" [columnsLength]="columns?.length"
+                                        *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'">
                                         <!-- icon -->
                                         <ng-container *ngIf="column?.icon;else other_display">
                                             <i [title]="column?.header"
@@ -43,18 +45,36 @@
 
                                         <!-- text -->
                                         <ng-template #other_display>
-                                            <span [title]="displayValue(value, column)">
+                                            <span [title]="displayValue(value, column)"
+                                                [class]="column?.conditionClass?.get(value[column.field]) ">
                                                 {{displayValue(value, column)}}</span>
                                         </ng-template>
                                     </td>
                                     <!-- actions -->
-                                    <td style="width: 8%" class="text-center px-0"
-                                        *ngIf="config?.actions && config?.actions.length > 0">
-                                        <ng-container *ngFor="let action of geActionsWithIcon()">
-                                            <a class="mr-1 pr-2" [title]="action?.icon?.tooltip">
-                                                <i class="icons {{action?.icon?.class}}"
-                                                    (click)="sendItem(action?.name, value)"></i>
+                                    <td style="width: 8%" class="text-center px-0" *ngIf="config?.actions">
+                                        <ng-container
+                                            *ngIf="config?.conditionActions?.enable != null && config?.conditionActions?.enable?.status === value[getFirstKeyFromJson(config?.conditionActions?.enable)]">
+                                            <a class="mr-1 pr-2"
+                                                [title]="config?.conditionActions?.enable?.icon?.tooltip">
+                                                <i class="icons {{config?.conditionActions?.enable?.icon?.class}}"
+                                                    (click)="sendItem(config?.conditionActions?.enable?.name, value)"></i>
                                             </a>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="config?.conditionActions?.disable != null && config?.conditionActions?.disable?.status === value[getFirstKeyFromJson(config?.conditionActions?.disable)]">
+                                            <a class="mr-1 pr-2"
+                                                [title]="config?.conditionActions?.disable?.icon?.tooltip">
+                                                <i class="icons {{config?.conditionActions?.disable?.icon?.class}}"
+                                                    (click)="sendItem(config?.conditionActions?.disable?.name, value)"></i>
+                                            </a>
+                                        </ng-container>
+                                        <ng-container *ngIf="config?.actions && config?.actions.length > 0">
+                                            <ng-container *ngFor="let action of geActionsWithIcon()">
+                                                <a class="mr-1 pr-2" [title]="action?.icon?.tooltip">
+                                                    <i class="icons {{action?.icon?.class}}"
+                                                        (click)="sendItem(action?.name, value)"></i>
+                                                </a>
+                                            </ng-container>
                                         </ng-container>
                                     </td>
 

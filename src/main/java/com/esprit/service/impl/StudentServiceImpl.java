@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.esprit.domain.ClassEntity;
-import com.esprit.domain.SpecialityEntity;
 import com.esprit.domain.StudentEntity;
 import com.esprit.dto.request.CreateStudentRequest;
 import com.esprit.dto.response.StudentResponse;
@@ -34,16 +33,17 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void addStudent(CreateStudentRequest createStudentRequest) {
 		StudentEntity studentEntity = mapper.createStudentRequestToStudentEntity(createStudentRequest, classRepository);
-		
+
 		if (studentRepository.findById(createStudentRequest.getUserId()).isPresent()
 				&& studentRepository.findByCin(createStudentRequest.getCin()) != null) {
-			throw new EntityAlreadyExistsExeption(SpecialityEntity.class, "cin", createStudentRequest.getCin());
+			throw new EntityAlreadyExistsExeption(StudentEntity.class, "cin",
+					Integer.toString(createStudentRequest.getCin()));
 		}
-		
+
 		if (!classRepository.findById(createStudentRequest.getClassId()).isPresent()) {
 			throw new EntityNotFoundException(ClassEntity.class, "id", createStudentRequest.getClassId());
 		}
-		
+
 		studentRepository.save(studentEntity);
 	}
 

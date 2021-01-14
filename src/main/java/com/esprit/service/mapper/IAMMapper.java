@@ -19,6 +19,7 @@ public interface IAMMapper {
 
 	IAMMapper INSTANCE = Mappers.getMapper(IAMMapper.class);
 
+	@Mapping(target = "status", source = "enabled", qualifiedByName = "enabledToStatus")
 	UserResponse userRepresentationToUserResponse(UserRepresentation usersRepresentation);
 
 	List<UserResponse> usersRepresentationToUsersResponse(List<UserRepresentation> usersRepresentation);
@@ -37,6 +38,10 @@ public interface IAMMapper {
 	@AfterMapping
 	default void setFullName(@MappingTarget SpecificUserResponse specificUserResponse, UserResponse userResponse) {
 		specificUserResponse.setFullName(userResponse.getFirstName() + " " + userResponse.getLastName());
+	}
+
+	public default String enabledToStatus(final Boolean enabled) {
+		return enabled.equals(Boolean.TRUE) ? "Activer" : "Désactiver";
 	}
 
 }

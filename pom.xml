@@ -20,17 +20,6 @@
 		<swagger.version>2.7.0</swagger.version>
 		<keycloak.version>12.0.1</keycloak.version>
 		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
-
-		<frontend-maven-plugin.version>1.10.0</frontend-maven-plugin.version>
-		<node.version>v12.13.0</node.version>
-		<npm.version>6.12.0</npm.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<working-directory>src/webapp</working-directory>
-		<npm.build.default>build</npm.build.default>
-		<dependency.check.skip>true</dependency.check.skip>
-		<dependency.check.report.dir>${project.build.directory}/dependency-check</dependency.check.report.dir>
-		<dependency-check-maven.version>5.3.2</dependency-check-maven.version>
 	</properties>
 
 	<dependencies>
@@ -79,6 +68,12 @@
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20201115</version>
 		</dependency>
 
 		<dependency>

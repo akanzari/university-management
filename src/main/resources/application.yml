@@ -13,18 +13,18 @@ spring:
       generate-ddl: true
       properties:
          hibernate:
-            search:
-              default:
+            show_sql: true
             dialect: org.hibernate.dialect.Oracle10gDialect
             jdbc:
                lob:
                   non_contextual_creation: true
    datasource:
-      url: jdbc:oracle:thin:@172.29.190.76:1529:xe
+      url: jdbc:oracle:thin:@localhost:1529:xe
       username: dev_user
       password: 1234
-#      initialization-mode: always
-
+      #data: classpath:data-oracle.sql
+      #initialization-mode: always
+        
 # --- server
 server:
   port: 8997
@@ -41,13 +41,17 @@ management:
 keycloak:
   use-resource-role-mappings: true
   credentials:
-    secret: 5fa40e5f-15c7-44df-9211-50e7a2d3b249
+    secret: 158da796-ac58-44aa-8450-35469dec4f96
   auth-server-url: http://localhost:8089/auth/
   realm: esprit-realm
   resource: university-api
   bearer-only: true
   principal-attribute: preferred_username
-        
+
+application:
+   migration:
+     url: http://localhost:8998/
+     
 # --- front info
 info: 
    environment:

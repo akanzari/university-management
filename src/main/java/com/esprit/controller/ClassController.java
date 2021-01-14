@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateClassRequest;
-import com.esprit.dto.request.UpdateClassRequest;
-import com.esprit.dto.response.ClassResponse;
+import com.esprit.dto.ClassDTO;
 import com.esprit.service.ClassService;
 
 @RestController
@@ -31,13 +29,15 @@ public class ClassController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClassResponse> createClass(@RequestBody @Valid CreateClassRequest createClassRequest) {
-		return new ResponseEntity<>(service.addClass(createClassRequest), HttpStatus.CREATED);
+	public ResponseEntity<Void> createClass(@RequestBody @Valid ClassDTO classDTO) {
+		service.addClass(classDTO);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<ClassResponse> createClass(@RequestBody @Valid UpdateClassRequest updateClassRequest) {
-		return new ResponseEntity<>(service.updateClass(updateClassRequest), HttpStatus.CREATED);
+	public ResponseEntity<Void> updateClass(@RequestBody @Valid ClassDTO classDTO) {
+		service.updateClass(classDTO);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("{classId}")
@@ -45,15 +45,20 @@ public class ClassController {
 		service.deleteClass(classId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping("{classId}")
-	public ResponseEntity<ClassResponse> findClass(@PathVariable String classId) {
-		return new ResponseEntity<>(service.findClasse(classId), HttpStatus.OK);
+	public ResponseEntity<ClassDTO> findClass(@PathVariable String classId) {
+		return new ResponseEntity<>(service.findClass(classId), HttpStatus.OK);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ClassResponse>> findClasses() {
+	public ResponseEntity<List<ClassDTO>> findClasses() {
 		return new ResponseEntity<>(service.findClasses(), HttpStatus.OK);
+	}
+
+	@GetMapping("moduleId/{moduleId}")
+	public ResponseEntity<List<ClassDTO>> findClassesByModule(@PathVariable String moduleId) {
+		return new ResponseEntity<>(service.findClassesByModule(moduleId), HttpStatus.OK);
 	}
 
 }

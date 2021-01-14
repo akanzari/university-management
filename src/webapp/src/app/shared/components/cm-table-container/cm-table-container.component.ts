@@ -89,10 +89,12 @@ export class CmTbaleContainerComponent implements OnChanges {
             if (column.field.includes(".")) {
                 let array: string[] = column.field.split('.');
                 let str: string = value[array[0]];
-                for (let i = 1; i < array.length; i++) {
-                    str = str[array[i]];
+                if (str) {
+                    for (let i = 1; i < array.length; i++) {
+                        str = str[array[i]];
+                    }
+                    result = this.getDataPipe(column.pipe, str);
                 }
-                result = this.getDataPipe(column.pipe, str);
             } else {
                 result = this.getDataPipe(column.pipe, value[column.field]);
             }
@@ -165,6 +167,32 @@ export class CmTbaleContainerComponent implements OnChanges {
         } else {
             return index;
         }
+    }
+
+    public getFirstKeyFromJson(object): string {
+        let resut: string;
+        if (object) {
+            resut = Object.keys(object)[0];
+        }
+        return resut;
+    }
+
+    public getFirstValueFromJson(object): any {
+        let resut: any;
+        if (object) {
+            resut = Object.values(object)[0];
+        }
+        return resut;
+    }
+
+    public getClass(value, action): string {
+        let resut: any;
+        console.log(this.getFirstValueFromJson(action?.condition));
+
+        if (value[this.getFirstKeyFromJson(action?.condition)] === this.getFirstValueFromJson(action?.condition)) {
+            resut = action.icon.calss
+        }
+        return resut;
     }
 
 }

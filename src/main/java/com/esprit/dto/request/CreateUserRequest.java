@@ -1,22 +1,27 @@
 package com.esprit.dto.request;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class CreateUserRequest {
 
+	private String userId;
+
 	@NotBlank
 	private String firstName;
-	
+
 	@NotBlank
 	private String lastName;
-	
-	@Email
-	@NotBlank
+
 	private String email;
-	
+
 	@NotBlank
 	private String role;
+
+	private String username;
+
+	private String password;
+
+	private String pole;
 
 	public String getFirstName() {
 		return firstName;
@@ -48,6 +53,38 @@ public class CreateUserRequest {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPole() {
+		return pole;
+	}
+
+	public void setPole(String pole) {
+		this.pole = pole;
 	}
 
 }

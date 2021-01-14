@@ -5,3 +5,8 @@ export { IAMService } from './iam.service';
 export { ClassService } from './class.servise';
 export { RoomService } from './room.servise';
 export { RefService } from './ref.service';
+export { StudentService } from './student-service';
+export { TeacherService } from './teacher-service';
+export { ModuleService } from './module.service';
+export { BlocService } from './bloc.service';
+export { ExamService } from './exam.service';

@@ -2,15 +2,12 @@ package com.esprit.dto.response;
 
 import java.util.List;
 
-import com.esprit.enums.ExamTypeEnum;
-import com.esprit.enums.PeriodEnum;
-import com.esprit.enums.SemesterEnum;
+import com.esprit.dto.ClassDTO;
+import com.esprit.dto.TeacherDTO;
 
 public class ModuleResponse {
-	
-	private String moduleId;
 
-	private String code;
+	private String moduleId;
 
 	private String designation;
 
@@ -18,15 +15,15 @@ public class ModuleResponse {
 
 	private int coefficient;
 
-	private SemesterEnum semester;
+	private String semester;
 
-	private List<PeriodEnum> periods;
+	private List<String> periods;
 
-	private ExamTypeEnum examType;
+	private String examType;
 
-	private TeacherResponse teacher;
+	private TeacherDTO teacher;
 
-	private ClassResponse classs;
+	private ClassDTO classs;
 
 	public String getModuleId() {
 		return moduleId;
@@ -34,14 +31,6 @@ public class ModuleResponse {
 
 	public void setModuleId(String moduleId) {
 		this.moduleId = moduleId;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getDesignation() {
@@ -68,43 +57,43 @@ public class ModuleResponse {
 		this.coefficient = coefficient;
 	}
 
-	public SemesterEnum getSemester() {
+	public String getSemester() {
 		return semester;
 	}
 
-	public void setSemester(SemesterEnum semester) {
+	public void setSemester(String semester) {
 		this.semester = semester;
 	}
 
-	public List<PeriodEnum> getPeriods() {
+	public List<String> getPeriods() {
 		return periods;
 	}
 
-	public void setPeriods(List<PeriodEnum> periods) {
+	public void setPeriods(List<String> periods) {
 		this.periods = periods;
 	}
 
-	public ExamTypeEnum getExamType() {
+	public String getExamType() {
 		return examType;
 	}
 
-	public void setExamType(ExamTypeEnum examType) {
+	public void setExamType(String examType) {
 		this.examType = examType;
 	}
 
-	public TeacherResponse getTeacher() {
+	public TeacherDTO getTeacher() {
 		return teacher;
 	}
 
-	public void setTeacher(TeacherResponse teacher) {
+	public void setTeacher(TeacherDTO teacher) {
 		this.teacher = teacher;
 	}
 
-	public ClassResponse getClasss() {
+	public ClassDTO getClasss() {
 		return classs;
 	}
 
-	public void setClasss(ClassResponse classs) {
+	public void setClasss(ClassDTO classs) {
 		this.classs = classs;
 	}
 

@@ -1,9 +1,11 @@
 import { PipeTransform } from '@angular/core';
+import { TSMap } from 'typescript-map';
 
 export class ConfigColumn {
 	id: string;
 	value?: any[];
 	actions?: Action[];
+	conditionActions?: any;
 	columns: Column[];
 	sortableBy?: string;
 	pagination?: Pagination;
@@ -18,6 +20,7 @@ export class Pagination {
 export class Action {
 	name: ActionEnum;
 	icon?: Icon;
+	condition?: {};
 }
 
 export class Icon {
@@ -31,13 +34,14 @@ export class Column {
 	width?: string;
 	pipe?: Pipe;
 	icon?: Icon;
+	conditionClass?: TSMap<string, string>;
 	filterable?: boolean = false;
 	sortable?: boolean = false;
 }
 
 export class Pipe {
 	function: PipeTransform;
-	params?: any [];
+	params?: any[];
 }
 
 export enum ActionEnum {

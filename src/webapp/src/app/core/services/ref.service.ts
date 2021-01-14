@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ConfigService } from '@ngx-config/core';
 import { Speciality } from '../models/speciality.model';
 import { Site } from '../models/site.modal';
@@ -18,38 +17,19 @@ export class RefService {
     }
 
     getSpecialities(): Observable<Speciality[]> {
-        return this.httpClient.get<Speciality[]>(this.domain + "speciality")
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<Speciality[]>(this.domain + "speciality");
     }
 
     getSites(): Observable<Site[]> {
-        return this.httpClient.get<Site[]>(this.domain + "site")
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<Site[]>(this.domain + "site");
     }
 
     getDepartements(): Observable<Department[]> {
-        return this.httpClient.get<Department[]>(this.domain + "departement")
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<Department[]>(this.domain + "departement");
     }
 
-    processError(err) {
-        let message = '';
-        if (err.error instanceof ErrorEvent) {
-            message = err.error.message;
-        } else {
-            message = `Error Code: ${err.status}\nMessage: ${err.message}`;
-        }
-        console.log(message);
-        return throwError(message);
+    getReasonRooms(): Observable<any[]> {
+        return this.httpClient.get<any[]>(this.domain + "reason-room");
     }
 
 }

@@ -13,6 +13,7 @@ import { CoreModule } from './core';
 import { LayoutModule } from './layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppRoutingModule } from './app.routes';
+import { registerLocaleData } from '@angular/common';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -26,6 +27,8 @@ export function configFactory(http: HttpClient): ConfigLoader {
   return new ConfigHttpLoader(http, infoUrl);
 }
 
+registerLocaleData(localeFr);
+
 @NgModule({
   declarations: [
     AppComponent
@@ -37,19 +40,20 @@ export function configFactory(http: HttpClient): ConfigLoader {
     LayoutModule,
     CoreModule.forRoot(),
     TranslateModule.forRoot(),
-    //KeycloakAngularModule,
+    KeycloakAngularModule,
     ConfigModule.forRoot({
       provide: ConfigLoader,
       useFactory: configFactory,
       deps: [HttpClient]
     }),
   ],
-  /*providers: [
+  providers: [
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
     {
       provide: APP_INITIALIZER, useFactory: initializer, multi: true,
       deps: [KeycloakService, HttpClient]
     }
-  ],*/
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

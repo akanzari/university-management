@@ -8,7 +8,8 @@
     </span>
 </div>
 
-<aw-wizard #wizard class="custom-step-css" [navBarLayout]="'large-empty-symbols'">
+<aw-wizard #wizard class="custom-step-css" [navBarLayout]="'large-empty-symbols'" [awNavigationMode]
+    navigateBackward="allow" navigateForward="allow">
     <aw-wizard-step>
         <ng-template awWizardStepSymbol><i class="fa fa-user-circle-o size-16"></i></ng-template>
 
@@ -76,8 +77,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-                <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
-                    [disabled]="!userForm.valid">Suivant</button>
+                <ng-container *ngIf="role === 'STUDENT' || role === 'TEACHER';else other_display">
+                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+                        [disabled]="!userForm.valid">
+                        Suivant
+                    </button>
+                </ng-container>
+                <ng-template #other_display>
+                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
+                        [disabled]="!userForm.valid">
+                        Confirmer
+                    </button>
+                </ng-template>
             </div>
         </form>
 
@@ -85,7 +96,7 @@
     <aw-wizard-completion-step>
         <ng-template awWizardStepSymbol><i class="fa fa-address-book-o size-16"></i></ng-template>
         <div *ngIf="role === 'STUDENT'">
-            <form [formGroup]="userForm">
+            <form [formGroup]="studentForm">
                 <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450"
                     role="alert" style="margin-left: auto; margin-right: auto;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -112,7 +123,7 @@
                                     <label class="float-right">N° CIN : <span class="color-error">*</span></label>
                                 </div>
                                 <div class="col-10">
-                                    <input type="text" formControlName="cin">
+                                    <input type="numbe" formControlName="cin" max="8" (keypress)="keyPress($event)">
                                 </div>
                             </div>
 
@@ -129,14 +140,14 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
-                        [disabled]="!userForm.valid">Suivant</button>
+                    <button type="button" class="btn btn-default" (click)="resetStudent()">Annuler</button>
+                    <button type="button" class="btn btn-bg-primary" (click)="saveStudent()"
+                        [disabled]="!studentForm.valid">Confirmer</button>
                 </div>
             </form>
         </div>
         <div *ngIf="role === 'TEACHER'">
-            <form [formGroup]="userForm">
+            <form [formGroup]="teacherForm">
                 <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450"
                     role="alert" style="margin-left: auto; margin-right: auto;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -163,7 +174,7 @@
                                     <label class="float-right">Téléphone : <span class="color-error">*</span></label>
                                 </div>
                                 <div class="col-10">
-                                    <input type="text" formControlName="phone">
+                                    <input type="number" formControlName="phone" max="8" (keypress)="keyPress($event)">
                                 </div>
                             </div>
 
@@ -189,9 +200,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-                    <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
-                        [disabled]="!userForm.valid">Suivant</button>
+                    <button type="button" class="btn btn-default" (click)="resetTeacher()">Annuler</button>
+                    <button type="button" class="btn btn-bg-primary" (click)="saveTeacher()"
+                        [disabled]="!teacherForm.valid">Confirmer</button>
                 </div>
             </form>
         </div>

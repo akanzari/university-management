@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateModuleRequest;
-import com.esprit.dto.request.UpdateModuleRequest;
+import com.esprit.dto.request.modules.CreateModuleRequest;
 import com.esprit.dto.response.ModuleResponse;
 import com.esprit.service.ModuleService;
 
@@ -31,13 +29,9 @@ public class ModuleController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ModuleResponse> createModule(@RequestBody @Valid CreateModuleRequest createModuleRequest) {
-		return new ResponseEntity<>(service.addModule(createModuleRequest), HttpStatus.CREATED);
-	}
-
-	@PutMapping
-	public ResponseEntity<ModuleResponse> createModule(@RequestBody @Valid UpdateModuleRequest updateModuleRequest) {
-		return new ResponseEntity<>(service.updateModule(updateModuleRequest), HttpStatus.CREATED);
+	public ResponseEntity<Void> createModule(@RequestBody @Valid CreateModuleRequest createModuleRequest) {
+		service.addModule(createModuleRequest);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("{moduleId}")
@@ -54,6 +48,11 @@ public class ModuleController {
 	@GetMapping
 	public ResponseEntity<List<ModuleResponse>> findModules() {
 		return new ResponseEntity<>(service.findModules(), HttpStatus.OK);
+	}
+
+	@GetMapping("classId/{classId}")
+	public ResponseEntity<List<ModuleResponse>> findModulesByClass(@PathVariable String classId) {
+		return new ResponseEntity<>(service.findModulesByClass(classId), HttpStatus.OK);
 	}
 
 }

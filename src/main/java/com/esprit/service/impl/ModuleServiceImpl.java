@@ -5,11 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.esprit.domain.ClassEntity;
 import com.esprit.domain.ModuleEntity;
-import com.esprit.domain.TeacherEntity;
-import com.esprit.dto.request.CreateModuleRequest;
-import com.esprit.dto.request.UpdateModuleRequest;
+import com.esprit.dto.request.modules.CreateModuleRequest;
 import com.esprit.dto.response.ModuleResponse;
 import com.esprit.error.exception.EntityNotFoundException;
 import com.esprit.repository.ClassRepository;
@@ -38,43 +35,10 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public ModuleResponse addModule(CreateModuleRequest createModuleRequest) {
+	public void addModule(CreateModuleRequest createModuleRequest) {
 		ModuleEntity moduleEntity = mapper.createModuleRequestToModuleEntity(createModuleRequest, teacherRepository,
 				classRepository);
-
-		if (!classRepository.findById(createModuleRequest.getClassId()).isPresent()) {
-			throw new EntityNotFoundException(ClassEntity.class, "Id", createModuleRequest.getClassId());
-		}
-
-		if (!teacherRepository.findById(createModuleRequest.getTeacherId()).isPresent()) {
-			throw new EntityNotFoundException(TeacherEntity.class, "Id", createModuleRequest.getTeacherId());
-		}
-
-		moduleEntity = moduleRepository.save(moduleEntity);
-		return mapper.moduleEntityToModuleResponse(moduleEntity);
-	}
-
-	@Override
-	public ModuleResponse updateModule(UpdateModuleRequest updateModuleRequest) {
-		ModuleEntity moduleEntity;
-		Optional<ModuleEntity> moduleEntityOptional = moduleRepository.findById(updateModuleRequest.getModuleId());
-		if (moduleEntityOptional.isPresent()) {
-			moduleEntity = mapper.updateModuleRequestToModuleEntity(updateModuleRequest, teacherRepository,
-					classRepository);
-			if (!classRepository.findById(updateModuleRequest.getClassId()).isPresent()) {
-				throw new EntityNotFoundException(ClassEntity.class, "Id", updateModuleRequest.getClassId());
-			}
-
-			if (!teacherRepository.findById(updateModuleRequest.getTeacherId()).isPresent()) {
-				throw new EntityNotFoundException(TeacherEntity.class, "Id", updateModuleRequest.getTeacherId());
-			}
-			moduleEntity.setCode(moduleEntityOptional.get().getCode());
-			moduleEntity.setDesignation(moduleEntityOptional.get().getDesignation());
-			moduleEntity = moduleRepository.save(moduleEntity);
-		} else {
-			throw new EntityNotFoundException(ModuleEntity.class, "Id", updateModuleRequest.getModuleId());
-		}
-		return mapper.moduleEntityToModuleResponse(moduleEntity);
+		moduleRepository.save(moduleEntity);
 	}
 
 	@Override
@@ -99,6 +63,11 @@ public class ModuleServiceImpl implements ModuleService {
 	@Override
 	public List<ModuleResponse> findModules() {
 		return mapper.moduleEntitiesToModuleResponse(moduleRepository.findAll());
+	}
+
+	@Override
+	public List<ModuleResponse> findModulesByClass(String classId) {
+		return null;
 	}
 
 }

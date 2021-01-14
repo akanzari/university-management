@@ -1,99 +1,96 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class TeacherEntity extends Auditable implements Serializable {
+public class TeacherEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String userId;
+	private String teacherId;
 
-	private String phone;
+	private int cin;
 
-	private int nbrSurveillance;
+	private String sex;
 
-	private int nbrHeureSurveillance;
+	@ElementCollection
+	private List<String> phones;
 
-	private Date startDate;
+	private String up;
 
-	private Date endDate;
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_departmenent")
+	private DepartmentEntity departmenent;
 
-	private String reason;
+	@JsonIgnore
+	@ManyToMany(mappedBy = "teachers")
+	private List<AssignClassEntity> assignClasses;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "department_id")
-	private DepartmentEntity department;
-
-	public String getUserId() {
-		return userId;
+	public String getTeacherId() {
+		return teacherId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setTeacherId(String teacherId) {
+		this.teacherId = teacherId;
 	}
 
-	public String getPhone() {
-		return phone;
+	public int getCin() {
+		return cin;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setCin(int cin) {
+		this.cin = cin;
 	}
 
-	public int getNbrSurveillance() {
-		return nbrSurveillance;
+	public String getSex() {
+		return sex;
 	}
 
-	public void setNbrSurveillance(int nbrSurveillance) {
-		this.nbrSurveillance = nbrSurveillance;
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
-	public int getNbrHeureSurveillance() {
-		return nbrHeureSurveillance;
+	public List<String> getPhones() {
+		return phones;
 	}
 
-	public void setNbrHeureSurveillance(int nbrHeureSurveillance) {
-		this.nbrHeureSurveillance = nbrHeureSurveillance;
+	public void setPhones(List<String> phones) {
+		this.phones = phones;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public String getUp() {
+		return up;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setUp(String up) {
+		this.up = up;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public DepartmentEntity getDepartmenent() {
+		return departmenent;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setDepartmenent(DepartmentEntity departmenent) {
+		this.departmenent = departmenent;
 	}
 
-	public String getReason() {
-		return reason;
+	public List<AssignClassEntity> getAssignClasses() {
+		return assignClasses;
 	}
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public DepartmentEntity getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(DepartmentEntity department) {
-		this.department = department;
+	public void setAssignClasses(List<AssignClassEntity> assignClasses) {
+		this.assignClasses = assignClasses;
 	}
 
 }

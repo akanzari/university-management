@@ -1,19 +1,14 @@
 package com.esprit.service.mapper;
 
 import com.esprit.domain.ClassEntity;
-import com.esprit.domain.DepartmentEntity;
-import com.esprit.domain.SpecialityEntity;
 import com.esprit.domain.StudentEntity;
 import com.esprit.domain.TeacherEntity;
+import com.esprit.dto.ClassDTO;
+import com.esprit.dto.TeacherDTO;
 import com.esprit.dto.request.CreateStudentRequest;
-import com.esprit.dto.request.CreateTeacherRequest;
-import com.esprit.dto.response.ClassResponse;
-import com.esprit.dto.response.DepartmentResponse;
-import com.esprit.dto.response.SpecialityResponse;
 import com.esprit.dto.response.StudentResponse;
-import com.esprit.dto.response.TeacherResponse;
 import com.esprit.repository.ClassRepository;
-import com.esprit.repository.DepartmentRepository;
+import com.esprit.service.IAMService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
@@ -21,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -34,8 +29,8 @@ public class UserMapperImpl implements UserMapper {
 
         StudentEntity studentEntity = new StudentEntity();
 
-        studentEntity.setCin( createStudentRequest.getCin() );
         studentEntity.setUserId( createStudentRequest.getUserId() );
+        studentEntity.setCin( createStudentRequest.getCin() );
 
         UserMapper.after( createStudentRequest, studentEntity, classRepository );
 
@@ -50,106 +45,84 @@ public class UserMapperImpl implements UserMapper {
 
         StudentResponse studentResponse = new StudentResponse();
 
-        studentResponse.setCin( studentEntity.getCin() );
-        studentResponse.setClasss( classEntityToClassResponse( studentEntity.getClasss() ) );
         studentResponse.setUserId( studentEntity.getUserId() );
+        studentResponse.setFullName( studentEntity.getFullName() );
+        studentResponse.setCin( String.valueOf( studentEntity.getCin() ) );
+        studentResponse.setClasss( classEntityToClassDTO( studentEntity.getClasss() ) );
 
         return studentResponse;
     }
 
     @Override
-    public TeacherEntity createTeacherRequestoTeacherEntity(CreateTeacherRequest createTeacherRequest, DepartmentRepository departmentRepository) {
-        if ( createTeacherRequest == null ) {
+    public TeacherEntity teacherDTOtoTeacherEntity(TeacherDTO teacherDTO) {
+        if ( teacherDTO == null ) {
             return null;
         }
 
         TeacherEntity teacherEntity = new TeacherEntity();
 
-        teacherEntity.setPhone( createTeacherRequest.getPhone() );
-        teacherEntity.setUserId( createTeacherRequest.getUserId() );
-
-        UserMapper.after( createTeacherRequest, teacherEntity, departmentRepository );
+        teacherEntity.setTeacherId( teacherDTO.getTeacherId() );
+        teacherEntity.setCin( teacherDTO.getCin() );
+        teacherEntity.setSex( teacherDTO.getSex() );
+        List<String> list = teacherDTO.getPhones();
+        if ( list != null ) {
+            teacherEntity.setPhones( new ArrayList<String>( list ) );
+        }
+        teacherEntity.setUp( teacherDTO.getUp() );
 
         return teacherEntity;
     }
 
     @Override
-    public TeacherResponse teacherEntityToTeacherResponse(TeacherEntity teacherEntity) {
+    public TeacherDTO teacherEntityToTeacherDTO(TeacherEntity teacherEntity, IAMService iamService) {
         if ( teacherEntity == null ) {
             return null;
         }
 
-        TeacherResponse teacherResponse = new TeacherResponse();
+        TeacherDTO teacherDTO = new TeacherDTO();
 
-        teacherResponse.setDepartment( departmentEntityToDepartmentResponse( teacherEntity.getDepartment() ) );
-        teacherResponse.setEndDate( teacherEntity.getEndDate() );
-        teacherResponse.setNbrHeureSurveillance( teacherEntity.getNbrHeureSurveillance() );
-        teacherResponse.setNbrSurveillance( teacherEntity.getNbrSurveillance() );
-        teacherResponse.setPhone( teacherEntity.getPhone() );
-        teacherResponse.setReason( teacherEntity.getReason() );
-        teacherResponse.setStartDate( teacherEntity.getStartDate() );
-        teacherResponse.setUserId( teacherEntity.getUserId() );
+        teacherDTO.setTeacherId( teacherEntity.getTeacherId() );
+        teacherDTO.setCin( teacherEntity.getCin() );
+        teacherDTO.setSex( teacherEntity.getSex() );
+        List<String> list = teacherEntity.getPhones();
+        if ( list != null ) {
+            teacherDTO.setPhones( new ArrayList<String>( list ) );
+        }
+        teacherDTO.setUp( teacherEntity.getUp() );
 
-        return teacherResponse;
+        UserMapper.after( teacherEntity, teacherDTO, iamService );
+
+        return teacherDTO;
     }
 
-    protected SpecialityResponse specialityEntityToSpecialityResponse(SpecialityEntity specialityEntity) {
-        if ( specialityEntity == null ) {
+    @Override
+    public List<TeacherDTO> teacherEntitiesToTeacherDTO(List<TeacherEntity> teacherEntities, IAMService iamService) {
+        if ( teacherEntities == null ) {
             return null;
         }
 
-        SpecialityResponse specialityResponse = new SpecialityResponse();
+        List<TeacherDTO> list = new ArrayList<TeacherDTO>( teacherEntities.size() );
+        for ( TeacherEntity teacherEntity : teacherEntities ) {
+            list.add( teacherEntityToTeacherDTO( teacherEntity, iamService ) );
+        }
 
-        specialityResponse.setCode( specialityEntity.getCode() );
-        specialityResponse.setLabel( specialityEntity.getLabel() );
-        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
-
-        return specialityResponse;
+        return list;
     }
 
-    protected ClassResponse classEntityToClassResponse(ClassEntity classEntity) {
+    protected ClassDTO classEntityToClassDTO(ClassEntity classEntity) {
         if ( classEntity == null ) {
             return null;
         }
 
-        ClassResponse classResponse = new ClassResponse();
+        ClassDTO classDTO = new ClassDTO();
 
-        classResponse.setClassId( classEntity.getClassId() );
-        classResponse.setCode( classEntity.getCode() );
-        classResponse.setCreatedDate( classEntity.getCreatedDate() );
-        classResponse.setLabel( classEntity.getLabel() );
-        classResponse.setNbrGroups( classEntity.getNbrGroups() );
-        classResponse.setNbrStudents( classEntity.getNbrStudents() );
-        classResponse.setSpeciality( specialityEntityToSpecialityResponse( classEntity.getSpeciality() ) );
+        classDTO.setClassId( classEntity.getClassId() );
+        classDTO.setLabel( classEntity.getLabel() );
+        classDTO.setNbrStudents( classEntity.getNbrStudents() );
+        classDTO.setSpeciality( classEntity.getSpeciality() );
+        classDTO.setCategory( classEntity.getCategory() );
+        classDTO.setEmail( classEntity.getEmail() );
 
-        return classResponse;
-    }
-
-    protected List<SpecialityResponse> specialityEntityListToSpecialityResponseList(List<SpecialityEntity> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<SpecialityResponse> list1 = new ArrayList<SpecialityResponse>( list.size() );
-        for ( SpecialityEntity specialityEntity : list ) {
-            list1.add( specialityEntityToSpecialityResponse( specialityEntity ) );
-        }
-
-        return list1;
-    }
-
-    protected DepartmentResponse departmentEntityToDepartmentResponse(DepartmentEntity departmentEntity) {
-        if ( departmentEntity == null ) {
-            return null;
-        }
-
-        DepartmentResponse departmentResponse = new DepartmentResponse();
-
-        departmentResponse.setCode( departmentEntity.getCode() );
-        departmentResponse.setDepartmentId( departmentEntity.getDepartmentId() );
-        departmentResponse.setLabel( departmentEntity.getLabel() );
-        departmentResponse.setSpecialities( specialityEntityListToSpecialityResponseList( departmentEntity.getSpecialities() ) );
-
-        return departmentResponse;
+        return classDTO;
     }
 }

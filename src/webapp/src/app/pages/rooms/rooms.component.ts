@@ -7,9 +7,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RoomService } from 'src/app/core/services';
 import { ActionEnum, ConfigColumn } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
-import { CreateRoomRequest, Room, UpdateRoomRequest } from 'src/app/core/models';
+import { Bloc, CreateRoomRequest, Room, UpdateRoomRequest } from 'src/app/core/models';
 import { RemovePopupComponent } from 'src/app/shared/components/comfirmation-popup/remove/remove-popup.component';
 import { RoomModalComponent } from './room-modal/room-modal.component';
+import { Site } from 'src/app/core/models/site.modal';
 
 @Component({
     selector: 'rooms',
@@ -28,7 +29,41 @@ export class RoomsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.roomService.getRooms().subscribe((rooms: Room[]) => this.initRoomsColomns(rooms));
+        this.roomService.getRooms().subscribe((rooms: Room[]) => this.initRoomsColomns(this.initTable(rooms)));
+    }
+
+    private initTable(rooms: Room[]): RoomTable[] {
+        console.log(rooms);
+
+        let table: RoomTable[] = [];
+        rooms.forEach((room: Room) => {
+            let date;
+            let hour;
+            if (room.startDate && room.endDate) {
+                date = this.datePipe.transform(room.startDate, 'dd/MM/yyyy') + " à " + this.datePipe.transform(room.endDate, 'dd/MM/yyyy');
+            }
+            if (room.startHour != '0' && room.endHour != '0') {
+                hour = this.getHoure(+room.startHour, +room.endHour);
+            }
+            table.push(new RoomTable(room.classRoomId, room.label, room.capacity, room.site, room.bloc, date, hour, room.reason, room.startDate, room.endDate, room.startHour, room.endHour));
+        })
+        return table;
+    }
+
+    private getHoure(s: number, e: number): string {
+        let result: string;
+        if (s >= 0 && e >= 0) {
+            let str1 = s ? s.toString() : '00:00';
+            let str2 = e ? e.toString() : '00:00';
+            if (str1.length === 3) {
+                str1 = "0" + str1;
+            }
+            if (str2.length === 3) {
+                str2 = "0" + str2;
+            }
+            result = str1.substring(0, 2).concat(":").concat(str1.slice(-2)) + " à " + str2.substring(0, 2).concat(":").concat(str2.slice(-2));
+        }
+        return result;
     }
 
     public openModal() {
@@ -42,7 +77,7 @@ export class RoomsComponent implements OnInit {
                     this.roomService.getRooms()
                 ).subscribe((rooms: Room[]) => {
                     this.spinner.hide();
-                    this.config = { ...this.config, value: rooms };
+                    this.config = { ...this.config, value: this.initTable(rooms) };
                     modal.componentInstance.setIsSaved({ isSaved: true });
                 }, error => {
                     this.spinner.hide();
@@ -71,7 +106,7 @@ export class RoomsComponent implements OnInit {
                         this.roomService.getRooms()
                     ).subscribe((rooms: Room[]) => {
                         this.spinner.hide();
-                        this.config = { ...this.config, value: rooms };
+                        this.config = { ...this.config, value: this.initTable(rooms) };
                         modal.componentInstance.setIsSaved({ isSaved: true });
                     }, error => {
                         this.spinner.hide();
@@ -87,13 +122,13 @@ export class RoomsComponent implements OnInit {
     private deleteClass(event): void {
         this.spinner.show();
         concat(
-            this.roomService.deleteRoom(event.classId).pipe(switchMapTo(EMPTY)),
+            this.roomService.deleteRoom(event.classRoomId).pipe(switchMapTo(EMPTY)),
             timer(1000).pipe(switchMapTo(EMPTY)),
             this.roomService.getRooms()
         ).subscribe((rooms: Room[]) => {
             this.spinner.hide();
             this.modalService.dismissAll();
-            this.config = { ...this.config, value: rooms };
+            this.config = { ...this.config, value: this.initTable(rooms) };
         })
     }
 
@@ -136,16 +171,11 @@ export class RoomsComponent implements OnInit {
             ],
             columns: [
                 {
-                    header: "Code",
-                    field: "code",
-                    filterable: true,
-                    sortable: true
-                },
-                {
                     header: "Salle",
                     field: "label",
                     filterable: true,
-                    sortable: true
+                    sortable: true,
+                    width: "11"
                 },
                 {
                     header: "Capacité",
@@ -155,20 +185,67 @@ export class RoomsComponent implements OnInit {
                 },
                 {
                     header: "Site",
-                    field: "sites",
+                    field: "site.label",
+                    filterable: true,
+                    sortable: true,
+                    width: "11"
+                },
+                {
+                    header: "Bloc",
+                    field: "bloc.label",
+                    filterable: true,
+                    sortable: true,
+                    width: "11"
+                },
+                {
+                    header: "Date indisponibilité",
+                    field: "dates",
                     filterable: true,
                     sortable: true
                 },
                 {
-                    header: "Date de création",
-                    field: "createdDate",
-                    pipe: {
-                        function: this.datePipe
-                    },
+                    header: "Heure indisponibilité",
+                    field: "hours",
+                    filterable: true,
+                    sortable: true
+                },
+                {
+                    header: "Motif indisponibilité",
+                    field: "reason.label",
                     filterable: true,
                     sortable: true
                 }
             ]
         }
+    }
+}
+
+export class RoomTable {
+    public classRoomId: string;
+    public label: string;
+    public capacity: string;
+    public site: Site;
+    public bloc: Bloc;
+    public dates: string;
+    public hours: string;
+    public startDate: string;
+    public endDate: string;
+    public startHour: string;
+    public endHour: string;
+    public reason: any;
+
+    constructor(classRoomId: string, label: string, capacity: string, site: Site, bloc: Bloc, dates: string, hours: string, reason: any, startDate: string, endDate: string, startHour: string, endHour: string) {
+        this.classRoomId = classRoomId;
+        this.label = label;
+        this.capacity = capacity;
+        this.site = site;
+        this.bloc = bloc;
+        this.dates = dates;
+        this.hours = hours;
+        this.reason = reason;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startHour = startHour;
+        this.endHour = endHour;
     }
 }

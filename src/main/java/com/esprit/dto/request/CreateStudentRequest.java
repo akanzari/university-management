@@ -1,14 +1,17 @@
 package com.esprit.dto.request;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreateStudentRequest {
 
 	@NotBlank
 	private String userId;
 
-	@NotBlank
-	private String cin;
+	@NotNull
+	@Min(value = 8, message = "Cin should not be less than 8")
+	private int cin;
 
 	@NotBlank
 	private String classId;
@@ -21,11 +24,11 @@ public class CreateStudentRequest {
 		this.userId = userId;
 	}
 
-	public String getCin() {
+	public int getCin() {
 		return cin;
 	}
 
-	public void setCin(String cin) {
+	public void setCin(int cin) {
 		this.cin = cin;
 	}
 

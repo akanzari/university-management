@@ -1,28 +1,20 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.OneToMany;
 
 @Entity
-public class ClassEntity extends Auditable implements Serializable {
+public class ClassEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(generator = "class-uuid")
-	@GenericGenerator(name = "class-uuid", strategy = "uuid2")
 	private String classId;
-
-	@Column(unique = true)
-	private String code;
 
 	private String label;
 
@@ -30,9 +22,14 @@ public class ClassEntity extends Auditable implements Serializable {
 
 	private int nbrGroups;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "speciality_id")
-	private SpecialityEntity speciality;
+	private String speciality;
+
+	private String category;
+
+	private String email;
+
+	@OneToMany(mappedBy = "classs", cascade = CascadeType.ALL)
+	private List<AssignClassEntity> assignClasses;
 
 	public String getClassId() {
 		return classId;
@@ -40,14 +37,6 @@ public class ClassEntity extends Auditable implements Serializable {
 
 	public void setClassId(String classId) {
 		this.classId = classId;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getLabel() {
@@ -74,12 +63,36 @@ public class ClassEntity extends Auditable implements Serializable {
 		this.nbrGroups = nbrGroups;
 	}
 
-	public SpecialityEntity getSpeciality() {
+	public String getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(SpecialityEntity speciality) {
+	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public List<AssignClassEntity> getAssignClasses() {
+		return assignClasses;
+	}
+
+	public void setAssignClasses(List<AssignClassEntity> assignClasses) {
+		this.assignClasses = assignClasses;
 	}
 
 }

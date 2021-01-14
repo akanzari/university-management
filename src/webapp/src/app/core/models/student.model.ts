@@ -1,7 +1,7 @@
-import { Class } from './class.model';
+import { Classs } from './class.model';
 
 export interface Student {
     userId: string;
     cin: string;
-    classEntity: Class;
+    classs: Classs;
 }

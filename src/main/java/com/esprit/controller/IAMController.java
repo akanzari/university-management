@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,14 +34,25 @@ public class IAMController {
 	}
 
 	@PostMapping(path = "/user")
-	public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
-		iamService.addUser(createUserRequest);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<String> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
+		return new ResponseEntity<>(iamService.addUser(createUserRequest), HttpStatus.CREATED);
 	}
 
 	@PutMapping(path = "/user")
 	public ResponseEntity<Void> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
 		iamService.updateUser(updateUserRequest);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PatchMapping(path = "/user/disabled/{userId}")
+	public ResponseEntity<Void> disabledUser(@PathVariable String userId) {
+		iamService.disabledUser(userId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PatchMapping(path = "/user/enable/{userId}")
+	public ResponseEntity<Void> enabledUser(@PathVariable String userId) {
+		iamService.enabledUser(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -60,9 +72,9 @@ public class IAMController {
 		return new ResponseEntity<>(iamService.findUsersByRole(role), HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/user/{username}")
-	public ResponseEntity<UserResponse> findUsers(@PathVariable String username) {
-		return new ResponseEntity<>(iamService.findUser(username), HttpStatus.OK);
+	@GetMapping(path = "/user/{email}")
+	public ResponseEntity<UserResponse> findUsers(@PathVariable String email) {
+		return new ResponseEntity<>(iamService.findUser(email), HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/current-user")

@@ -31,39 +31,99 @@
             <div class="col-12 px-0 mb-2">
 
                 <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Code : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" formControlName="code" [attr.disabled]="editRoom">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2 px-0">
                         <label class="float-right">Salle : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-10">
                         <input type="text" formControlName="label">
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2 px-0">
                         <label class="float-right">Capacité : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-10">
                         <input type="number" formControlName="capacity">
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2 px-0">
                         <label class="float-right">Site : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
-                        <ng-select [items]="sites$ | async" [multiple]="true" [searchable]="true"
-                            formControlName="siteIds" bindValue="siteId"></ng-select>
+                    <div class="col-10">
+                        <ng-select [items]="sites$ | async" formControlName="siteId" bindValue="siteId"
+                            (change)="onChangeSite($event)"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Bloc : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-10">
+                        <ng-select [items]="blocs$ | async" [searchable]="true" formControlName="blocId"
+                            bindValue="blocId" [readonly]="disabledBloc"></ng-select>
+                    </div>
+                </div>
+
+                <div class="hr-sect">Indisponibilité</div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Date début : </label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <input type="date" formControlName="startDate">
+                        <p class="media" *ngIf="form.hasError('loadDate')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">La date début est invalide</small>
+                        </p>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Date fin : </label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <input type="date" formControlName="endDate">
+                        <p class="media" *ngIf="form.hasError('loadDate')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">La date fin est invalide</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Houre début : </label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <input type="time" formControlName="startHour">
+                        <p class="media" *ngIf="form.hasError('loadHour')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">La heure début est invalide</small>
+                        </p>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Houre fin : </label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <input type="time" formControlName="endHour">
+                        <p class="media" *ngIf="form.hasError('loadHour')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">La heure début est invalide</small>
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Motif fin : </label>
+                    </div>
+                    <div class="col-10">
+                        <ng-select [items]="reasonRooms$ | async" formControlName="reasonId" bindValue="reasonRoomId">
+                        </ng-select>
                     </div>
                 </div>
 
@@ -72,6 +132,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-        <button type="button" class="btn btn-bg-primary" (click)="editRoom ? update() : save()">Confirmer</button>
+        <button type="button" class="btn btn-bg-primary" (click)="editRoom ? update() : save()"
+            [disabled]="!form.valid">Confirmer</button>
     </div>
 </form>

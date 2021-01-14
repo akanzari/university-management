@@ -1,12 +1,15 @@
 package com.esprit.service;
 
-import com.esprit.dto.request.CreateTeacherRequest;
-import com.esprit.dto.response.TeacherResponse;
+import java.util.List;
+
+import com.esprit.dto.TeacherDTO;
 
 public interface TeacherService {
 
-	void addTeacher(CreateTeacherRequest createTeacherRequest);
+	void addTeacher(TeacherDTO teacherDTO);
 
-	TeacherResponse findBydId(String userId);
+	TeacherDTO findBydId(String userId);
+
+	List<TeacherDTO> findTeachers();
 
 }

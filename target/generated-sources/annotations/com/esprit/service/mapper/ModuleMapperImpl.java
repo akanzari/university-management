@@ -1,18 +1,10 @@
 package com.esprit.service.mapper;
 
-import com.esprit.domain.ClassEntity;
-import com.esprit.domain.DepartmentEntity;
+import com.esprit.domain.AssignClassEntity;
 import com.esprit.domain.ModuleEntity;
-import com.esprit.domain.SpecialityEntity;
-import com.esprit.domain.TeacherEntity;
-import com.esprit.dto.request.CreateModuleRequest;
-import com.esprit.dto.request.UpdateModuleRequest;
-import com.esprit.dto.response.ClassResponse;
-import com.esprit.dto.response.DepartmentResponse;
+import com.esprit.dto.request.modules.AssignClassToModuleRequest;
+import com.esprit.dto.request.modules.CreateModuleRequest;
 import com.esprit.dto.response.ModuleResponse;
-import com.esprit.dto.response.SpecialityResponse;
-import com.esprit.dto.response.TeacherResponse;
-import com.esprit.enums.PeriodEnum;
 import com.esprit.repository.ClassRepository;
 import com.esprit.repository.TeacherRepository;
 import java.util.ArrayList;
@@ -22,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
 )
 @Component
 public class ModuleMapperImpl implements ModuleMapper {
@@ -35,37 +27,11 @@ public class ModuleMapperImpl implements ModuleMapper {
 
         ModuleEntity moduleEntity = new ModuleEntity();
 
-        moduleEntity.setCode( createModuleRequest.getCode() );
-        moduleEntity.setCoefficient( createModuleRequest.getCoefficient() );
+        moduleEntity.setModuleId( createModuleRequest.getModuleId() );
         moduleEntity.setDesignation( createModuleRequest.getDesignation() );
-        moduleEntity.setExamType( createModuleRequest.getExamType() );
-        moduleEntity.setNbrHours( createModuleRequest.getNbrHours() );
-        List<PeriodEnum> list = createModuleRequest.getPeriods();
-        if ( list != null ) {
-            moduleEntity.setPeriods( new ArrayList<PeriodEnum>( list ) );
-        }
-        moduleEntity.setSemester( createModuleRequest.getSemester() );
+        moduleEntity.setAssignClasses( assignClassToModuleRequestListToAssignClassEntityList( createModuleRequest.getAssignClasses(), teacherRepository, classRepository ) );
 
-        return moduleEntity;
-    }
-
-    @Override
-    public ModuleEntity updateModuleRequestToModuleEntity(UpdateModuleRequest updateModuleRequest, TeacherRepository teacherRepository, ClassRepository classRepository) {
-        if ( updateModuleRequest == null ) {
-            return null;
-        }
-
-        ModuleEntity moduleEntity = new ModuleEntity();
-
-        moduleEntity.setCoefficient( updateModuleRequest.getCoefficient() );
-        moduleEntity.setExamType( updateModuleRequest.getExamType() );
-        moduleEntity.setModuleId( updateModuleRequest.getModuleId() );
-        moduleEntity.setNbrHours( updateModuleRequest.getNbrHours() );
-        List<PeriodEnum> list = updateModuleRequest.getPeriods();
-        if ( list != null ) {
-            moduleEntity.setPeriods( new ArrayList<PeriodEnum>( list ) );
-        }
-        moduleEntity.setSemester( updateModuleRequest.getSemester() );
+        ModuleMapper.after( createModuleRequest, moduleEntity, teacherRepository, classRepository );
 
         return moduleEntity;
     }
@@ -78,19 +44,8 @@ public class ModuleMapperImpl implements ModuleMapper {
 
         ModuleResponse moduleResponse = new ModuleResponse();
 
-        moduleResponse.setClasss( classEntityToClassResponse( moduleEntity.getClasss() ) );
-        moduleResponse.setCode( moduleEntity.getCode() );
-        moduleResponse.setCoefficient( moduleEntity.getCoefficient() );
-        moduleResponse.setDesignation( moduleEntity.getDesignation() );
-        moduleResponse.setExamType( moduleEntity.getExamType() );
         moduleResponse.setModuleId( moduleEntity.getModuleId() );
-        moduleResponse.setNbrHours( moduleEntity.getNbrHours() );
-        List<PeriodEnum> list = moduleEntity.getPeriods();
-        if ( list != null ) {
-            moduleResponse.setPeriods( new ArrayList<PeriodEnum>( list ) );
-        }
-        moduleResponse.setSemester( moduleEntity.getSemester() );
-        moduleResponse.setTeacher( teacherEntityToTeacherResponse( moduleEntity.getTeacher() ) );
+        moduleResponse.setDesignation( moduleEntity.getDesignation() );
 
         return moduleResponse;
     }
@@ -109,82 +64,32 @@ public class ModuleMapperImpl implements ModuleMapper {
         return list;
     }
 
-    protected SpecialityResponse specialityEntityToSpecialityResponse(SpecialityEntity specialityEntity) {
-        if ( specialityEntity == null ) {
+    protected AssignClassEntity assignClassToModuleRequestToAssignClassEntity(AssignClassToModuleRequest assignClassToModuleRequest, TeacherRepository teacherRepository, ClassRepository classRepository) {
+        if ( assignClassToModuleRequest == null ) {
             return null;
         }
 
-        SpecialityResponse specialityResponse = new SpecialityResponse();
+        AssignClassEntity assignClassEntity = new AssignClassEntity();
 
-        specialityResponse.setCode( specialityEntity.getCode() );
-        specialityResponse.setLabel( specialityEntity.getLabel() );
-        specialityResponse.setSpecialityId( specialityEntity.getSpecialityId() );
+        assignClassEntity.coefficient( assignClassToModuleRequest.getCoefficient() );
+        assignClassEntity.nbrHours( assignClassToModuleRequest.getNbrHours() );
+        assignClassEntity.semester( ModuleMapper.toSemesterEnum( assignClassToModuleRequest.getSemester() ) );
+        assignClassEntity.periods( ModuleMapper.toPeriodEnum( assignClassToModuleRequest.getPeriods() ) );
+        assignClassEntity.examType( ModuleMapper.toExamTypeEnum( assignClassToModuleRequest.getExamType() ) );
 
-        return specialityResponse;
+        return assignClassEntity;
     }
 
-    protected ClassResponse classEntityToClassResponse(ClassEntity classEntity) {
-        if ( classEntity == null ) {
-            return null;
-        }
-
-        ClassResponse classResponse = new ClassResponse();
-
-        classResponse.setClassId( classEntity.getClassId() );
-        classResponse.setCode( classEntity.getCode() );
-        classResponse.setCreatedDate( classEntity.getCreatedDate() );
-        classResponse.setLabel( classEntity.getLabel() );
-        classResponse.setNbrGroups( classEntity.getNbrGroups() );
-        classResponse.setNbrStudents( classEntity.getNbrStudents() );
-        classResponse.setSpeciality( specialityEntityToSpecialityResponse( classEntity.getSpeciality() ) );
-
-        return classResponse;
-    }
-
-    protected List<SpecialityResponse> specialityEntityListToSpecialityResponseList(List<SpecialityEntity> list) {
+    protected List<AssignClassEntity> assignClassToModuleRequestListToAssignClassEntityList(List<AssignClassToModuleRequest> list, TeacherRepository teacherRepository, ClassRepository classRepository) {
         if ( list == null ) {
             return null;
         }
 
-        List<SpecialityResponse> list1 = new ArrayList<SpecialityResponse>( list.size() );
-        for ( SpecialityEntity specialityEntity : list ) {
-            list1.add( specialityEntityToSpecialityResponse( specialityEntity ) );
+        List<AssignClassEntity> list1 = new ArrayList<AssignClassEntity>( list.size() );
+        for ( AssignClassToModuleRequest assignClassToModuleRequest : list ) {
+            list1.add( assignClassToModuleRequestToAssignClassEntity( assignClassToModuleRequest, teacherRepository, classRepository ) );
         }
 
         return list1;
-    }
-
-    protected DepartmentResponse departmentEntityToDepartmentResponse(DepartmentEntity departmentEntity) {
-        if ( departmentEntity == null ) {
-            return null;
-        }
-
-        DepartmentResponse departmentResponse = new DepartmentResponse();
-
-        departmentResponse.setCode( departmentEntity.getCode() );
-        departmentResponse.setDepartmentId( departmentEntity.getDepartmentId() );
-        departmentResponse.setLabel( departmentEntity.getLabel() );
-        departmentResponse.setSpecialities( specialityEntityListToSpecialityResponseList( departmentEntity.getSpecialities() ) );
-
-        return departmentResponse;
-    }
-
-    protected TeacherResponse teacherEntityToTeacherResponse(TeacherEntity teacherEntity) {
-        if ( teacherEntity == null ) {
-            return null;
-        }
-
-        TeacherResponse teacherResponse = new TeacherResponse();
-
-        teacherResponse.setDepartment( departmentEntityToDepartmentResponse( teacherEntity.getDepartment() ) );
-        teacherResponse.setEndDate( teacherEntity.getEndDate() );
-        teacherResponse.setNbrHeureSurveillance( teacherEntity.getNbrHeureSurveillance() );
-        teacherResponse.setNbrSurveillance( teacherEntity.getNbrSurveillance() );
-        teacherResponse.setPhone( teacherEntity.getPhone() );
-        teacherResponse.setReason( teacherEntity.getReason() );
-        teacherResponse.setStartDate( teacherEntity.getStartDate() );
-        teacherResponse.setUserId( teacherEntity.getUserId() );
-
-        return teacherResponse;
     }
 }

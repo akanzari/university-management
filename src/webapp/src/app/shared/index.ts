@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,13 +12,15 @@ import { FilterPipe } from './components/cm-table-container/pipes/filter.pipe';
 import { RemovePopupComponent } from './components/comfirmation-popup/remove/remove-popup.component';
 import { CmPaginationComponent } from './components/cm-table-container/components/pagination/pagination.component';
 import { CmTbaleContainerComponent } from './components/cm-table-container/cm-table-container.component';
+import { WidthDirective } from './components/width.directive';
 
 @NgModule({
     declarations: [
         CmTbaleContainerComponent,
         CmPaginationComponent,
         RemovePopupComponent,
-        FilterPipe
+        FilterPipe,
+        WidthDirective
     ],
     imports: [
         CommonModule,
@@ -37,6 +40,7 @@ import { CmTbaleContainerComponent } from './components/cm-table-container/cm-ta
         NgbModule,
         NgSelectModule,
         NgxSpinnerModule,
+        ChartsModule,
         CmTbaleContainerComponent
     ]
 })

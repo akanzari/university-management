@@ -2,19 +2,15 @@ package com.esprit.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class ClassRoomEntity extends Auditable implements Serializable {
+public class ClassRoomEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +19,6 @@ public class ClassRoomEntity extends Auditable implements Serializable {
 	@GenericGenerator(name = "class-room-uuid", strategy = "uuid2")
 	private String classRoomId;
 
-	@Column(unique = true)
 	private String code;
 
 	private String label;
@@ -34,14 +29,15 @@ public class ClassRoomEntity extends Auditable implements Serializable {
 
 	private Date endDate;
 
-	private String startHour;
+	private int startHour;
 
-	private String endHour;
+	private int endHour;
 
 	private String reason;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<SiteEntity> sites;
+	private String bloc;
+
+	private String site;
 
 	public String getClassRoomId() {
 		return classRoomId;
@@ -91,19 +87,19 @@ public class ClassRoomEntity extends Auditable implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public String getStartHour() {
+	public int getStartHour() {
 		return startHour;
 	}
 
-	public void setStartHour(String startHour) {
+	public void setStartHour(int startHour) {
 		this.startHour = startHour;
 	}
 
-	public String getEndHour() {
+	public int getEndHour() {
 		return endHour;
 	}
 
-	public void setEndHour(String endHour) {
+	public void setEndHour(int endHour) {
 		this.endHour = endHour;
 	}
 
@@ -115,12 +111,20 @@ public class ClassRoomEntity extends Auditable implements Serializable {
 		this.reason = reason;
 	}
 
-	public List<SiteEntity> getSites() {
-		return sites;
+	public String getBloc() {
+		return bloc;
 	}
 
-	public void setSites(List<SiteEntity> sites) {
-		this.sites = sites;
+	public void setBloc(String bloc) {
+		this.bloc = bloc;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
 	}
 
 }

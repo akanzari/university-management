@@ -2,25 +2,25 @@ package com.esprit.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class StudentEntity extends Auditable implements Serializable {
+public class StudentEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String userId;
 
-	@Column(unique = true)
-	private String cin;
+	private String fullName;
+
+	private int cin;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "class_id")
+	@JoinColumn(name = "fk_class")
 	private ClassEntity classs;
 
 	public String getUserId() {
@@ -31,11 +31,19 @@ public class StudentEntity extends Auditable implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getCin() {
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public int getCin() {
 		return cin;
 	}
 
-	public void setCin(String cin) {
+	public void setCin(int cin) {
 		this.cin = cin;
 	}
 

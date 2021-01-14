@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { WizardComponent } from 'angular-archwizard';
 import { Observable, timer } from 'rxjs';
-import { Class, CreateUserRequest, Department, UpdateUserRequest, User } from 'src/app/core/models';
+import { Classs, CreateStudentRequest, CreateTeacherRequest, CreateUserRequest, Department, UpdateUserRequest, User } from 'src/app/core/models';
 import { ClassService, IAMService, RefService } from 'src/app/core/services';
 import { ActionEnum } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
@@ -33,12 +33,13 @@ export class UserModalComponent implements OnInit {
     public role: string;
     public saveError: string;
     public saveSuccess: string;
+    public userId: string;
 
     public showLoaderError: boolean = false;
     public showLoaderSuccess: boolean = false;
 
     public roles$: Observable<string[]>;
-    public classes$: Observable<Class[]>;
+    public classes$: Observable<Classs[]>;
     public departments$: Observable<Department[]>;
 
     constructor(private fb: FormBuilder,
@@ -61,31 +62,65 @@ export class UserModalComponent implements OnInit {
         }
     }
 
-    public setIsSaved(event) {
+    public setIsUserSaved(event) {
         if (event.isSaved === true) {
             this.showLoaderSuccess = true;
             this.saveSuccess = "L'utilisateur " + this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value + " ajouté avec succès";
             if (this.userForm.get("role").value === "STUDENT") {
                 this.showLoaderSuccess = false;
-                this.initStudentForm();
                 this.classes$ = this.classService.getClasses();
+                timer(1000).subscribe(() => this.wizard.goToStep(1));
             } else if (this.userForm.get("role").value === "TEACHER") {
                 this.showLoaderSuccess = false;
-                this.initTeacherForm();
                 this.departments$ = this.refService.getDepartements();
+                timer(1000).subscribe(() => this.wizard.goToStep(1));
+            } else {
+                this.reset();
             }
-            timer(1000).subscribe(() => this.wizard.goToStep(1));
         } else {
             if (event.code === 701) {
                 this.showLoaderError = true;
-                this.saveError = "L'utilisateur " + this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value + "  déjà existe";
+                this.saveError = "L'utilisateur déjà existe avec l'email " + this.userForm.get("email").value;
+                timer(2000).subscribe(() => this.showLoaderError = false);
+            }
+        }
+    }
+
+    public setUserId(userId: string) {
+        this.userId = userId;
+    }
+
+    public setIsStudentSaved(event) {
+        if (event.isSaved === true) {
+            this.showLoaderSuccess = true;
+            this.saveSuccess = "Le profil d'étudiant " + this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value + " est mettre à jour";
+            timer(1000).subscribe(() => this.resetStudent());
+        } else {
+            if (event.code === 701) {
+                this.showLoaderError = true;
+                this.saveError = "Le cin " + this.userForm.get("studentForm").value + "  déjà existe";
+                timer(2000).subscribe(() => this.showLoaderError = false);
+            }
+        }
+    }
+
+    public setIsTeacherSaved(event) {
+        if (event.isSaved === true) {
+            this.showLoaderSuccess = true;
+            this.saveSuccess = "Le profil d'enseignant " + this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value + " est mettre à jour";
+            timer(1000).subscribe(() => this.resetTeacher());
+        } else {
+            if (event.code === 701) {
+                this.showLoaderError = true;
+                this.saveError = "Le téléphone " + this.teacherForm.get("phone").value + "  déjà existe";
+                timer(2000).subscribe(() => this.showLoaderError = false);
             }
         }
     }
 
     public save() {
         if (this.userForm.valid) {
-            let dataValue: DataValue = { action: ActionEnum.CREATE, value: this.userForm.value as CreateUserRequest };
+            let dataValue: DataValue = { type: "user", action: ActionEnum.CREATE, value: this.userForm.value as CreateUserRequest };
             this.triggerSave.emit(dataValue);
         }
     }
@@ -98,8 +133,42 @@ export class UserModalComponent implements OnInit {
         }
     }
 
+    public saveStudent() {
+        if (this.studentForm.valid) {
+            let arg = this.studentForm.value as CreateStudentRequest;
+            arg.userId = this.userId;
+            arg.classId = this.studentForm.value.class.classId;
+            let dataValue: DataValue = { type: "student", action: ActionEnum.CREATE, value: arg };
+            this.triggerSave.emit(dataValue);
+        }
+    }
+
+    public saveTeacher() {
+        if (this.teacherForm.valid) {
+            let arg = this.teacherForm.value as CreateTeacherRequest;
+            arg.userId = this.userId;
+            arg.departmentId = this.teacherForm.value.department.departmentId;
+            let dataValue: DataValue = { type: "teacher", action: ActionEnum.CREATE, value: arg };
+            this.triggerSave.emit(dataValue);
+        }
+    }
+
+    public keyPress(event) {
+        const pattern = /[0-9]/;
+        let inputChar = String.fromCharCode(event.charCode);
+        if (!pattern.test(inputChar)) {
+            event.preventDefault();
+
+        }
+    }
+
     public onChangeRole(event) {
         this.role = event;
+        if (this.role === "STUDENT") {
+            this.initStudentForm();
+        } else if (this.role === "TEACHER") {
+            this.initTeacherForm();
+        }
     }
 
     public onClearRole() {
@@ -111,6 +180,16 @@ export class UserModalComponent implements OnInit {
         this.closeModal();
     }
 
+    public resetStudent() {
+        this.studentForm.reset();
+        this.closeModal();
+    }
+
+    public resetTeacher() {
+        this.teacherForm.reset();
+        this.closeModal();
+    }
+
     public closeModal(): void {
         this.activeModal.close();
     }
@@ -119,21 +198,21 @@ export class UserModalComponent implements OnInit {
         this.userForm = this.fb.group({
             firstName: [null, Validators.required],
             lastName: [null, Validators.required],
-            email: [null, [Validators.required, Validators.email]],
+            email: [null, [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
             role: [null, Validators.required],
         })
     }
 
     private initStudentForm(): void {
         this.studentForm = this.fb.group({
-            cin: [null, Validators.required],
+            cin: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(8), Validators.maxLength(8)]],
             class: [null, Validators.required]
         })
     }
 
     private initTeacherForm(): void {
         this.teacherForm = this.fb.group({
-            phone: [null, Validators.required],
+            phone: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(9), Validators.maxLength(9)]],
             grade: [null, Validators.required],
             department: [null, Validators.required]
         })

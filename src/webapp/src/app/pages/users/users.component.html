@@ -60,3 +60,59 @@
 
     </div>
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header mt-3">
+        <span class="close" aria-label="Close" data-dismiss="modal" (click)="modal.dismiss()" style="cursor: pointer;">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body pt-1 pt-2 text-center ">
+        <div class="row">
+            <div class="col-12 pb-5">
+                <p class="bold font-size-24">
+                    <i class="icons icon-help color-valid pr-2"></i>
+                    Voulez-vous vraiment désactiver cette utilisateur?
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-bg-primary float-right" (click)="disabledUser()">
+                Confirmer
+            </button>
+            <button type="button" class="btn btn-default float-right" (click)="modal.close()">
+                Annuler
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content1 let-modal>
+    <div class="modal-header mt-3">
+        <span class="close" aria-label="Close" data-dismiss="modal" (click)="modal.dismiss()" style="cursor: pointer;">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body pt-1 pt-2 text-center ">
+        <div class="row">
+            <div class="col-12 pb-5">
+                <p class="bold font-size-24">
+                    <i class="icons icon-help color-valid pr-2"></i>
+                    Voulez-vous vraiment activer cette utilisateur?
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-bg-primary float-right" (click)="enabledUser()">
+                Confirmer
+            </button>
+            <button type="button" class="btn btn-default float-right" (click)="modal.close()">
+                Annuler
+            </button>
+        </div>
+    </div>
+</ng-template>

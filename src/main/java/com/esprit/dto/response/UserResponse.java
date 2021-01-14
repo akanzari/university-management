@@ -14,6 +14,10 @@ public class UserResponse {
 	
 	private String email;
 	
+	private String status;
+	
+	private String depatement;;
+	
 	private String createdTimestamp;
 	
 	private Set<String> roles;
@@ -60,6 +64,24 @@ public class UserResponse {
 
 	public UserResponse email(String email) {
 		this.email = email;
+		return this;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public UserResponse status(String status) {
+		this.status = status;
+		return this;
+	}
+
+	public String getDepatement() {
+		return depatement;
+	}
+
+	public UserResponse depatement(String depatement) {
+		this.depatement = depatement;
 		return this;
 	}
 

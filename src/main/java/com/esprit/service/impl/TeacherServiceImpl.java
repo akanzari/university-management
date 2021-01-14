@@ -1,16 +1,15 @@
 package com.esprit.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.esprit.domain.TeacherEntity;
-import com.esprit.dto.request.CreateTeacherRequest;
-import com.esprit.dto.response.TeacherResponse;
-import com.esprit.error.exception.EntityAlreadyExistsExeption;
+import com.esprit.dto.TeacherDTO;
 import com.esprit.error.exception.EntityNotFoundException;
-import com.esprit.repository.DepartmentRepository;
 import com.esprit.repository.TeacherRepository;
+import com.esprit.service.IAMService;
 import com.esprit.service.TeacherService;
 import com.esprit.service.mapper.UserMapper;
 
@@ -19,43 +18,37 @@ public class TeacherServiceImpl implements TeacherService {
 
 	private final TeacherRepository teacherRepository;
 
-	private final DepartmentRepository departmentRepository;
+	private final IAMService iamService;
 
 	private final UserMapper mapper;
 
-	public TeacherServiceImpl(TeacherRepository teacherRepository, DepartmentRepository departmentRepository,
-			UserMapper mapper) {
+	public TeacherServiceImpl(TeacherRepository teacherRepository, IAMService iamService, UserMapper mapper) {
 		this.teacherRepository = teacherRepository;
-		this.departmentRepository = departmentRepository;
+		this.iamService = iamService;
 		this.mapper = mapper;
 	}
 
 	@Override
-	public void addTeacher(CreateTeacherRequest createTeacherRequest) {
-		TeacherEntity teacherEntity = mapper.createTeacherRequestoTeacherEntity(createTeacherRequest,
-				departmentRepository);
-
-		if (teacherRepository.findById(createTeacherRequest.getUserId()).isPresent()) {
-			throw new EntityAlreadyExistsExeption(TeacherEntity.class, "id", createTeacherRequest.getUserId());
-		}
-
-		if (!departmentRepository.findById(createTeacherRequest.getDepartmentId()).isPresent()) {
-			throw new EntityNotFoundException(TeacherEntity.class, "id", createTeacherRequest.getDepartmentId());
-		}
-
-		teacherRepository.save(teacherEntity);
+	public void addTeacher(TeacherDTO teacherDTO) {
+		TeacherEntity teacherEntity = mapper.teacherDTOtoTeacherEntity(teacherDTO);
+		teacherEntity = teacherRepository.save(teacherEntity);
 	}
 
 	@Override
-	public TeacherResponse findBydId(String userId) {
-		TeacherResponse result = null;
+	public TeacherDTO findBydId(String userId) {
+		TeacherDTO result = null;
 		Optional<TeacherEntity> teacherEntityOptional = teacherRepository.findById(userId);
 		if (teacherEntityOptional.isPresent()) {
-			result = mapper.teacherEntityToTeacherResponse(teacherEntityOptional.get());
+			result = mapper.teacherEntityToTeacherDTO(teacherEntityOptional.get(), iamService);
 		} else {
-			throw new EntityNotFoundException(TeacherResponse.class, "id", userId);
+			throw new EntityNotFoundException(TeacherDTO.class, "id", userId);
 		}
 		return result;
+	}
+
+	@Override
+	public List<TeacherDTO> findTeachers() {
+		return mapper.teacherEntitiesToTeacherDTO(teacherRepository.findAll(), iamService);
 	}
 
 }

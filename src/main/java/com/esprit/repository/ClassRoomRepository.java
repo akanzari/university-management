@@ -6,6 +6,6 @@ import com.esprit.domain.ClassRoomEntity;
 
 public interface ClassRoomRepository extends JpaRepository<ClassRoomEntity, String> {
 
-	ClassRoomEntity findByCode(String code);
+	ClassRoomEntity findByLabel(String label);
 
 }

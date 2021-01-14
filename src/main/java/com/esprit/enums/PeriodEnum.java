@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -22,7 +20,18 @@ public enum PeriodEnum {
 
 	@JsonCreator
 	public static PeriodEnum forValue(String value) {
-		return namesMap.get(StringUtils.lowerCase(value));
+		return namesMap.get(value);
+	}
+
+	public static String forKey(PeriodEnum value) {
+		String key = null;
+		for (Map.Entry<String, PeriodEnum> entry : namesMap.entrySet()) {
+			if (value.equals(entry.getValue())) {
+				key = entry.getKey();
+				break;
+			}
+		}
+		return key;
 	}
 
 	@JsonValue

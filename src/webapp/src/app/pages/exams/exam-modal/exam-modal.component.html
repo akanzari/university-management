@@ -1,0 +1,152 @@
+<div class="modal-header mt-3">
+    <h2 *ngIf="!editExam" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un examen
+    </h2>
+    <h2 *ngIf="editExam" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un examen
+    </h2>
+    <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
+        <span aria-hidden="true">&times;</span>
+    </span>
+</div>
+
+<form [formGroup]="form">
+    <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-alert color-white" aria-hidden="true"></i>
+        {{saveError}}
+    </div>
+    <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+        {{saveSuccess}}
+    </div>
+
+    <div class="modal-body mb-2">
+        <div class="row pt-1" style="padding-right: 5%;">
+            <div class="col-12 px-0 mb-2">
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Classe : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <ng-select [items]="class$ | async" formControlName="classId" bindValue="classId"
+                            (change)="onChangeClass($event)"></ng-select>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Module : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <ng-select [items]="module$ | async" formControlName="moduleId" bindValue="moduleId"
+                            bindLabel="designation" (change)="onChangeModule($event)">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Enseigant :</label>
+                    </div>
+                    <div class="col-10">
+                        <input type="text" [disabled]="true">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Date d'examen : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-10">
+                        <input type="date" formControlName="date">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Houre d'examen : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-10">
+                        <input type="time" formControlName="hour">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Duration d'examen : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-10">
+                        <input type="number" formControlName="duration">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">DSEX : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <ng-select [items]="dsex" formControlName="dsex"></ng-select>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Type d'exame : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <ng-select [items]="examTypes" formControlName="examType"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Semestre : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <ng-select [items]="semesters" formControlName="semester"></ng-select>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Session : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <ng-select [items]="sessions" formControlName="session"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Groupe : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-10">
+                        <ng-select [items]="semesters" formControlName="semester"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Salle : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <ng-select [items]="rooms$ | async" formControlName="classRoomId" bindValue="classRoomId">
+                        </ng-select>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Surveillant : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <ng-select [items]="supervisors$ | async" formControlName="supervisorId" bindValue="userId"
+                            bindLabel="fullName">
+                        </ng-select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+        <button type="button" class="btn btn-bg-primary" (click)="editExam ? update() : save()"
+            [disabled]="!form.valid">Confirmer</button>
+    </div>
+</form>

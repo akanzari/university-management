@@ -1,3 +1,4 @@
+import { Bloc } from './bloc.model';
 import { Site } from './site.modal';
 
 export interface Room {
@@ -9,6 +10,7 @@ export interface Room {
     endDate: string;
     startHour: string;
     endHour: string;
-    reason: string;
-    sites: Site[];
+    reason: any;
+    site: Site;
+    bloc: Bloc;
 }

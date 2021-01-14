@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ConfigService } from '@ngx-config/core';
 import { SpecificUserResponse, UserResponse } from '../models';
 
@@ -15,70 +14,41 @@ export class IAMService {
         this.domain = this.config.getSettings('environment.serviceBaseUrl') + "iam/";
     }
 
-    addUser(data): Observable<void> {
-        return this.httpClient.post<void>(this.domain + 'create-user', data)
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+    addUser(data): Observable<any> {
+        let httpOptions = { headers: new HttpHeaders({}), responseType: 'text' as 'json' };
+        return this.httpClient.post<any>(this.domain + 'user', data, httpOptions);
     }
 
     updateUser(data): Observable<void> {
-        return this.httpClient.put<void>(this.domain + 'update-user', data)
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.put<void>(this.domain + 'user', data);
+    }
+
+    disabledUser(id): Observable<void> {
+        return this.httpClient.patch<void>(this.domain + 'user/disabled/' + id, null);
+    }
+
+    enabledUser(id): Observable<void> {
+        return this.httpClient.patch<void>(this.domain + 'user/enable/' + id, null);
     }
 
     deleteUser(id) {
-        return this.httpClient.delete<void>(this.domain + 'delete-user/' + id)
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.delete<void>(this.domain + 'user/' + id);
     }
 
     getUsers(): Observable<UserResponse[]> {
-        return this.httpClient.get<UserResponse[]>(this.domain + 'find-users')
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<UserResponse[]>(this.domain + 'users');
     }
 
     getSingleUser(username: string): Observable<UserResponse> {
-        return this.httpClient.get<UserResponse>(this.domain + 'find-user/' + username)
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<UserResponse>(this.domain + 'user/' + username);
     }
 
     getUserByRole(role: string): Observable<SpecificUserResponse[]> {
-        return this.httpClient.get<SpecificUserResponse[]>(this.domain + 'find-users/' + role)
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<SpecificUserResponse[]>(this.domain + 'users/' + role);
     }
 
     getRoles(): Observable<string[]> {
-        return this.httpClient.get<string[]>(this.domain + 'find-roles')
-            .pipe(
-                retry(1),
-                catchError(this.processError)
-            )
+        return this.httpClient.get<string[]>(this.domain + 'roles');
     }
 
-    processError(err) {
-        let message = '';
-        if (err.error instanceof ErrorEvent) {
-            message = err.error.message;
-        } else {
-            message = `Error Code: ${err.status}\nMessage: ${err.message}`;
-        }
-        console.log(message);
-        return throwError(message);
-    }
 }

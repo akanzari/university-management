@@ -4,7 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { concat, EMPTY, timer } from "rxjs";
 import { switchMapTo } from "rxjs/operators";
-import { Class, CreateClassRequest, UpdateClassRequest } from 'src/app/core/models';
+import { Classs, CreateClassRequest, UpdateClassRequest } from 'src/app/core/models';
 import { ClassService } from 'src/app/core/services';
 import { ActionEnum, ConfigColumn } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
@@ -27,7 +27,11 @@ export class ClassesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.classService.getClasses().subscribe(classes => this.initClassesColomns(classes))
+        this.spinner.show();
+        this.classService.getClasses().subscribe(classes => {
+            this.initClassesColomns(classes);
+            this.spinner.hide();
+        });
     }
 
     public openModal() {
@@ -39,7 +43,7 @@ export class ClassesComponent implements OnInit {
                     this.classService.addClass(dataValue.value as CreateClassRequest).pipe(switchMapTo(EMPTY)),
                     timer(1000).pipe(switchMapTo(EMPTY)),
                     this.classService.getClasses()
-                ).subscribe((classes: Class[]) => {
+                ).subscribe((classes: Classs[]) => {
                     this.spinner.hide();
                     this.config = { ...this.config, value: classes };
                     modal.componentInstance.setIsSaved({ isSaved: true });
@@ -57,10 +61,10 @@ export class ClassesComponent implements OnInit {
         if (event.action === ActionEnum.DELETE) {
             const modal: NgbModalRef = this.initPopUp(RemovePopupComponent);
             modal.componentInstance.config = { title: "Confirmation de suppression", message: "Est-ce que vous confirmez la suppression définitive ?" };
-            modal.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteClass((event.value as Class)) : null);
+            modal.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteClass((event.value as Classs)) : null);
         } else {
             const modal: NgbModalRef = this.initPopUp(ClassModalComponent);
-            modal.componentInstance.editClass = event.value as Class;
+            modal.componentInstance.editClass = event.value as Classs;
             modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
                 this.spinner.show();
                 if (dataValue.action === ActionEnum.UPDATE) {
@@ -68,7 +72,7 @@ export class ClassesComponent implements OnInit {
                         this.classService.updateClass(dataValue.value as UpdateClassRequest).pipe(switchMapTo(EMPTY)),
                         timer(1000).pipe(switchMapTo(EMPTY)),
                         this.classService.getClasses()
-                    ).subscribe((classes: Class[]) => {
+                    ).subscribe((classes: Classs[]) => {
                         this.spinner.hide();
                         this.config = { ...this.config, value: classes };
                         modal.componentInstance.setIsSaved({ isSaved: true });
@@ -89,7 +93,7 @@ export class ClassesComponent implements OnInit {
             this.classService.deleteClass(event.classId).pipe(switchMapTo(EMPTY)),
             timer(1000).pipe(switchMapTo(EMPTY)),
             this.classService.getClasses()
-        ).subscribe((classes: Class[]) => {
+        ).subscribe((classes: Classs[]) => {
             this.spinner.hide();
             this.modalService.dismissAll();
             this.config = { ...this.config, value: classes };
@@ -114,8 +118,8 @@ export class ClassesComponent implements OnInit {
             sortableBy: "code",
             pagination: {
                 paginate: true,
-                rowsPerPage: 10,
-                rowsPerPageOptions: [10, 15, 20, 25]
+                rowsPerPage: 20,
+                rowsPerPageOptions: [20, 25, 30, 35]
             },
             actions: [
                 {
@@ -135,43 +139,36 @@ export class ClassesComponent implements OnInit {
             ],
             columns: [
                 {
-                    header: "Code",
-                    field: "code",
-                    filterable: true,
-                    sortable: true
-                },
-                {
                     header: "Classe",
-                    field: "label",
+                    field: "classId",
                     filterable: true,
-                    sortable: true
+                    sortable: true,
+                    width: "10"
                 },
                 {
-                    header: "Nombre des groupes",
-                    field: "nbrStudents",
+                    header: "Description",
+                    field: "label",
                     filterable: true,
                     sortable: true,
                 },
                 {
-                    header: "Nombre d'étudiants",
-                    field: "nbrGroups",
+                    header: "E-mail",
+                    field: "email",
                     filterable: true,
                     sortable: true
                 },
                 {
-                    header: "Spécialiés",
-                    field: "speciality.label",
+                    header: "Spécialié",
+                    field: "speciality",
                     filterable: true,
                     sortable: true
                 },
                 {
-                    header: "Date de création",
-                    field: "createdDate",
-                    pipe: {
-                        function: this.datePipe
-                    },
+                    header: "Catégorie",
+                    field: "category",
                     filterable: true,
-                    sortable: true
+                    sortable: true,
+                    width: "10"
                 }
             ]
         }

@@ -1,12 +1,9 @@
 package com.esprit.service.mapper;
 
 import com.esprit.domain.ClassRoomEntity;
-import com.esprit.domain.SiteEntity;
-import com.esprit.dto.request.CreateClassRoomRequest;
-import com.esprit.dto.request.UpdateClassRoomRequest;
+import com.esprit.dto.request.rooms.CreateClassRoomRequest;
+import com.esprit.dto.request.rooms.UpdateClassRoomRequest;
 import com.esprit.dto.response.ClassRoomResponse;
-import com.esprit.dto.response.SiteResponse;
-import com.esprit.repository.SiteRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
@@ -14,46 +11,44 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 1.3.1100.v20200828-0941, environment: Java 15 (Oracle Corporation)"
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_275 (Private Build)"
 )
 @Component
 public class ClassRoomMapperImpl implements ClassRoomMapper {
 
     @Override
-    public ClassRoomEntity createClassRoomRequestToClassRoomEntity(CreateClassRoomRequest createClassRoomRequest, SiteRepository repository) {
+    public ClassRoomEntity createClassRoomRequestToClassRoomEntity(CreateClassRoomRequest createClassRoomRequest) {
         if ( createClassRoomRequest == null ) {
             return null;
         }
 
         ClassRoomEntity classRoomEntity = new ClassRoomEntity();
 
-        classRoomEntity.setCapacity( createClassRoomRequest.getCapacity() );
-        classRoomEntity.setCode( createClassRoomRequest.getCode() );
         classRoomEntity.setLabel( createClassRoomRequest.getLabel() );
-
-        ClassRoomMapper.after( createClassRoomRequest, classRoomEntity, repository );
+        classRoomEntity.setCapacity( createClassRoomRequest.getCapacity() );
+        classRoomEntity.setStartDate( createClassRoomRequest.getStartDate() );
+        classRoomEntity.setEndDate( createClassRoomRequest.getEndDate() );
+        classRoomEntity.setStartHour( createClassRoomRequest.getStartHour() );
+        classRoomEntity.setEndHour( createClassRoomRequest.getEndHour() );
 
         return classRoomEntity;
     }
 
     @Override
-    public ClassRoomEntity updateClassRoomRequestToClassRoomEntity(UpdateClassRoomRequest updateClassRoomRequest, SiteRepository repository) {
+    public ClassRoomEntity updateClassRoomRequestToClassRoomEntity(UpdateClassRoomRequest updateClassRoomRequest) {
         if ( updateClassRoomRequest == null ) {
             return null;
         }
 
         ClassRoomEntity classRoomEntity = new ClassRoomEntity();
 
-        classRoomEntity.setCapacity( updateClassRoomRequest.getCapacity() );
         classRoomEntity.setClassRoomId( updateClassRoomRequest.getClassRoomId() );
-        classRoomEntity.setEndDate( updateClassRoomRequest.getEndDate() );
-        classRoomEntity.setEndHour( updateClassRoomRequest.getEndHour() );
         classRoomEntity.setLabel( updateClassRoomRequest.getLabel() );
-        classRoomEntity.setReason( updateClassRoomRequest.getReason() );
+        classRoomEntity.setCapacity( updateClassRoomRequest.getCapacity() );
         classRoomEntity.setStartDate( updateClassRoomRequest.getStartDate() );
+        classRoomEntity.setEndDate( updateClassRoomRequest.getEndDate() );
         classRoomEntity.setStartHour( updateClassRoomRequest.getStartHour() );
-
-        ClassRoomMapper.after( updateClassRoomRequest, classRoomEntity, repository );
+        classRoomEntity.setEndHour( updateClassRoomRequest.getEndHour() );
 
         return classRoomEntity;
     }
@@ -66,17 +61,16 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
 
         ClassRoomResponse classRoomResponse = new ClassRoomResponse();
 
-        classRoomResponse.setCapacity( classRoomEntity.getCapacity() );
         classRoomResponse.setClassRoomId( classRoomEntity.getClassRoomId() );
-        classRoomResponse.setCode( classRoomEntity.getCode() );
-        classRoomResponse.setCreatedDate( classRoomEntity.getCreatedDate() );
-        classRoomResponse.setEndDate( classRoomEntity.getEndDate() );
-        classRoomResponse.setEndHour( classRoomEntity.getEndHour() );
         classRoomResponse.setLabel( classRoomEntity.getLabel() );
-        classRoomResponse.setReason( classRoomEntity.getReason() );
-        classRoomResponse.setSites( siteEntityListToSiteResponseList( classRoomEntity.getSites() ) );
+        classRoomResponse.setCapacity( classRoomEntity.getCapacity() );
+        classRoomResponse.setBloc( classRoomEntity.getBloc() );
+        classRoomResponse.setSite( classRoomEntity.getSite() );
         classRoomResponse.setStartDate( classRoomEntity.getStartDate() );
-        classRoomResponse.setStartHour( classRoomEntity.getStartHour() );
+        classRoomResponse.setEndDate( classRoomEntity.getEndDate() );
+        classRoomResponse.setStartHour( String.valueOf( classRoomEntity.getStartHour() ) );
+        classRoomResponse.setEndHour( String.valueOf( classRoomEntity.getEndHour() ) );
+        classRoomResponse.setReason( classRoomEntity.getReason() );
 
         return classRoomResponse;
     }
@@ -93,32 +87,5 @@ public class ClassRoomMapperImpl implements ClassRoomMapper {
         }
 
         return list;
-    }
-
-    protected SiteResponse siteEntityToSiteResponse(SiteEntity siteEntity) {
-        if ( siteEntity == null ) {
-            return null;
-        }
-
-        SiteResponse siteResponse = new SiteResponse();
-
-        siteResponse.setCode( siteEntity.getCode() );
-        siteResponse.setLabel( siteEntity.getLabel() );
-        siteResponse.setSiteId( siteEntity.getSiteId() );
-
-        return siteResponse;
-    }
-
-    protected List<SiteResponse> siteEntityListToSiteResponseList(List<SiteEntity> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<SiteResponse> list1 = new ArrayList<SiteResponse>( list.size() );
-        for ( SiteEntity siteEntity : list ) {
-            list1.add( siteEntityToSiteResponse( siteEntity ) );
-        }
-
-        return list1;
     }
 }

@@ -1,20 +1,18 @@
 package com.esprit.dto.response;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 public class ClassRoomResponse {
 
 	private String classRoomId;
 
-	private String code;
-
 	private String label;
 
 	private int capacity;
 
-	private List<SiteResponse> sites;
+	private String bloc;
+
+	private String site;
 
 	private Date startDate;
 
@@ -26,9 +24,7 @@ public class ClassRoomResponse {
 
 	private String reason;
 
-	private DepartmentResponse department;
-
-	protected LocalDateTime createdDate;
+	private String department;
 
 	public String getClassRoomId() {
 		return classRoomId;
@@ -36,14 +32,6 @@ public class ClassRoomResponse {
 
 	public void setClassRoomId(String classRoomId) {
 		this.classRoomId = classRoomId;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getLabel() {
@@ -62,12 +50,20 @@ public class ClassRoomResponse {
 		this.capacity = capacity;
 	}
 
-	public List<SiteResponse> getSites() {
-		return sites;
+	public String getBloc() {
+		return bloc;
 	}
 
-	public void setSites(List<SiteResponse> sites) {
-		this.sites = sites;
+	public void setBloc(String bloc) {
+		this.bloc = bloc;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
 	}
 
 	public Date getStartDate() {
@@ -110,20 +106,12 @@ public class ClassRoomResponse {
 		this.reason = reason;
 	}
 
-	public DepartmentResponse getDepartment() {
+	public String getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(DepartmentResponse department) {
+	public void setDepartment(String department) {
 		this.department = department;
-	}
-
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
 	}
 
 }

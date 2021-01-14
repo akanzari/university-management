@@ -1,7 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators';
 import { ConfigService } from '@ngx-config/core';
 import { Room } from '../models';
 
@@ -16,23 +15,23 @@ export class RoomService {
     }
 
     addRoom(data): Observable<HttpResponse<HttpResponse<Room>>> {
-        return this.httpClient.post<HttpResponse<Room>>(this.domain, data, { observe: 'response' }).pipe(retry(1));
+        return this.httpClient.post<HttpResponse<Room>>(this.domain, data, { observe: 'response' });
     }
 
     updateRoom(data): Observable<HttpResponse<HttpResponse<Room>>> {
-        return this.httpClient.put<HttpResponse<Room>>(this.domain, data, { observe: 'response' }).pipe(retry(1));
+        return this.httpClient.put<HttpResponse<Room>>(this.domain, data, { observe: 'response' });
     }
 
     deleteRoom(id) {
-        return this.httpClient.delete<void>(this.domain + id).pipe(retry(1));
+        return this.httpClient.delete<void>(this.domain + id);
     }
 
     getRooms(): Observable<Room[]> {
-        return this.httpClient.get<Room[]>(this.domain).pipe(retry(1));
+        return this.httpClient.get<Room[]>(this.domain);
     }
 
     getSingleRoom(username: string): Observable<Room> {
-        return this.httpClient.get<Room>(this.domain + '/' + username).pipe(retry(1));
+        return this.httpClient.get<Room>(this.domain + '/' + username);
     }
 
 }

@@ -1,6 +1,6 @@
 import { Speciality } from './speciality.model';
 
-export interface Class {
+export interface Classs {
     classId: string;
     code: string;
     label: string;
