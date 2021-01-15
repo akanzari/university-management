@@ -187,8 +187,6 @@ export class CmTbaleContainerComponent implements OnChanges {
 
     public getClass(value, action): string {
         let resut: any;
-        console.log(this.getFirstValueFromJson(action?.condition));
-
         if (value[this.getFirstKeyFromJson(action?.condition)] === this.getFirstValueFromJson(action?.condition)) {
             resut = action.icon.calss
         }

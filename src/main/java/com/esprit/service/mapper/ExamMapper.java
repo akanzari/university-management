@@ -14,7 +14,7 @@ import com.esprit.dto.request.exams.CreateExamRequest;
 import com.esprit.dto.request.exams.UpdateExamRequest;
 import com.esprit.dto.response.ExamResponse;
 import com.esprit.repository.ClassRepository;
-import com.esprit.repository.ClassRoomRepository;
+import com.esprit.repository.RoomRepository;
 import com.esprit.repository.ModuleRepository;
 import com.esprit.repository.TeacherRepository;
 
@@ -25,11 +25,11 @@ public interface ExamMapper {
 
 	ExamEntity createExamRequestToExamEntity(CreateExamRequest createExamRequest,
 			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context ClassRoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
+			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
 
 	ExamEntity updateExamRequestToExamEntity(UpdateExamRequest updateExamRequest,
 			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context ClassRoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
+			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
 
 	ExamResponse examEntityToExamResponse(ExamEntity examEntity);
 
@@ -38,7 +38,7 @@ public interface ExamMapper {
 	@AfterMapping
 	static void after(CreateExamRequest source, @MappingTarget ExamEntity target,
 			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context ClassRoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
+			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
 		target.setClasss(classRepository.getOne(source.getClassId()));
 		target.setModule(moduleRepository.getOne(source.getModuleId()));
 		target.setClassRoom(classRoomRepository.getOne(source.getClassRoomId()));
@@ -48,7 +48,7 @@ public interface ExamMapper {
 	@AfterMapping
 	static void after(UpdateExamRequest source, @MappingTarget ExamEntity target,
 			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context ClassRoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
+			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
 		target.setClasss(classRepository.getOne(source.getClassId()));
 		target.setModule(moduleRepository.getOne(source.getModuleId()));
 		target.setClassRoom(classRoomRepository.getOne(source.getClassRoomId()));

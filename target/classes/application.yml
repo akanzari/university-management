@@ -62,4 +62,5 @@ info:
          realm: esprit-realm
          clientId: university-web
       serviceBaseUrl: http://localhost:8997/
+      serviceBaseUrlMigration: http://localhost:8998/
   

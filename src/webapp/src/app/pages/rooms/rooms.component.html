@@ -24,29 +24,18 @@
                     <div class="py-2">
                         <div class="float-left">
                             <p class="bold color-title font-size-20 mb-0">Liste des salles</p>
+                            <label class="pt-2 my-0" *ngIf="roomsLength === 0">
+                                Vous n'avez aucun salle
+                            </label>
+                            <label class="pt-2 my-0" *ngIf="roomsLength > 0">
+                                Vous avez {{roomsLength}} salle(s)
+                            </label>
                         </div>
                         <div class="dropdown float-right">
                             <button type="button" class="btn btn-bg-add font-size-12 btn-add mb-0 color-white"
                                 (click)="openModal()">
                                 <span class="pl-1">Nouveau</span>
                             </button>
-                            <span ngbTooltip="Rechercher">
-                                <a>
-                                    <i class="icon-search icons mx-2 my-1"></i>
-                                </a>
-                            </span>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="accordion mb-0" role="tablist" aria-multiselectable="true">
-                        <div class="card card-search">
-                            <div id="search-criteria-one" class="border-top collapse" role="tabpanel"
-                                aria-labelledby="headingOne">
-                                <div class="card-block bg-white py-4" style="overflow: visible;">
-
-                                </div>
-                            </div>
                         </div>
                     </div>
 

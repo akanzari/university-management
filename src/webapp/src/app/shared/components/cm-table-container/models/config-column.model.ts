@@ -37,6 +37,12 @@ export class Column {
 	conditionClass?: TSMap<string, string>;
 	filterable?: boolean = false;
 	sortable?: boolean = false;
+	link?: Link;
+}
+
+export class Link {
+	text?: string;
+	url?: string;
 }
 
 export class Pipe {

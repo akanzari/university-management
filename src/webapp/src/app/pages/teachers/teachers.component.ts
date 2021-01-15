@@ -1,24 +1,18 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TeacherService } from 'src/app/core/services';
-import { ActionEnum, ConfigColumn } from 'src/app/shared/components/cm-table-container/models/config-column.model';
-import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
+import { ConfigColumn } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { Teacher } from 'src/app/core/models/teacher.model';
 
 @Component({
     templateUrl: './teachers.component.html',
-    styleUrls: ['./teachers.component.scss'],
-    providers: [DatePipe]
+    styleUrls: ['./teachers.component.scss']
 })
 export class TeachersComponent implements OnInit {
 
     public config: ConfigColumn;
 
-    constructor(private modalService: NgbModal,
-        private spinner: NgxSpinnerService,
-        private datePipe: DatePipe,
+    constructor(private spinner: NgxSpinnerService,
         private teacherService: TeacherService) {
     }
 
@@ -28,9 +22,6 @@ export class TeachersComponent implements OnInit {
             this.initTeachersColomns(teachers);
             this.spinner.hide();
         });
-    }
-
-    public getArrayForm(event: DataValue) {
     }
 
 
@@ -44,22 +35,6 @@ export class TeachersComponent implements OnInit {
                 rowsPerPage: 20,
                 rowsPerPageOptions: [30, 35, 40, 45]
             },
-            /*actions: [
-                {
-                    name: ActionEnum.UPDATE,
-                    icon: {
-                        class: "icon-edit size-16",
-                        tooltip: "Modifier"
-                    }
-                },
-                {
-                    name: ActionEnum.DELETE,
-                    icon: {
-                        class: "icon-trash size-16",
-                        tooltip: "Supprimer"
-                    }
-                }
-            ],*/
             columns: [
                 {
                     header: "N°",
@@ -95,21 +70,22 @@ export class TeachersComponent implements OnInit {
                 },
                 {
                     header: "Dépatement",
-                    field: "departement",
+                    field: "departement.label",
                     filterable: true,
                     sortable: true
                 },
                 {
                     header: "Nbr de surveillance",
-                    field: "",
+                    field: "nbrSurveillance",
                     filterable: true,
                     sortable: true
                 },
                 {
                     header: "Nbr heuere surveillance",
-                    field: "",
+                    field: "nbrHeureSurveillance",
                     filterable: true,
-                    sortable: true
+                    sortable: true,
+                    width: "13"
                 }
             ]
         }

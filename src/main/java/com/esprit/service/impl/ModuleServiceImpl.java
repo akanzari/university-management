@@ -36,8 +36,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	public void addModule(CreateModuleRequest createModuleRequest) {
-		ModuleEntity moduleEntity = mapper.createModuleRequestToModuleEntity(createModuleRequest, teacherRepository,
-				classRepository);
+		ModuleEntity moduleEntity = mapper.createModuleRequestToModuleEntity(createModuleRequest, teacherRepository, classRepository);
 		moduleRepository.save(moduleEntity);
 	}
 

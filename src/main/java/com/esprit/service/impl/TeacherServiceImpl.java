@@ -11,7 +11,7 @@ import com.esprit.error.exception.EntityNotFoundException;
 import com.esprit.repository.TeacherRepository;
 import com.esprit.service.IAMService;
 import com.esprit.service.TeacherService;
-import com.esprit.service.mapper.UserMapper;
+import com.esprit.service.mapper.TeacherMapper;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -20,9 +20,9 @@ public class TeacherServiceImpl implements TeacherService {
 
 	private final IAMService iamService;
 
-	private final UserMapper mapper;
+	private final TeacherMapper mapper;
 
-	public TeacherServiceImpl(TeacherRepository teacherRepository, IAMService iamService, UserMapper mapper) {
+	public TeacherServiceImpl(TeacherRepository teacherRepository, IAMService iamService, TeacherMapper mapper) {
 		this.teacherRepository = teacherRepository;
 		this.iamService = iamService;
 		this.mapper = mapper;

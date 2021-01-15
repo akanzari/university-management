@@ -37,12 +37,11 @@
                                     <td [columnWidth]="column?.width" [columnsLength]="columns?.length"
                                         *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'">
                                         <!-- icon -->
-                                        <ng-container *ngIf="column?.icon;else other_display">
-                                            <i [title]="column?.header"
-                                                [class]="'icons icon-' + column?.icon?.class + ' size-16' "
-                                                (click)="sendItem(null, value)"></i>
+                                        <ng-container *ngIf="column?.link;else other_display">
+                                            <a href="javascript:void(0)" [title]="column?.link.text"
+                                                (click)="sendItem(null, value)">{{column?.link.text}}</a>
                                         </ng-container>
-
+                                        
                                         <!-- text -->
                                         <ng-template #other_display>
                                             <span [title]="displayValue(value, column)"

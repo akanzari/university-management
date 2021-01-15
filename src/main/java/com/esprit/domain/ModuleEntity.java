@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ESP_MODULE")
 public class ModuleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,7 +23,7 @@ public class ModuleEntity implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "fk_module")
-	private List<AssignClassEntity> assignClasses;
+	private List<AssignClassModuleEntity> assignClasses;
 
 	public String getModuleId() {
 		return moduleId;
@@ -39,11 +41,11 @@ public class ModuleEntity implements Serializable {
 		this.designation = designation;
 	}
 
-	public List<AssignClassEntity> getAssignClasses() {
+	public List<AssignClassModuleEntity> getAssignClasses() {
 		return assignClasses;
 	}
 
-	public void setAssignClasses(List<AssignClassEntity> assignClasses) {
+	public void setAssignClasses(List<AssignClassModuleEntity> assignClasses) {
 		this.assignClasses = assignClasses;
 	}
 

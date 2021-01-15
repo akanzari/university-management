@@ -11,9 +11,12 @@ export class RefService {
 
     readonly domain: string;
 
+    readonly domainMigration: string;
+
     constructor(private config: ConfigService,
         private httpClient: HttpClient) {
         this.domain = this.config.getSettings('environment.serviceBaseUrl');
+        this.domainMigration = this.config.getSettings('environment.serviceBaseUrlMigration');
     }
 
     getSpecialities(): Observable<Speciality[]> {
@@ -30,6 +33,18 @@ export class RefService {
 
     getReasonRooms(): Observable<any[]> {
         return this.httpClient.get<any[]>(this.domain + "reason-room");
+    }
+
+    getDayById(dayId: string): Observable<any> {
+        return this.httpClient.get<any[]>(this.domainMigration + "day/" + dayId);
+    }
+
+    getSeanceById(seanceId: string): Observable<any> {
+        return this.httpClient.get<any[]>(this.domainMigration + "seance/" + seanceId);
+    }
+
+    getSemeterById(semesterId: string): Observable<any> {
+        return this.httpClient.get<any[]>(this.domainMigration + "semester/" + semesterId);
     }
 
 }

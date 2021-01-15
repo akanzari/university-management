@@ -11,7 +11,7 @@ import com.esprit.dto.request.exams.UpdateExamRequest;
 import com.esprit.dto.response.ExamResponse;
 import com.esprit.error.exception.EntityNotFoundException;
 import com.esprit.repository.ClassRepository;
-import com.esprit.repository.ClassRoomRepository;
+import com.esprit.repository.RoomRepository;
 import com.esprit.repository.ExamRepository;
 import com.esprit.repository.ModuleRepository;
 import com.esprit.repository.TeacherRepository;
@@ -27,14 +27,14 @@ public class ExamServiceImpl implements ExamService {
 
 	private final ModuleRepository moduleRepository;
 
-	private final ClassRoomRepository classRoomRepository;
+	private final RoomRepository classRoomRepository;
 
 	private final TeacherRepository teacherRepository;
 
 	private final ExamMapper mapper;
 
 	public ExamServiceImpl(ExamRepository examRepository, ClassRepository classRepository,
-			ModuleRepository moduleRepository, ClassRoomRepository classRoomRepository,
+			ModuleRepository moduleRepository, RoomRepository classRoomRepository,
 			TeacherRepository teacherRepository, ExamMapper mapper) {
 		this.examRepository = examRepository;
 		this.classRepository = classRepository;

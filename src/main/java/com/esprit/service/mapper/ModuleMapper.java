@@ -3,6 +3,8 @@ package com.esprit.service.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -10,7 +12,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import com.esprit.domain.AssignClassEntity;
+import com.esprit.domain.AssignClassModuleEntity;
 import com.esprit.domain.ModuleEntity;
 import com.esprit.domain.TeacherEntity;
 import com.esprit.dto.request.modules.CreateModuleRequest;
@@ -36,15 +38,35 @@ public interface ModuleMapper {
 	@AfterMapping
 	static void after(CreateModuleRequest source, @MappingTarget ModuleEntity target,
 			@Context TeacherRepository teacherRepository, @Context ClassRepository classRepository) {
+
+		List<AssignClassModuleEntity> assignClassEntities = new ArrayList<>();
+
 		source.getAssignClasses().forEach(item -> {
 			List<TeacherEntity> teacherEntities = new ArrayList<>();
-			AssignClassEntity assignClassEntity = new AssignClassEntity();
-			assignClassEntity.coefficient(item.getCoefficient()).nbrHours(item.getNbrHours())
-					.semester(toSemesterEnum(item.getSemester())).periods(toPeriodEnum(item.getPeriods()))
-					.examType(toExamTypeEnum(item.getExamType())).classs(classRepository.getOne(item.getClassId()));
-			item.getTeacherIds().forEach(teacher -> teacherEntities.add(teacherRepository.getOne(teacher)));
-			assignClassEntity.teachers(teacherEntities);
+			AssignClassModuleEntity assignClassEntity = new AssignClassModuleEntity();
+
+			assignClassEntity.coefficient(item.getCoefficient()).nbrHour(item.getNbrHour())
+					.semester(toSemesterEnum(item.getSemester())).period(toPeriodEnum(item.getPeriod()))
+					.typeExam(toExamTypeEnum(item.getTypeExam()));
+
+			if (classRepository.getOne(item.getClassId()) != null) {
+				assignClassEntity.classs(classRepository.getOne(item.getClassId()));
+			}
+
+			if (CollectionUtils.isNotEmpty(item.getTeacherIds())) {
+				item.getTeacherIds().forEach(teacher -> {
+					if (!StringUtils.isBlank(teacher)) {
+						if (!teacher.equals("0")) {
+							teacherEntities.add(teacherRepository.getOne(teacher));
+						}
+					}
+				});
+				assignClassEntity.teachers(teacherEntities);
+			}
+			assignClassEntities.add(assignClassEntity);
 		});
+		target.setAssignClasses(assignClassEntities);
+
 	}
 
 	/*
@@ -61,10 +83,8 @@ public interface ModuleMapper {
 		return SemesterEnum.forValue(semester);
 	}
 
-	public static List<PeriodEnum> toPeriodEnum(final List<String> periods) {
-		List<PeriodEnum> result = new ArrayList<>();
-		periods.forEach(period -> result.add(PeriodEnum.forValue(period)));
-		return result;
+	public static PeriodEnum toPeriodEnum(final String period) {
+		return PeriodEnum.forValue(period);
 	}
 
 	public static ExamTypeEnum toExamTypeEnum(final String examType) {
@@ -72,7 +92,11 @@ public interface ModuleMapper {
 	}
 
 	public default String toSemesterString(final SemesterEnum semester) {
-		return SemesterEnum.forKey(semester);
+		String result = null;
+		if (semester != null) {
+			result = SemesterEnum.forKey(semester);
+		}
+		return result;
 	}
 
 	public default List<String> toPeriodString(final List<PeriodEnum> periods) {
@@ -82,7 +106,11 @@ public interface ModuleMapper {
 	}
 
 	public default String toExamTypeString(final ExamTypeEnum examType) {
-		return ExamTypeEnum.forKey(examType);
+		String result = null;
+		if (examType != null) {
+			result = ExamTypeEnum.forKey(examType);
+		}
+		return result;
 	}
 
 }

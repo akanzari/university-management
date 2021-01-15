@@ -1,6 +1,8 @@
 package com.esprit.dto.response;
 
-import java.util.Date;
+import java.util.List;
+
+import com.esprit.dto.DisponibilityDTO;
 
 public class ClassRoomResponse {
 
@@ -10,21 +12,11 @@ public class ClassRoomResponse {
 
 	private int capacity;
 
+	private String pole;
+
 	private String bloc;
 
-	private String site;
-
-	private Date startDate;
-
-	private Date endDate;
-
-	private String startHour;
-
-	private String endHour;
-
-	private String reason;
-
-	private String department;
+	private List<DisponibilityDTO> disponibilities;
 
 	public String getClassRoomId() {
 		return classRoomId;
@@ -50,6 +42,14 @@ public class ClassRoomResponse {
 		this.capacity = capacity;
 	}
 
+	public String getPole() {
+		return pole;
+	}
+
+	public void setPole(String pole) {
+		this.pole = pole;
+	}
+
 	public String getBloc() {
 		return bloc;
 	}
@@ -58,60 +58,12 @@ public class ClassRoomResponse {
 		this.bloc = bloc;
 	}
 
-	public String getSite() {
-		return site;
+	public List<DisponibilityDTO> getDisponibilities() {
+		return disponibilities;
 	}
 
-	public void setSite(String site) {
-		this.site = site;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getStartHour() {
-		return startHour;
-	}
-
-	public void setStartHour(String startHour) {
-		this.startHour = startHour;
-	}
-
-	public String getEndHour() {
-		return endHour;
-	}
-
-	public void setEndHour(String endHour) {
-		this.endHour = endHour;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public String getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(String department) {
-		this.department = department;
+	public void setDisponibilities(List<DisponibilityDTO> disponibilities) {
+		this.disponibilities = disponibilities;
 	}
 
 }

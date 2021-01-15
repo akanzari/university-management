@@ -11,6 +11,7 @@ import { Bloc, CreateRoomRequest, Room, UpdateRoomRequest } from 'src/app/core/m
 import { RemovePopupComponent } from 'src/app/shared/components/comfirmation-popup/remove/remove-popup.component';
 import { RoomModalComponent } from './room-modal/room-modal.component';
 import { Site } from 'src/app/core/models/site.modal';
+import { DisponibilityModalComponent } from './disponibility/disponibility.component';
 
 @Component({
     selector: 'rooms',
@@ -22,6 +23,8 @@ export class RoomsComponent implements OnInit {
 
     public config: ConfigColumn;
 
+    public roomsLength: number;
+
     constructor(private modalService: NgbModal,
         private spinner: NgxSpinnerService,
         private datePipe: DatePipe,
@@ -29,12 +32,15 @@ export class RoomsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.roomService.getRooms().subscribe((rooms: Room[]) => this.initRoomsColomns(this.initTable(rooms)));
+        this.spinner.show();
+        this.roomService.getRooms().subscribe((rooms: Room[]) => {
+            this.initRoomsColomns(rooms);
+            this.roomsLength = rooms.length;
+            this.spinner.hide();
+        });
     }
 
     private initTable(rooms: Room[]): RoomTable[] {
-        console.log(rooms);
-
         let table: RoomTable[] = [];
         rooms.forEach((room: Room) => {
             let date;
@@ -77,6 +83,7 @@ export class RoomsComponent implements OnInit {
                     this.roomService.getRooms()
                 ).subscribe((rooms: Room[]) => {
                     this.spinner.hide();
+                    this.roomsLength = rooms.length;
                     this.config = { ...this.config, value: this.initTable(rooms) };
                     modal.componentInstance.setIsSaved({ isSaved: true });
                 }, error => {
@@ -94,7 +101,7 @@ export class RoomsComponent implements OnInit {
             const modal: NgbModalRef = this.initPopUp(RemovePopupComponent);
             modal.componentInstance.config = { title: "Confirmation de suppression", message: "Est-ce que vous confirmez la suppression définitive ?" };
             modal.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteClass((event.value as Room)) : null);
-        } else {
+        } else if (event.action === ActionEnum.UPDATE) {
             const modal: NgbModalRef = this.initPopUp(RoomModalComponent);
             modal.componentInstance.editRoom = event.value as Room;
             modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
@@ -106,6 +113,7 @@ export class RoomsComponent implements OnInit {
                         this.roomService.getRooms()
                     ).subscribe((rooms: Room[]) => {
                         this.spinner.hide();
+                        this.roomsLength = rooms.length;
                         this.config = { ...this.config, value: this.initTable(rooms) };
                         modal.componentInstance.setIsSaved({ isSaved: true });
                     }, error => {
@@ -116,6 +124,20 @@ export class RoomsComponent implements OnInit {
                     })
                 }
             });
+        } else {
+            if (event.value.disponibilities && event.value.disponibilities.length > 0) {
+                console.log(event.value.disponibilities);
+                const modal: NgbModalRef = this.modalService.open(DisponibilityModalComponent,
+                    {
+                        size: 'lg',
+                        windowClass: 'modal-adaptive',
+                        ariaLabelledBy: 'modal-basic-title',
+                        keyboard: false,
+                        backdrop: 'static',
+                        centered: true
+                    });
+                modal.componentInstance.disponibilities = event.value.disponibilities;
+            }
         }
     }
 
@@ -127,6 +149,7 @@ export class RoomsComponent implements OnInit {
             this.roomService.getRooms()
         ).subscribe((rooms: Room[]) => {
             this.spinner.hide();
+            this.roomsLength = rooms.length;
             this.modalService.dismissAll();
             this.config = { ...this.config, value: this.initTable(rooms) };
         })
@@ -150,8 +173,8 @@ export class RoomsComponent implements OnInit {
             sortableBy: "code",
             pagination: {
                 paginate: true,
-                rowsPerPage: 10,
-                rowsPerPageOptions: [10, 15, 20, 25]
+                rowsPerPage: 20,
+                rowsPerPageOptions: [30, 35, 40, 45]
             },
             actions: [
                 {
@@ -172,7 +195,7 @@ export class RoomsComponent implements OnInit {
             columns: [
                 {
                     header: "Salle",
-                    field: "label",
+                    field: "classRoomId",
                     filterable: true,
                     sortable: true,
                     width: "11"
@@ -185,33 +208,24 @@ export class RoomsComponent implements OnInit {
                 },
                 {
                     header: "Site",
-                    field: "site.label",
+                    field: "pole",
                     filterable: true,
                     sortable: true,
                     width: "11"
                 },
                 {
                     header: "Bloc",
-                    field: "bloc.label",
+                    field: "blocId",
                     filterable: true,
                     sortable: true,
                     width: "11"
                 },
                 {
-                    header: "Date indisponibilité",
-                    field: "dates",
-                    filterable: true,
-                    sortable: true
-                },
-                {
-                    header: "Heure indisponibilité",
-                    field: "hours",
-                    filterable: true,
-                    sortable: true
-                },
-                {
-                    header: "Motif indisponibilité",
-                    field: "reason.label",
+                    header: "Disponibilités",
+                    field: "",
+                    link: {
+                        text: "Liste disponibilités"
+                    },
                     filterable: true,
                     sortable: true
                 }

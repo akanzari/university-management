@@ -1,14 +1,13 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "CLASSE")
 public class ClassEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -20,16 +19,11 @@ public class ClassEntity implements Serializable {
 
 	private int nbrStudents;
 
-	private int nbrGroups;
-
 	private String speciality;
 
 	private String category;
 
 	private String email;
-
-	@OneToMany(mappedBy = "classs", cascade = CascadeType.ALL)
-	private List<AssignClassEntity> assignClasses;
 
 	public String getClassId() {
 		return classId;
@@ -55,14 +49,6 @@ public class ClassEntity implements Serializable {
 		this.nbrStudents = nbrStudents;
 	}
 
-	public int getNbrGroups() {
-		return nbrGroups;
-	}
-
-	public void setNbrGroups(int nbrGroups) {
-		this.nbrGroups = nbrGroups;
-	}
-
 	public String getSpeciality() {
 		return speciality;
 	}
@@ -85,14 +71,6 @@ public class ClassEntity implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public List<AssignClassEntity> getAssignClasses() {
-		return assignClasses;
-	}
-
-	public void setAssignClasses(List<AssignClassEntity> assignClasses) {
-		this.assignClasses = assignClasses;
 	}
 
 }

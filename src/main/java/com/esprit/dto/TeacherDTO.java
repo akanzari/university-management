@@ -19,7 +19,7 @@ public class TeacherDTO {
 
 	private String up;
 
-	private String departement;
+	private DepartementDTO departement;
 
 	private int nbrSurveillance;
 
@@ -87,11 +87,11 @@ public class TeacherDTO {
 		this.up = up;
 	}
 
-	public String getDepartement() {
+	public DepartementDTO getDepartement() {
 		return departement;
 	}
 
-	public void setDepartement(String departement) {
+	public void setDepartement(DepartementDTO departement) {
 		this.departement = departement;
 	}
 

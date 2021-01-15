@@ -1,0 +1,19 @@
+@media screen {
+    .modal-adaptive .modal-lg {
+        width: 80% !important;
+        max-width: calc(90%) !important;
+    }
+}
+
+:host ::ng-deep .modal-adaptive .modal-lg {
+    width: 80% !important;
+    max-width: calc(90%) !important;
+}
+
+.close {
+    font-size: 2.5rem !important;
+}
+
+.alert button.close {
+    font-size: 20px !important;
+}

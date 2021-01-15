@@ -6,13 +6,13 @@ public class AssignClassToModuleRequest {
 
 	private int coefficient;
 
-	private int nbrHours;
+	private int nbrHour;
 
 	private String semester;
 
-	private List<String> periods;
+	private String period;
 
-	private String examType;
+	private String typeExam;
 
 	private List<String> teacherIds;
 
@@ -26,12 +26,12 @@ public class AssignClassToModuleRequest {
 		this.coefficient = coefficient;
 	}
 
-	public int getNbrHours() {
-		return nbrHours;
+	public int getNbrHour() {
+		return nbrHour;
 	}
 
-	public void setNbrHours(int nbrHours) {
-		this.nbrHours = nbrHours;
+	public void setNbrHour(int nbrHour) {
+		this.nbrHour = nbrHour;
 	}
 
 	public String getSemester() {
@@ -42,20 +42,20 @@ public class AssignClassToModuleRequest {
 		this.semester = semester;
 	}
 
-	public List<String> getPeriods() {
-		return periods;
+	public String getPeriod() {
+		return period;
 	}
 
-	public void setPeriods(List<String> periods) {
-		this.periods = periods;
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 
-	public String getExamType() {
-		return examType;
+	public String getTypeExam() {
+		return typeExam;
 	}
 
-	public void setExamType(String examType) {
-		this.examType = examType;
+	public void setTypeExam(String typeExam) {
+		this.typeExam = typeExam;
 	}
 
 	public List<String> getTeacherIds() {

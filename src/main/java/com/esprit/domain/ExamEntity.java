@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,6 +18,7 @@ import com.esprit.enums.SemesterEnum;
 import com.esprit.enums.SessionEnum;
 
 @Entity
+@Table(name = "EPREUVE")
 public class ExamEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -50,7 +52,7 @@ public class ExamEntity implements Serializable {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "fk_romm")
-	private ClassRoomEntity classRoom;
+	private RoomEntity classRoom;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "fk_supervisor")
@@ -136,11 +138,11 @@ public class ExamEntity implements Serializable {
 		this.module = module;
 	}
 
-	public ClassRoomEntity getClassRoom() {
+	public RoomEntity getClassRoom() {
 		return classRoom;
 	}
 
-	public void setClassRoom(ClassRoomEntity classRoom) {
+	public void setClassRoom(RoomEntity classRoom) {
 		this.classRoom = classRoom;
 	}
 
