@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.exams.CreateExamRequest;
-import com.esprit.dto.request.exams.UpdateExamRequest;
-import com.esprit.dto.response.ExamResponse;
+import com.esprit.dto.exam.CreateExamRequest;
+import com.esprit.dto.exam.ExamDTO;
+import com.esprit.dto.exam.UpdateExamRequest;
 import com.esprit.service.ExamService;
 
 @RestController
@@ -48,13 +48,8 @@ public class ExamController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping("{examId}")
-	public ResponseEntity<ExamResponse> findExam(@PathVariable String examId) {
-		return new ResponseEntity<>(service.findExam(examId), HttpStatus.OK);
-	}
-
 	@GetMapping
-	public ResponseEntity<List<ExamResponse>> findExams() {
+	public ResponseEntity<List<ExamDTO>> findExams() {
 		return new ResponseEntity<>(service.findExams(), HttpStatus.OK);
 	}
 

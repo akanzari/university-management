@@ -7,14 +7,13 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.esprit.domain.StudentEntity;
-import com.esprit.dto.request.CreateStudentRequest;
-import com.esprit.dto.response.StudentResponse;
+import com.esprit.dto.user.CreateStudentRequest;
+import com.esprit.dto.user.StudentResponse;
 import com.esprit.repository.ClassRepository;
 
 @Mapper
 public interface UserMapper {
 
-	@Mapping(target = "fullName", qualifiedByName = "IAMService, findFullNameById")
 	StudentEntity createStudentRequestToStudentEntity(CreateStudentRequest createStudentRequest,
 			@Context ClassRepository classRepository);
 

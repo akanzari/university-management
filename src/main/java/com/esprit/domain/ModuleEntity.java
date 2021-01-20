@@ -1,14 +1,17 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 @Entity
 @Table(name = "ESP_MODULE")
@@ -21,9 +24,21 @@ public class ModuleEntity implements Serializable {
 
 	private String designation;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "fk_module")
+	@OneToMany(mappedBy = "module", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<AssignClassModuleEntity> assignClasses;
+
+	public void addAssignClasses(List<AssignClassModuleEntity> assignClassModuleEntities) {
+		if (CollectionUtils.isEmpty(assignClasses)) {
+			assignClasses = new ArrayList<>();
+		}
+		assignClasses.addAll(assignClassModuleEntities);
+		assignClassModuleEntities.forEach(item -> item.module(this));
+	}
+	
+	public void removeAssignClasses(List<AssignClassModuleEntity> assignClassModuleEntities) {
+		assignClasses.removeAll(assignClassModuleEntities);
+		assignClassModuleEntities.forEach(item -> item.module(null));
+    }
 
 	public String getModuleId() {
 		return moduleId;

@@ -28,7 +28,11 @@ export class ModuleService {
     }
 
     getModules(): Observable<Module[]> {
-        return this.httpClient.get<Module[]>(this.domain);
+        return this.httpClient.get<Module[]>(this.domain + "without-classes");
+    }
+
+    getAssignClassesByModule(moduleId: string): Observable<any> {
+        return this.httpClient.get<any>(this.domain + "assign-classes/" + moduleId);
     }
 
     getModulesByClass(classId: string): Observable<Module[]> {

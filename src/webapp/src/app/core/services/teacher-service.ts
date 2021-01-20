@@ -27,4 +27,12 @@ export class TeacherService {
         return this.httpClient.get<Teacher[]>(this.domain);
     }
 
+    getTeachersByUps(data): Observable<Teacher[]> {
+        return this.httpClient.post<Teacher[]>(this.domain + "ups", data);
+    }
+
+    searchTeachers(data): Observable<Teacher[]> {
+        return this.httpClient.post<Teacher[]>(this.domain + "search", data);
+    }
+
 }

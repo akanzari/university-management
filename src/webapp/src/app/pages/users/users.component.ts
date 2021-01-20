@@ -106,7 +106,7 @@ export class UsersComponent implements OnInit {
                 {
                     header: "Statut",
                     field: "status",
-                    conditionClass: statusMap,
+                    //conditionClass: statusMap,
                     width: "10",
                     filterable: true,
                     sortable: true

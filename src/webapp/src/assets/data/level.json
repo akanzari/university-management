@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "label": "1ère année",
+        "disabled": false,
+        "session": ["S1P1","S1P2","S2P1","S2P2","SR"]
+    },
+    {
+        "id": 2,
+        "label": "2ème année",
+        "disabled": false,
+        "session": ["S1P1","S1P2","S2P1","S2P2","SR"]
+    },
+    {
+        "id": 3,
+        "label": "3ème année",
+        "disabled": false,
+        "session": ["S1P1","S1P2","S2P1","S2P2","SR"]
+    },
+    {
+        "id": 4,
+        "label": "4ème année",
+        "disabled": false,
+        "session": ["S1P1","S1P2","S2P1","S2P2","SR"]
+    },
+    {
+        "id": 5,
+        "disabled": false,
+        "label": "5ème année",
+        "session": ["SP","SR"]
+    }
+]

@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.modules.CreateModuleRequest;
-import com.esprit.dto.response.ModuleResponse;
+import com.esprit.dto.module.AssignClassModuleDTO;
+import com.esprit.dto.module.CreateModuleRequest;
+import com.esprit.dto.module.ModuleDTO;
 import com.esprit.service.ModuleService;
 
 @RestController
@@ -41,17 +42,27 @@ public class ModuleController {
 	}
 
 	@GetMapping("{moduleId}")
-	public ResponseEntity<ModuleResponse> findModule(@PathVariable String moduleId) {
+	public ResponseEntity<ModuleDTO> findModule(@PathVariable String moduleId) {
 		return new ResponseEntity<>(service.findModule(moduleId), HttpStatus.OK);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ModuleResponse>> findModules() {
+	public ResponseEntity<List<ModuleDTO>> findModules() {
 		return new ResponseEntity<>(service.findModules(), HttpStatus.OK);
 	}
 
+	@GetMapping("assign-classes/{moduleId}")
+	public ResponseEntity<List<AssignClassModuleDTO>> findAssignClassesByModule(@PathVariable String moduleId) {
+		return new ResponseEntity<>(service.findAssignClassesByModule(moduleId), HttpStatus.OK);
+	}
+
+	@GetMapping("without-classes")
+	public ResponseEntity<List<ModuleDTO>> findAllWithoutAssignClasses() {
+		return new ResponseEntity<>(service.findAllWithoutAssignClasses(), HttpStatus.OK);
+	}
+
 	@GetMapping("classId/{classId}")
-	public ResponseEntity<List<ModuleResponse>> findModulesByClass(@PathVariable String classId) {
+	public ResponseEntity<List<ModuleDTO>> findModulesByClass(@PathVariable String classId) {
 		return new ResponseEntity<>(service.findModulesByClass(classId), HttpStatus.OK);
 	}
 

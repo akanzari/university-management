@@ -1,91 +1,79 @@
 package com.esprit.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import com.esprit.domain.ExamEntity;
-import com.esprit.dto.request.exams.CreateExamRequest;
-import com.esprit.dto.request.exams.UpdateExamRequest;
-import com.esprit.dto.response.ExamResponse;
-import com.esprit.error.exception.EntityNotFoundException;
-import com.esprit.repository.ClassRepository;
-import com.esprit.repository.RoomRepository;
+import com.esprit.dto.exam.CreateExamRequest;
+import com.esprit.dto.exam.ExamDTO;
+import com.esprit.dto.exam.UpdateExamRequest;
 import com.esprit.repository.ExamRepository;
-import com.esprit.repository.ModuleRepository;
-import com.esprit.repository.TeacherRepository;
 import com.esprit.service.ExamService;
+import com.esprit.service.TeacherService;
 import com.esprit.service.mapper.ExamMapper;
+import com.esprit.service.mapper.ExamResponseMapper;
 
 @Service
 public class ExamServiceImpl implements ExamService {
 
 	private final ExamRepository examRepository;
 
-	private final ClassRepository classRepository;
-
-	private final ModuleRepository moduleRepository;
-
-	private final RoomRepository classRoomRepository;
-
-	private final TeacherRepository teacherRepository;
+	private final TeacherService teacherService;
 
 	private final ExamMapper mapper;
 
-	public ExamServiceImpl(ExamRepository examRepository, ClassRepository classRepository,
-			ModuleRepository moduleRepository, RoomRepository classRoomRepository,
-			TeacherRepository teacherRepository, ExamMapper mapper) {
+	private final ExamResponseMapper responseMapper;
+
+	public ExamServiceImpl(ExamRepository examRepository, TeacherService teacherService, ExamMapper mapper,
+			ExamResponseMapper responseMapper) {
 		this.examRepository = examRepository;
-		this.classRepository = classRepository;
-		this.moduleRepository = moduleRepository;
-		this.classRoomRepository = classRoomRepository;
-		this.teacherRepository = teacherRepository;
+		this.teacherService = teacherService;
 		this.mapper = mapper;
+		this.responseMapper = responseMapper;
 	}
 
 	@Override
 	public void addExam(CreateExamRequest createExamRequest) {
-		ExamEntity examEntity = mapper.createExamRequestToExamEntity(createExamRequest, classRepository,
-				moduleRepository, classRoomRepository, teacherRepository);
+		ExamEntity examEntity = mapper.createExamRequestToExamEntity(createExamRequest);
+		if (CollectionUtils.isNotEmpty(examEntity.getAssignClasses())) {
+			examEntity.addAssignClasses(examEntity.getAssignClasses());
+		}
+
+		createExamRequest.getAssignClasses().forEach(item -> {
+			item.getTeachers().forEach(teacher -> {
+				teacherService.addDisponibilityToTeacher(teacher, item.getExamDate(), item.getExamHour(),
+						item.getExamDuration());
+			});
+		});
+
 		examRepository.save(examEntity);
 	}
 
 	@Override
 	public void updateExam(UpdateExamRequest updateExamRequest) {
-		ExamEntity examEntity;
-		Optional<ExamEntity> examEntityOptional = examRepository.findById(updateExamRequest.getExamId());
-		if (examEntityOptional.isPresent()) {
-			examEntity = mapper.updateExamRequestToExamEntity(updateExamRequest, classRepository, moduleRepository,
-					classRoomRepository, teacherRepository);
-			examRepository.save(examEntity);
-		} else {
-			throw new EntityNotFoundException(ExamEntity.class, "Id", updateExamRequest.getExamId());
-		}
+		/*
+		 * ExamEntity examEntity; Optional<ExamEntity> examEntityOptional =
+		 * examRepository.findById(updateExamRequest.getExamId()); if
+		 * (examEntityOptional.isPresent()) { examEntity =
+		 * mapper.updateExamRequestToExamEntity(updateExamRequest);
+		 * examRepository.save(examEntity); } else { throw new
+		 * EntityNotFoundException(ExamEntity.class, "Id",
+		 * updateExamRequest.getExamId()); }
+		 */
 	}
 
 	@Override
 	public void deleteExam(String examId) {
-		if (findExam(examId) != null) {
-			examRepository.deleteById(examId);
-		}
+		/*
+		 * if (findExam(examId) != null) { examRepository.deleteById(examId); }
+		 */
 	}
 
 	@Override
-	public ExamResponse findExam(String examId) {
-		ExamResponse result = null;
-		Optional<ExamEntity> examEntityOptional = examRepository.findById(examId);
-		if (examEntityOptional.isPresent()) {
-			result = mapper.examEntityToExamResponse(examEntityOptional.get());
-		} else {
-			throw new EntityNotFoundException(ExamEntity.class, "id", examId);
-		}
-		return result;
-	}
-
-	@Override
-	public List<ExamResponse> findExams() {
-		return mapper.examEntitiessToExamResponse(examRepository.findAll());
+	public List<ExamDTO> findExams() {
+		return responseMapper.examEntitiesToExamDTO(examRepository.findAll());
 	}
 
 }

@@ -3,18 +3,22 @@ package com.esprit.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import com.esprit.domain.ClassEntity;
-import com.esprit.dto.ClassDTO;
+import com.esprit.dto.classes.ClassDTO;
+import com.esprit.dto.classes.CreateClassRequest;
+import com.esprit.service.SpecialityService;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = SpecialityService.class)
 public interface ClassMapper {
 
 	ClassMapper INSTANCE = Mappers.getMapper(ClassMapper.class);
 
-	ClassEntity classDTOToClassEntity(ClassDTO classDTO);
+	@Mapping(source = "speciality", target = "speciality", qualifiedByName = "findSpeciality")
+	ClassEntity createClassRequestToClassEntity(CreateClassRequest createClassRequest);
 
 	ClassDTO classEntityToClassDTO(ClassEntity classEntity);
 

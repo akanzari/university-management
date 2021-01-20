@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateUserRequest;
-import com.esprit.dto.request.UpdateUserRequest;
-import com.esprit.dto.response.SpecificUserResponse;
-import com.esprit.dto.response.UserResponse;
+import com.esprit.dto.user.CreateUserRequest;
+import com.esprit.dto.user.SpecificUserResponse;
+import com.esprit.dto.user.UpdateUserRequest;
+import com.esprit.dto.user.UserResponse;
 import com.esprit.service.IAMService;
 
 @RestController

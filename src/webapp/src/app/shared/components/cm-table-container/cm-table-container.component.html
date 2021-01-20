@@ -1,4 +1,5 @@
-<ng-container *ngIf="config">
+<ng-container *ngIf="currentConfig">
+
     <div class="row mx-0">
         <div class="col-12 px-0">
 
@@ -9,7 +10,18 @@
                             style="table-layout: fixed; word-wrap: break-word;">
                             <thead>
                                 <tr>
+                                    <th *ngIf="currentConfig?.selectionMode === 'multiple' && allItems?.length > 0"
+                                        class="v-align-middle" style="width: 5%">
+                                        <input type="checkbox" id="box-0" [checked]="principalChecked"
+                                            (change)="checkAllLignes($event)">
+                                        <label for="box-0"
+                                            [ngClass]="{'principal-check': !isAllColumnSortable(), 'principal-check-filter': isAllColumnSortable()}"></label>
+                                    </th>
+                                    <th *ngIf="currentConfig?.selectionMode === 'single'" class="v-align-middle"
+                                        style="width: 5%">
+                                    </th>
                                     <th [columnWidth]="column?.width" [columnsLength]="columns?.length"
+                                        [selectionMode]="currentConfig?.hasOwnProperty('selectionMode')"
                                         *ngFor="let column of columns; let x = index" rowspan="1" colspan="1"
                                         style="padding: 10px 15px 0 !important;">
                                         <div [ngClass]="{'form-ui': column?.filterable && allItems?.length > 1}">
@@ -17,7 +29,9 @@
                                                 <input type="text" required="" class="d-inline"
                                                     (keyup)="keyupFilter($event, column?.field)" title="">
                                             </ng-container>
-                                            <label style="font-weight: 700;">{{column?.header}}</label>
+                                            <label style="font-weight: 700;">{{column?.header}}<span
+                                                    *ngIf="isElementRequired(column?.field) && displayLine"
+                                                    class="color-error required"></span></label>
 
                                             <ng-container *ngIf="column?.sortable && allItems?.length > 1">
                                                 <span #sort [id]="'sort-'+column?.field" (click)="sortArray(column)"
@@ -25,58 +39,280 @@
                                             </ng-container>
                                         </div>
                                     </th>
-                                    <th style="width: 8%" *ngIf="config?.actions?.length > 0 && allItems?.length > 0">
+                                    <th style="width: 8%"
+                                        *ngIf="currentConfig?.actions?.length > 0 && allItems?.length > 0">
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
 
+                                <tr id="editLigne" class="background-tr" *ngIf="displayLine"
+                                    (keyup.enter)="currentConfig?.addable ? enterKeyup() : 'false'">
+                                    <td *ngIf="currentConfig?.selectionMode"></td>
+                                    <ng-container [formGroup]="formGroup">
+                                        <td [columnWidth]="column?.width" [columnsLength]="columns?.length" class="px-1"
+                                            *ngFor="let column of columns" [id]="column?.field">
+                                            <ng-container *ngIf="column?.type === 'monoselect'">
+                                                <ng-select [items]="column?.monoselectConfig?.options"
+                                                    [formControlName]="column?.field"
+                                                    [bindLabel]="column?.monoselectConfig?.bindLabel"
+                                                    [bindValue]="column?.monoselectConfig?.bindValue"
+                                                    (change)="onChangeItem($event, column?.field)"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [readonly]="columnsEditable.get(column?.field) || column?.disabled">
+                                                </ng-select>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'multiselect'">
+                                                <ng-select [items]="column?.multiselectConfig?.options"
+                                                    [formControlName]="column?.field" [multiple]="true"
+                                                    [bindLabel]="column?.multiselectConfig?.bindLabel"
+                                                    [bindValue]="column?.multiselectConfig?.bindValue"
+                                                    (change)="onChangeItem($event, column?.field)"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [readonly]="columnsEditable.get(column?.field) || column?.disabled">
+                                                </ng-select>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'text'">
+                                                <input [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled"
+                                                    style="background-color: white !important" />
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && getErrorForConditionValidation"
+                                                    style="cursor: default" [title]="getErrorForConditionValidation">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error ">{{getErrorForConditionValidation}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'number'">
+                                                <input type="number" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled"
+                                                    style="background-color: white !important" />
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && getErrorForConditionValidation"
+                                                    style="cursor: default" [title]="getErrorForConditionValidation">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error ">{{getErrorForConditionValidation}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'calendar'">
+                                                <input type="date" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    (change)="changeCalendar(column?.field)"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled" />
+                                                <p class="media line-break" *ngIf="formGroup.hasError('loaddate')"
+                                                    style="cursor: default" [title]="getErrorFormLoadDate()">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error">{{getErrorFormLoadDate()}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break" *ngIf="validationError.has(column?.field)"
+                                                    style="cursor: default"
+                                                    [title]="validationError.get(column?.field)">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error">{{validationError.get(column?.field)}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'label'">
+                                                <label class=" my-2"
+                                                    [title]="labelMap?.get(column?.field)">{{labelMap?.get(column?.field)}}</label>
+                                            </ng-container>
+                                        </td>
+                                        <td style="width: 8%" class="text-center px-0 py-3">
+                                            <a class="mr-1" title="Valider"
+                                                *ngIf="getUpdateAction() || currentConfig?.addable" (click)="confirm()"
+                                                [class.disabled]="isLineHasElementNotValid()">
+                                                <i class="icons icon-check size-16"></i>
+                                            </a>
+                                            <a class="ml-1" title="Annuler" *ngIf="displayLine" (click)="resetLine()">
+                                                <i class="icons icon-cancel size-16"></i>
+                                            </a>
+                                        </td>
+                                    </ng-container>
+                                </tr>
+
                                 <tr *ngFor="let value of arrayOfItems() | filter: valueForFilter: fieldForFilter | orderBy: fieldForSort:reverse:true; let j = index"
-                                    [id]="config?.id +'-'+ getIndex(j)">
-                                    <!-- display ligne -->
-                                    <td [columnWidth]="column?.width" [columnsLength]="columns?.length"
-                                        *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'">
-                                        <!-- icon -->
-                                        <ng-container *ngIf="column?.link;else other_display">
-                                            <a href="javascript:void(0)" [title]="column?.link.text"
-                                                (click)="sendItem(null, value)">{{column?.link.text}}</a>
-                                        </ng-container>
-                                        
-                                        <!-- text -->
-                                        <ng-template #other_display>
-                                            <span [title]="displayValue(value, column)"
-                                                [class]="column?.conditionClass?.get(value[column.field]) ">
-                                                {{displayValue(value, column)}}</span>
-                                        </ng-template>
-                                    </td>
-                                    <!-- actions -->
-                                    <td style="width: 8%" class="text-center px-0" *ngIf="config?.actions">
-                                        <ng-container
-                                            *ngIf="config?.conditionActions?.enable != null && config?.conditionActions?.enable?.status === value[getFirstKeyFromJson(config?.conditionActions?.enable)]">
-                                            <a class="mr-1 pr-2"
-                                                [title]="config?.conditionActions?.enable?.icon?.tooltip">
-                                                <i class="icons {{config?.conditionActions?.enable?.icon?.class}}"
-                                                    (click)="sendItem(config?.conditionActions?.enable?.name, value)"></i>
-                                            </a>
-                                        </ng-container>
-                                        <ng-container
-                                            *ngIf="config?.conditionActions?.disable != null && config?.conditionActions?.disable?.status === value[getFirstKeyFromJson(config?.conditionActions?.disable)]">
-                                            <a class="mr-1 pr-2"
-                                                [title]="config?.conditionActions?.disable?.icon?.tooltip">
-                                                <i class="icons {{config?.conditionActions?.disable?.icon?.class}}"
-                                                    (click)="sendItem(config?.conditionActions?.disable?.name, value)"></i>
-                                            </a>
-                                        </ng-container>
-                                        <ng-container *ngIf="config?.actions && config?.actions.length > 0">
+                                    [id]="currentConfig?.id +'-'+ getIndex(j)">
+
+                                    <ng-container *ngIf="!getEditableLigne(currentConfig?.id +'-'+ getIndex(j))">
+                                        <td *ngIf="currentConfig?.selectionMode === 'multiple'" class="v-align-middle">
+                                            <input type="checkbox" [id]="currentConfig?.id +'--'+ getIndex(j)"
+                                                [checked]="itemsChecked.get(currentConfig?.id +'-'+ getIndex(j))"
+                                                (change)="getItemsChecked($event, value, currentConfig?.id +'-'+ getIndex(j))">
+                                            <label [for]="currentConfig?.id +'--'+ getIndex(j)"></label>
+                                        </td>
+                                        <td *ngIf="currentConfig?.selectionMode === 'single'" class="v-align-middle">
+                                            <input type="checkbox" [id]="currentConfig?.id +'--'+ getIndex(j)"
+                                                [checked]="itemsChecked.get(currentConfig?.id +'-'+ getIndex(j))"
+                                                (change)="getItemChecked($event, value, currentConfig?.id +'-'+ getIndex(j))">
+                                            <label [for]="currentConfig?.id +'--'+ getIndex(j)"></label>
+                                        </td>
+                                        <!-- display ligne -->
+                                        <td *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'"
+                                            [ngStyle]="{'cursor': editableWithSelectMode && notEditableCondition(value[currentConfig?.notEditableCondition?.field]) && !displayLine ? 'pointer' : 'default'}"
+                                            (click)="editableWithSelectMode && notEditableCondition(value[currentConfig?.notEditableCondition?.field]) && !displayLine ? selectItem(getIndex(j), value, currentConfig?.id +'-'+ getIndex(j)) : 'false'">
+                                            <!-- icon -->
+                                            <ng-container *ngIf="column?.link;else other_display">
+                                                <a href="javascript:void(0)" [title]="column?.link.text" [class.disabled]="column?.field !== 'nothing' && value[column?.field]?.length < 1"
+                                                    (click)="sendItem(null, value, getIndex(j))">{{column?.link.text}}</a>
+                                            </ng-container>
+                                            <!-- text -->
+                                            <ng-template #other_display>
+                                                <span [title]="displayValue(value, column)">
+                                                    {{displayValue(value, column)}}</span>
+                                            </ng-template>
+                                        </td>
+                                        <!-- actions -->
+                                        <td style="width: 8%" class="text-center px-0"
+                                            *ngIf="currentConfig?.actions && currentConfig?.actions.length > 0">
                                             <ng-container *ngFor="let action of geActionsWithIcon()">
-                                                <a class="mr-1 pr-2" [title]="action?.icon?.tooltip">
+                                                <a class="mr-1 pr-2" [title]="action?.icon?.tooltip"
+                                                    *ngIf="displayAction(action)">
                                                     <i class="icons {{action?.icon?.class}}"
-                                                        (click)="sendItem(action?.name, value)"></i>
+                                                        (click)="sendItem(action?.name, value, getIndex(j))"></i>
                                                 </a>
                                             </ng-container>
-                                        </ng-container>
-                                    </td>
+                                        </td>
+                                    </ng-container>
 
+                                    <ng-container [formGroup]="formGroup"
+                                        *ngIf="getEditableLigne(currentConfig?.id +'-'+ getIndex(j))">
+                                        <td *ngIf="currentConfig?.selectionMode"></td>
+                                        <!-- editable ligne -->
+                                        <td *ngFor="let column of columns" [columnWidth]="column?.width"
+                                            [columnsLength]="columns?.length" class="px-1" [id]="column?.field"
+                                            (keyup.enter)="getUpdateAction() ? enterKeyup() : 'false'">
+                                            <ng-container *ngIf="column?.type === 'monoselect'">
+                                                <ng-select [items]="column?.monoselectConfig?.options"
+                                                    [formControlName]="column?.field"
+                                                    [bindLabel]="column?.monoselectConfig?.bindLabel"
+                                                    [bindValue]="column?.monoselectConfig?.bindValue"
+                                                    (change)="onChangeItem($event, column?.field)"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [readonly]="columnsEditable.get(column?.field) && column?.disabled">
+                                                </ng-select>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'multiselect'">
+                                                <ng-select [items]="column?.multiselectConfig?.options"
+                                                    [formControlName]="column?.field" [multiple]="true"
+                                                    [bindLabel]="column?.multiselectConfig?.bindLabel"
+                                                    [bindValue]="column?.multiselectConfig?.bindValue"
+                                                    (change)="onChangeItem($event, column?.field)"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [readonly]="columnsEditable.get(column?.field) || column?.disabled">
+                                                </ng-select>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'text'">
+                                                <input [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled"
+                                                    style="background-color: white !important" />
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && getErrorForConditionValidation"
+                                                    style="cursor: default" [title]="getErrorForConditionValidation">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error ">{{getErrorForConditionValidation}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'number'">
+                                                <input type="number" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled"
+                                                    style="background-color: white !important" />
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && getErrorForConditionValidation"
+                                                    style="cursor: default" [title]="getErrorForConditionValidation">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error ">{{getErrorForConditionValidation}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'calendar'">
+                                                <input type="date" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    (change)="changeCalendar(column?.field)"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled" />
+                                                <p class="media line-break" *ngIf="formGroup.hasError('loaddate')"
+                                                    style="cursor: default" [title]="getErrorFormLoadDate()">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error">{{getErrorFormLoadDate()}}</small>
+                                                </p>
+                                                <p class="media line-break"
+                                                    *ngIf="isInvalidElement(column?.field) && column?.validations?.error"
+                                                    style="cursor: default" [title]="column?.validations?.error">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small class="color-error ">{{column?.validations?.error}}</small>
+                                                </p>
+                                                <p class="media line-break" *ngIf="validationError.has(column?.field)"
+                                                    style="cursor: default"
+                                                    [title]="validationError.get(column?.field)">
+                                                    <i class="icons icon-cancel color-error font-size-16"></i>
+                                                    <small
+                                                        class="color-error">{{validationError.get(column?.field)}}</small>
+                                                </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'label'">
+                                                <label style="padding-left: 11px;"
+                                                    [title]="labelMap?.get(column?.field)">{{labelMap?.get(column?.field)}}</label>
+                                            </ng-container>
+                                        </td>
+
+                                        <!-- actions -->
+                                        <td style="width: 8%" class="text-center px-0 py-3">
+                                            <a class="mr-1" title="Valider"
+                                                *ngIf="getUpdateAction() || currentConfig?.addable" (click)="confirm()"
+                                                [class.disabled]="isLineHasElementNotValid()">
+                                                <i class="icons icon-check size-16"></i>
+                                            </a>
+                                            <a class="ml-1" title="Annuler" (click)="resetLine()">
+                                                <i class="icons icon-cancel size-16"></i>
+                                            </a>
+                                        </td>
+                                    </ng-container>
                                 </tr>
 
                             </tbody>
@@ -86,10 +322,11 @@
                 </div>
             </div>
 
-            <cm-pagination *ngIf="config?.pagination && pagedItems?.length > 0" [pager]="pager"
-                (updatePager)="setPage($event)" [rowsPerPageOptions]="config?.pagination?.rowsPerPageOptions">
+            <cm-pagination *ngIf="currentConfig?.pagination && pagedItems?.length > 0" [pager]="pager"
+                (updatePager)="setPage($event)" [rowsPerPageOptions]="currentConfig?.pagination?.rowsPerPageOptions">
             </cm-pagination>
 
         </div>
     </div>
+
 </ng-container>

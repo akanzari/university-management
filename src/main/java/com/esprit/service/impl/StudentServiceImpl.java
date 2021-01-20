@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.esprit.domain.ClassEntity;
 import com.esprit.domain.StudentEntity;
-import com.esprit.dto.request.CreateStudentRequest;
-import com.esprit.dto.response.StudentResponse;
+import com.esprit.dto.user.CreateStudentRequest;
+import com.esprit.dto.user.StudentResponse;
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.error.exception.EntityNotFoundException;
 import com.esprit.repository.ClassRepository;

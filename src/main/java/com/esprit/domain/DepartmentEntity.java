@@ -1,13 +1,13 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "DEPARTMENT")
@@ -16,13 +16,13 @@ public class DepartmentEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(generator = "departmenet-uuid")
-	@GenericGenerator(name = "departmenet-uuid", strategy = "uuid2")
 	private String departmenetId;
 
-	private String code;
-
 	private String label;
+
+	@ElementCollection
+	@CollectionTable(name = "DEPARTMENT_UP")
+	private List<String> up;
 
 	public String getDepartmenetId() {
 		return departmenetId;
@@ -32,20 +32,20 @@ public class DepartmentEntity implements Serializable {
 		this.departmenetId = departmenetId;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public String getLabel() {
 		return label;
 	}
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public List<String> getUp() {
+		return up;
+	}
+
+	public void setUp(List<String> up) {
+		this.up = up;
 	}
 
 }

@@ -4,7 +4,9 @@ export interface Classs {
     classId: string;
     code: string;
     label: string;
+    description: string;
     nbrStudents: string;
-    nbrGroups: string;
     speciality: Speciality;
+    category: string;
+    email: string;
 }

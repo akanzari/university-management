@@ -1,7 +1,5 @@
 <div class="modal-header mt-3">
-    <h2 *ngIf="!editExam" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un examen
-    </h2>
-    <h2 *ngIf="editExam" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un examen
+    <h2 *ngIf="!editExam" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un épreuve
     </h2>
     <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
         <span aria-hidden="true">&times;</span>
@@ -26,120 +24,188 @@
         {{saveSuccess}}
     </div>
 
-    <div class="modal-body mb-2">
-        <div class="row pt-1" style="padding-right: 5%;">
-            <div class="col-12 px-0 mb-2">
+    <div class="modal-body pb-0">
+        <div class="row pt-1">
+            <div class="col-12 px-0">
 
-                <div class="row">
+                <div class="row" style="padding-right: 5%;">
                     <div class="col-2 py-2 px-0">
-                        <label class="float-right">Classe : <span class="color-error">*</span></label>
+                        <label class="float-right">Niveaux : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-4 pr-0">
-                        <ng-select [items]="class$ | async" formControlName="classId" bindValue="classId"
-                            (change)="onChangeClass($event)"></ng-select>
-                    </div>
-                    <div class="col-2 py-2">
-                        <label class="float-right">Module : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pl-0">
-                        <ng-select [items]="module$ | async" formControlName="moduleId" bindValue="moduleId"
-                            bindLabel="designation" (change)="onChangeModule($event)">
+                        <ng-select [items]="levels" formControlName="levels" bindLabel="label" bindValue="id"
+                            [multiple]="true" [hideSelected]="true" (change)="onChangeLavel($event)"
+                            (remove)="onRemoveLavel()" (clear)="onClearLavel()">
                         </ng-select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Enseigant :</label>
-                    </div>
-                    <div class="col-10">
-                        <input type="text" [disabled]="true">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Date d'examen : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-10">
-                        <input type="date" formControlName="date">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Houre d'examen : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-10">
-                        <input type="time" formControlName="hour">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Duration d'examen : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-10">
-                        <input type="number" formControlName="duration">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">DSEX : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pr-0">
-                        <ng-select [items]="dsex" formControlName="dsex"></ng-select>
-                    </div>
-                    <div class="col-2 py-2">
-                        <label class="float-right">Type d'exame : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pl-0">
-                        <ng-select [items]="examTypes" formControlName="examType"></ng-select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Semestre : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pr-0">
-                        <ng-select [items]="semesters" formControlName="semester"></ng-select>
                     </div>
                     <div class="col-2 py-2">
                         <label class="float-right">Session : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-4 pl-0">
-                        <ng-select [items]="sessions" formControlName="session"></ng-select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Groupe : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-10">
-                        <ng-select [items]="semesters" formControlName="semester"></ng-select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2 py-2 px-0">
-                        <label class="float-right">Salle : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pr-0">
-                        <ng-select [items]="rooms$ | async" formControlName="classRoomId" bindValue="classRoomId">
-                        </ng-select>
-                    </div>
-                    <div class="col-2 py-2">
-                        <label class="float-right">Surveillant : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-4 pl-0">
-                        <ng-select [items]="supervisors$ | async" formControlName="supervisorId" bindValue="userId"
-                            bindLabel="fullName">
+                        <ng-select [items]="sessions" formControlName="session" (change)="onChangeSession($event)">
                         </ng-select>
                     </div>
                 </div>
+
+                <ng-container formArrayName="assignClasses">
+                    <ng-container *ngFor="let dispo of form.get('assignClasses')['controls']; let i=index"
+                        [formGroupName]="i">
+
+                        <fieldset class="pt-2" style="border: 1px solid #bda671;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-bg-primary float-right mr-2"
+                                        *ngIf=" i == form.get('assignClasses')?.value.length-1"
+                                        (click)="inProgress ? false : addAssignClass(i)"
+                                        [ngClass]="{'disabled': inProgress}" [disabled]="isDisabledAssignClass(i)">
+                                        <i class="fa fa-plus btn-plus fa-lg"></i>
+                                    </button>
+                                    <button class="btn btn-bg-primary float-right" *ngIf=" i > 0"
+                                        (click)="inProgress ? false : removeAssignClass(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-times btn-fonticon fa-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Date examen : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <input type="date" formControlName="examDate" (change)="onChangeDate($event, i)">
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Heure examen : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-2 pl-0 pr-0">
+                                    <input type="time" formControlName="examHour" style="width: 100%;"
+                                        (input)="onChangeHour($event, i)">
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Durée examen : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-2 pl-0">
+                                    <input type="number" formControlName="examDuration" style="width: 100%;"
+                                        (change)="onChangeDuration($event, i)" (input)="onChangeDuration($event, i)">
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Modules : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="modules" formControlName="module" [hideSelected]="true"
+                                        bindLabel="moduleId" bindValue="moduleId" [virtualScroll]="true"
+                                        [loading]="loadingModules" (scroll)="onScrollModules($event)"
+                                        (scrollToEnd)="onScrollToEndModules()" [closeOnSelect]="false"></ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Classes :<span class="color-error">*</span> </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="classes" formControlName="classes" [multiple]="true"
+                                        bindLabel="classId" bindValue="classId" groupBy="category"
+                                        [virtualScroll]="true" [loading]="loadingClasses"
+                                        (scroll)="onScrollClasses($event)" (scrollToEnd)="onScrollToEndClasses()"
+                                        [closeOnSelect]="false" [selectableGroup]="true"
+                                        [selectableGroupAsModel]="false" (change)="onChangeClass($event, i)"
+                                        (remove)="onRemoveClass($event, i)" (clear)="onClearClass($event, i)"
+                                        [readonly]="disabledClass">
+                                        <ng-template ng-multi-label-tmp let-items="items">
+                                             {{items.length}} classes séléctionnées
+                                        </ng-template>`
+                                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                            let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item.category}}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item.classId}}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Bloc : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="blocs$ | async" formControlName="bloc" bindLabel="label"
+                                        bindValue="pole" groupBy="blocs" [closeOnSelect]="false"
+                                        [selectableGroup]="true" [selectableGroupAsModel]="false"
+                                        (change)="onChangeBoc($event, i)" (remove)="onRemoveBloc($event, i)"
+                                        (clear)="onClearBloc($event, i)" [readonly]="disabled?.get(i)"
+                                        [multiple]="true">
+                                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                            let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item.label}}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item}}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Salles : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="rooms" formControlName="rooms" [multiple]="true"
+                                        [hideSelected]="true" bindLabel="classRoomId" bindValue="classRoomId"
+                                        [readonly]="disabledRoom?.get(i)" [maxSelectedItems]="selectedClassesLenght">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">UP : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="department$ | async" formControlName="up" bindLabel="label"
+                                        bindValue="departmenetId" groupBy="up" [closeOnSelect]="false"
+                                        [selectableGroup]="true" [selectableGroupAsModel]="false"
+                                        (change)="onChangeDepartmenet($event, i)"
+                                        (remove)="onRemoveDepartmenet($event, i)"
+                                        (clear)="onClearDepartmenet($event, i)" [readonly]="disabled?.get(i)"
+                                        [multiple]="true">
+                                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                            let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item.label}}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                                                [ngModelOptions]="{standalone: true}" style="height: auto;">
+                                            {{item}}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Enseigants : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="teachers" formControlName="teachers" [multiple]="true"
+                                        bindLabel="fullName" bindValue="teacherId" [readonly]="disabledTeacher?.get(i)"
+                                        [maxSelectedItems]="selectedClassesLenght">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <br />
+
+                    </ng-container>
+                </ng-container>
 
             </div>
         </div>

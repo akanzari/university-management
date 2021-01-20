@@ -8,11 +8,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DisplayPipe } from './components/cm-table-container/pipes/display.pipe';
 import { FilterPipe } from './components/cm-table-container/pipes/filter.pipe';
 import { RemovePopupComponent } from './components/comfirmation-popup/remove/remove-popup.component';
 import { CmPaginationComponent } from './components/cm-table-container/components/pagination/pagination.component';
 import { CmTbaleContainerComponent } from './components/cm-table-container/cm-table-container.component';
-import { WidthDirective } from './components/width.directive';
+import { WidthDirective } from './components/cm-table-container/directives/width.directive';
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import { WidthDirective } from './components/width.directive';
         CmPaginationComponent,
         RemovePopupComponent,
         FilterPipe,
+        DisplayPipe,
         WidthDirective
     ],
     imports: [
@@ -28,7 +30,8 @@ import { WidthDirective } from './components/width.directive';
         RouterModule,
         TranslateModule,
         ReactiveFormsModule,
-        OrderModule
+        OrderModule,
+        NgSelectModule
     ],
     exports: [
         CommonModule,

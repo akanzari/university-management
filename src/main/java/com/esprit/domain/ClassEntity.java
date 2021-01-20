@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,7 +21,9 @@ public class ClassEntity implements Serializable {
 
 	private int nbrStudents;
 
-	private String speciality;
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_speciality")
+	private SpecialityEntity speciality;
 
 	private String category;
 
@@ -49,11 +53,11 @@ public class ClassEntity implements Serializable {
 		this.nbrStudents = nbrStudents;
 	}
 
-	public String getSpeciality() {
+	public SpecialityEntity getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(String speciality) {
+	public void setSpeciality(SpecialityEntity speciality) {
 		this.speciality = speciality;
 	}
 

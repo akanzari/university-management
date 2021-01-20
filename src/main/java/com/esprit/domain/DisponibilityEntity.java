@@ -1,15 +1,20 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.esprit.enums.PeriodEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "DISPONIBILITY_SALLE")
@@ -24,17 +29,37 @@ public class DisponibilityEntity implements Serializable {
 
 	private String day;
 
-	private String seance;
-
-	private String week;
-
-	private String semester;
-
 	private String year;
 
-	private PeriodEnum period;
-
 	private String motif;
+
+	private Date exactDate;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_seance")
+	private SeanceEntity seance;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_week")
+	private WeekEntity week;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_semester")
+	private SemesterEntity semester;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_period")
+	private PeriodEntity period;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_room")
+	private RoomEntity room;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_teacher")
+	private TeacherEntity teacher;
 
 	public String getDisponibilityId() {
 		return disponibilityId;
@@ -52,28 +77,44 @@ public class DisponibilityEntity implements Serializable {
 		this.day = day;
 	}
 
-	public String getSeance() {
+	public Date getExactDate() {
+		return exactDate;
+	}
+
+	public void setExactDate(Date exactDate) {
+		this.exactDate = exactDate;
+	}
+
+	public SeanceEntity getSeance() {
 		return seance;
 	}
 
-	public void setSeance(String seance) {
+	public void setSeance(SeanceEntity seance) {
 		this.seance = seance;
 	}
 
-	public String getWeek() {
+	public WeekEntity getWeek() {
 		return week;
 	}
 
-	public void setWeek(String week) {
+	public void setWeek(WeekEntity week) {
 		this.week = week;
 	}
 
-	public String getSemester() {
+	public SemesterEntity getSemester() {
 		return semester;
 	}
 
-	public void setSemester(String semester) {
+	public void setSemester(SemesterEntity semester) {
 		this.semester = semester;
+	}
+
+	public PeriodEntity getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(PeriodEntity period) {
+		this.period = period;
 	}
 
 	public String getYear() {
@@ -84,20 +125,28 @@ public class DisponibilityEntity implements Serializable {
 		this.year = year;
 	}
 
-	public PeriodEnum getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(PeriodEnum period) {
-		this.period = period;
-	}
-
 	public String getMotif() {
 		return motif;
 	}
 
 	public void setMotif(String motif) {
 		this.motif = motif;
+	}
+
+	public RoomEntity getRoom() {
+		return room;
+	}
+
+	public void setRoom(RoomEntity room) {
+		this.room = room;
+	}
+
+	public TeacherEntity getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(TeacherEntity teacher) {
+		this.teacher = teacher;
 	}
 
 }

@@ -1,0 +1,25 @@
+.stepper {padding:20px;margin-bottom:10px;
+    .num-circle {height:60px;width:60px;background:$default-200;margin:10px auto;border-radius:50px;padding:18px 0;font-size: 14px;color:$text;
+        &.num-prev {color:$white;background:$primary-200;padding:20px 0;
+            i {font-size: 18px; color:$white;}
+        }
+        &.num-actif {font-weight:700;color:$white;background:$primary-200;}
+    }
+    .bold {font-weight: 700;color:$title;
+        em {font-weight: 300;color:$text;}
+    }
+
+    &.stepper-horizontal {padding:10px 15px;
+        .num-circle {float: left;text-align:center;height:30px;width:30px;margin:10px 15px;padding:4px 0;font-size: 14px;
+            &.num-prev {padding:7px 0;
+                i {font-size: 16px;}
+            }
+        }
+        p {margin: 15px 0; float:left; padding-right:50px;}
+    }
+} 
+
+
+@media only screen and (max-width: 1440px) { 
+
+}

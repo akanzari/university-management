@@ -1,0 +1,27 @@
+<div class="modal-header mt-3">
+    <h2 class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">{{config?.title}}
+    </h2>
+    <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </span>
+</div>
+<div class="modal-body pt-1 pt-2 text-center ">
+    <div class="row">
+        <div class="col-12 py-4">
+            <p class="bold font-size-24">
+                <i class="icons icon-help color-primary size-32 pr-2"></i>
+                {{config?.message}}
+            </p>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-group">
+        <button type="button" class="btn btn-bg-primary float-right" (click)="confirm()">
+            Confirmer
+        </button>
+        <button type="button" class="btn btn-default float-right" (click)="closeModal()">
+            Annuler
+        </button>
+    </div>
+</div>

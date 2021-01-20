@@ -2,8 +2,12 @@ package com.esprit.service;
 
 import java.util.List;
 
-import com.esprit.dto.request.modules.CreateModuleRequest;
-import com.esprit.dto.response.ModuleResponse;
+import org.mapstruct.Named;
+
+import com.esprit.domain.ModuleEntity;
+import com.esprit.dto.module.AssignClassModuleDTO;
+import com.esprit.dto.module.CreateModuleRequest;
+import com.esprit.dto.module.ModuleDTO;
 
 public interface ModuleService {
 
@@ -11,10 +15,17 @@ public interface ModuleService {
 
 	void deleteModule(String moduleId);
 
-	ModuleResponse findModule(String moduleId);
+	ModuleDTO findModule(String moduleId);
 
-	List<ModuleResponse> findModules();
+	@Named("findModuleById")
+	ModuleEntity findModuleById(String moduleId);
 
-	List<ModuleResponse> findModulesByClass(String classId);
+	List<ModuleDTO> findModules();
+
+	List<ModuleDTO> findAllWithoutAssignClasses();
+
+	List<AssignClassModuleDTO> findAssignClassesByModule(String moduleId);
+
+	List<ModuleDTO> findModulesByClass(String classId);
 
 }

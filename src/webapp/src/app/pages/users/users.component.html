@@ -2,8 +2,8 @@
     <div class="col-12 px-0">
         <ol class="breadcrumb d-none d-lg-block">
             <li class="breadcrumb-item">
-                <a href="/">
-                    <i class="icons icon-home size-20 color-text"></i> Accueil </a>
+                <a routerLink="/">
+                    <i class="icons icon-bar_chart size-20 color-text"></i> Accueil </a>
             </li>
             <li class="breadcrumb-item active">Utilisateurs</li>
         </ol>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="col-12 mb-4 px-0">
-            <cm-table-container [currentConfig]="config"></cm-table-container>
+            <cm-table-container [config]="config"></cm-table-container>
         </div>
 
     </div>

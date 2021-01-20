@@ -36,7 +36,7 @@ export class ExamsComponent implements OnInit {
             this.spinner.show();
             if (dataValue.action === ActionEnum.CREATE) {
                 concat(
-                    this.examService.addExam(dataValue.value as CreateExamRequest).pipe(switchMapTo(EMPTY)),
+                    this.examService.addExam(dataValue.value).pipe(switchMapTo(EMPTY)),
                     timer(1000).pipe(switchMapTo(EMPTY)),
                     this.examService.getExams()
                 ).subscribe((exams: Exam[]) => {
@@ -130,13 +130,6 @@ export class ExamsComponent implements OnInit {
                 rowsPerPageOptions: [10, 15, 20, 25]
             },
             actions: [
-                {
-                    name: ActionEnum.UPDATE,
-                    icon: {
-                        class: "icon-edit size-16",
-                        tooltip: "Modifier"
-                    }
-                },
                 {
                     name: ActionEnum.DELETE,
                     icon: {

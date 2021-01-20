@@ -34,6 +34,10 @@ export class ClassService {
         return this.httpClient.get<Classs[]>(this.domain + "moduleId/" + moduleId);
     }
 
+    searchClass(data): Observable<Classs[]> {
+        return this.httpClient.post<Classs[]>(this.domain + "search", data);
+    }
+
     getSingleClass(id: string): Observable<Classs> {
         return this.httpClient.get<Classs>(this.domain + id);
     }

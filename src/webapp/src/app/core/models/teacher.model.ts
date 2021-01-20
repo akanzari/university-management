@@ -1,12 +1,13 @@
 import { Department } from './departement.modal';
 
 export interface Teacher {
-    userId: string;
-    phone: string;
+    teacherId: string;
+    cin: number;
+    sex: string;
+    fullName: string;
+    email: string;
+    phones: string[];
     nbrSurveillance: number;
     nbrHeureSurveillance: number;
-    startDate: string;
-    endDate: string;
-    reason: string;
-    department: Department;
+    departement: Department;
 }

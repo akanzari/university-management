@@ -30,10 +30,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.esprit.dto.request.CreateUserRequest;
-import com.esprit.dto.request.UpdateUserRequest;
-import com.esprit.dto.response.SpecificUserResponse;
-import com.esprit.dto.response.UserResponse;
+import com.esprit.dto.user.CreateUserRequest;
+import com.esprit.dto.user.SpecificUserResponse;
+import com.esprit.dto.user.UpdateUserRequest;
+import com.esprit.dto.user.UserResponse;
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.service.IAMService;
 import com.esprit.service.mapper.IAMMapper;

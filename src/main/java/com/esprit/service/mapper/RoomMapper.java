@@ -9,65 +9,49 @@ import org.mapstruct.factory.Mappers;
 
 import com.esprit.domain.DisponibilityEntity;
 import com.esprit.domain.RoomEntity;
-import com.esprit.dto.DisponibilityDTO;
-import com.esprit.dto.RoomDTO;
-import com.esprit.enums.PeriodEnum;
-import com.esprit.enums.PoleEnum;
-import com.esprit.enums.SemesterEnum;
+import com.esprit.dto.CreateDisponibilityRequest;
+import com.esprit.dto.room.CreateRoomRequest;
+import com.esprit.dto.room.DisponibilityDTO;
+import com.esprit.dto.room.RoomDTO;
+import com.esprit.dto.room.RoomWithoutDisponibilityDTO;
+import com.esprit.service.PeriodService;
+import com.esprit.service.SeanceService;
+import com.esprit.service.SemesterService;
+import com.esprit.service.WeekService;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { SemesterService.class, SeanceService.class,
+		WeekService.class, PeriodService.class })
 public interface RoomMapper {
 
 	RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
 
-	RoomEntity createClassRoomRequestToClassRoomEntity(RoomDTO roomDTO);
+	RoomEntity createRoomRequestToClassRoomEntity(CreateRoomRequest createRoomRequest);
 
-	RoomEntity updateClassRoomRequestToClassRoomEntity(RoomDTO roomDTO);
+	RoomEntity updateRoomRequestToClassRoomEntity(CreateRoomRequest createRoomRequest);
 
-	@Mapping(target = "pole", source = "pole", qualifiedByName = "toPoleString")
+	@Mapping(target = "pole", expression = "java(classRoomEntity.getPole().equals(\"g\") ? \"Charguia\" : \"\")")
 	RoomDTO classRoomEntityToClassRoomResponse(RoomEntity classRoomEntity);
 
 	List<RoomDTO> classRoomEntitiesToClassRoomResponse(List<RoomEntity> classRoomEntities);
 
-	@Mapping(target = "period", source = "period", qualifiedByName = "toPeriodEnum")
-	DisponibilityEntity createDisponibilityRequestToDisponibilityEntity(DisponibilityDTO disponibilityDTO);
+	@Mapping(target = "pole", expression = "java(roomWithoutDisponibilityDTO.getPole().equals(\"g\") ? \"Charguia\" : \"El Ghazala\")")
+	RoomDTO roomWithoutDisponibilityDTOToRoomDTO(RoomWithoutDisponibilityDTO roomWithoutDisponibilityDTO);
 
-	@Mapping(target = "period", source = "period", qualifiedByName = "toPeriodString")
-	DisponibilityDTO disponibilityEntityToDisponibilityEntities(DisponibilityEntity disponibilityEntity);
+	List<RoomDTO> roomWithoutDisponibilityDTOsToRoomDTO(List<RoomWithoutDisponibilityDTO> roomWithoutDisponibilityDTOs);
+
+	@Mapping(source = "semesterId", target = "semester", qualifiedByName = "findSemester")
+	@Mapping(source = "seanceId", target = "seance", qualifiedByName = "findSeance")
+	@Mapping(source = "weekId", target = "week", qualifiedByName = "findWeek")
+	@Mapping(source = "periodId", target = "period", qualifiedByName = "findPeriod")
+	DisponibilityEntity createDispoibilityRequestToDisponibilityEntity(
+			CreateDisponibilityRequest createDispoibilityRequest);
 
 	List<DisponibilityEntity> createDisponibilityRequestToDisponibilityEntities(
 			List<DisponibilityDTO> createDisponibilityRequest);
 
-	public default SemesterEnum toSemesterEnum(final String semester) {
-		return SemesterEnum.forValue(semester);
-	}
+	DisponibilityDTO disponibilityEntityToDisponibilityEntities(DisponibilityEntity disponibilityEntity);
 
-	public default PeriodEnum toPeriodEnum(final String period) {
-		return PeriodEnum.forValue(period);
-	}
-
-	public default String toPoleString(final PoleEnum pole) {
-		String result = null;
-		if (pole != null) {
-			result = PoleEnum.forKey(pole);
-		}
-		return result;
-	}
-
-	public default String toSemesterString(final SemesterEnum semester) {
-		String result = null;
-		if (semester != null) {
-			result = SemesterEnum.forKey(semester);
-		}
-		return result;
-	}
-
-	public default String toPeriodString(final PeriodEnum period) {
-		String result = null;
-		if (period != null) {
-			result = PeriodEnum.forKey(period);
-		}
-		return result;
-	}
+	List<DisponibilityDTO> disponibilityEntitiesToDisponibilityEntities(
+			List<DisponibilityEntity> disponibilityEntities);
 
 }

@@ -3,10 +3,10 @@ package com.esprit.service;
 import java.security.Principal;
 import java.util.List;
 
-import com.esprit.dto.request.CreateUserRequest;
-import com.esprit.dto.request.UpdateUserRequest;
-import com.esprit.dto.response.SpecificUserResponse;
-import com.esprit.dto.response.UserResponse;
+import com.esprit.dto.user.CreateUserRequest;
+import com.esprit.dto.user.SpecificUserResponse;
+import com.esprit.dto.user.UpdateUserRequest;
+import com.esprit.dto.user.UserResponse;
 
 public interface IAMService {
 

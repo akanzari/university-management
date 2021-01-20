@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.request.CreateStudentRequest;
-import com.esprit.dto.response.StudentResponse;
+import com.esprit.dto.user.CreateStudentRequest;
+import com.esprit.dto.user.StudentResponse;
 import com.esprit.service.StudentService;
 
 @RestController

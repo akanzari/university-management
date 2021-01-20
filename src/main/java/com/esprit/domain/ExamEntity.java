@@ -1,21 +1,22 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.annotations.GenericGenerator;
-
-import com.esprit.enums.DsexEnum;
-import com.esprit.enums.ExamTypeEnum;
-import com.esprit.enums.SemesterEnum;
-import com.esprit.enums.SessionEnum;
 
 @Entity
 @Table(name = "EPREUVE")
@@ -28,35 +29,30 @@ public class ExamEntity implements Serializable {
 	@GenericGenerator(name = "exam-uuid", strategy = "uuid2")
 	private String examId;
 
-	private Date examDate;
+	@ElementCollection
+	@CollectionTable(name = "EPREUVE_LEVELS")
+	private List<Integer> levels;
+	
+	@Column(name="EXAM_SESSION")
+	private String session;
 
-	private int examHour;
+	@OneToMany(mappedBy = "exam", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<AssignClassExamEntity> assignClasses;
 
-	private int examDuration;
+	public void addAssignClasses(List<AssignClassExamEntity> assignClassExamEntities) {
+		if (CollectionUtils.isEmpty(assignClasses)) {
+			assignClasses = new ArrayList<>();
+			assignClasses.addAll(assignClassExamEntities);
+			assignClassExamEntities.forEach(item -> item.setExam(this));
+		} else {
+			assignClasses.forEach(item -> item.setExam(this));
+		}
+	}
 
-	private ExamTypeEnum examType;
-
-	private SemesterEnum semester;
-
-	private SessionEnum examSession;
-
-	private DsexEnum dsex;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "fk_class")
-	private ClassEntity classs;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "fk_module")
-	private ModuleEntity module;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "fk_romm")
-	private RoomEntity classRoom;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "fk_supervisor")
-	private TeacherEntity supervisor;
+	public void removeAssignClasses(List<AssignClassExamEntity> assignClassExamEntities) {
+		assignClasses.removeAll(assignClassExamEntities);
+		assignClassExamEntities.forEach(item -> item.setExam(null));
+	}
 
 	public String getExamId() {
 		return examId;
@@ -66,92 +62,28 @@ public class ExamEntity implements Serializable {
 		this.examId = examId;
 	}
 
-	public Date getExamDate() {
-		return examDate;
+	public List<Integer> getLevels() {
+		return levels;
 	}
 
-	public void setExamDate(Date examDate) {
-		this.examDate = examDate;
+	public void setLevels(List<Integer> levels) {
+		this.levels = levels;
 	}
 
-	public int getExamHour() {
-		return examHour;
+	public String getSession() {
+		return session;
 	}
 
-	public void setExamHour(int examHour) {
-		this.examHour = examHour;
+	public void setSession(String session) {
+		this.session = session;
 	}
 
-	public int getExamDuration() {
-		return examDuration;
+	public List<AssignClassExamEntity> getAssignClasses() {
+		return assignClasses;
 	}
 
-	public void setExamDuration(int examDuration) {
-		this.examDuration = examDuration;
-	}
-
-	public ExamTypeEnum getExamType() {
-		return examType;
-	}
-
-	public void setExamType(ExamTypeEnum examType) {
-		this.examType = examType;
-	}
-
-	public SemesterEnum getSemester() {
-		return semester;
-	}
-
-	public void setSemester(SemesterEnum semester) {
-		this.semester = semester;
-	}
-
-	public SessionEnum getExamSession() {
-		return examSession;
-	}
-
-	public void setExamSession(SessionEnum examSession) {
-		this.examSession = examSession;
-	}
-
-	public DsexEnum getDsex() {
-		return dsex;
-	}
-
-	public void setDsex(DsexEnum dsex) {
-		this.dsex = dsex;
-	}
-
-	public ClassEntity getClasss() {
-		return classs;
-	}
-
-	public void setClasss(ClassEntity classs) {
-		this.classs = classs;
-	}
-
-	public ModuleEntity getModule() {
-		return module;
-	}
-
-	public void setModule(ModuleEntity module) {
-		this.module = module;
-	}
-
-	public RoomEntity getClassRoom() {
-		return classRoom;
-	}
-
-	public void setClassRoom(RoomEntity classRoom) {
-		this.classRoom = classRoom;
-	}
-
-	public TeacherEntity getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(TeacherEntity supervisor) {
-		this.supervisor = supervisor;
+	public void setAssignClasses(List<AssignClassExamEntity> assignClasses) {
+		this.assignClasses = assignClasses;
 	}
 
 }

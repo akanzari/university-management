@@ -1,7 +1,7 @@
 package com.esprit.service;
 
-import com.esprit.dto.request.CreateStudentRequest;
-import com.esprit.dto.response.StudentResponse;
+import com.esprit.dto.user.CreateStudentRequest;
+import com.esprit.dto.user.StudentResponse;
 
 public interface StudentService {
 

@@ -1,0 +1,23 @@
+[
+    {
+        "pole": "C",
+        "label": "Charguia",
+        "blocs": [
+            "18",
+            "26"
+        ]
+    },
+    {
+        "pole": "G",
+        "label": "El Ghazala",
+        "blocs": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+        ]
+    }
+]

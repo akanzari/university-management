@@ -3,6 +3,7 @@ package com.esprit.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.TeacherDTO;
+import com.esprit.dto.teacher.CreateTeacherRequest;
+import com.esprit.dto.teacher.SearchTeacherDTO;
+import com.esprit.dto.teacher.TeacherDTO;
 import com.esprit.service.TeacherService;
 
 @RestController
@@ -24,11 +27,11 @@ public class TeacherController {
 
 	public TeacherController(TeacherService service) {
 		this.service = service;
-	};
+	}
 
 	@PostMapping
-	public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherDTO teacherDTO) {
-		service.addTeacher(teacherDTO);
+	public ResponseEntity<Void> createTeacher(@RequestBody @Valid CreateTeacherRequest createTeacherRequest) {
+		service.addTeacher(createTeacherRequest);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
@@ -40,6 +43,17 @@ public class TeacherController {
 	@GetMapping
 	public ResponseEntity<List<TeacherDTO>> findTeachers() {
 		return new ResponseEntity<>(service.findTeachers(), HttpStatus.OK);
+	}
+
+	@PostMapping("ups")
+	public ResponseEntity<List<TeacherDTO>> findAllByUps(@RequestBody @NotEmpty List<String> ups) {
+		return new ResponseEntity<>(service.findAllByUps(ups), HttpStatus.OK);
+	}
+
+	@PostMapping("search")
+	public ResponseEntity<List<TeacherDTO>> searcheachers(@RequestBody SearchTeacherDTO searchTeacherDTO) {
+		return new ResponseEntity<>(service.searcheachers(searchTeacherDTO.getTeacherId(), searchTeacherDTO.getCin(),
+				searchTeacherDTO.getDepartement(), searchTeacherDTO.getClasss()), HttpStatus.OK);
 	}
 
 }

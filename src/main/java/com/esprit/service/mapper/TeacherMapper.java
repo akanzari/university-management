@@ -2,32 +2,26 @@ package com.esprit.service.mapper;
 
 import java.util.List;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 import com.esprit.domain.TeacherEntity;
-import com.esprit.dto.TeacherDTO;
-import com.esprit.dto.response.UserResponse;
-import com.esprit.service.IAMService;
+import com.esprit.dto.teacher.CreateTeacherRequest;
+import com.esprit.dto.teacher.TeacherDTO;
+import com.esprit.service.DepartmentService;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = DepartmentService.class)
 public interface TeacherMapper {
 
-	TeacherEntity teacherDTOtoTeacherEntity(TeacherDTO teacherDTO);
+	TeacherMapper INSTANCE = Mappers.getMapper(TeacherMapper.class);
 
-	TeacherDTO teacherEntityToTeacherDTO(TeacherEntity teacherEntity, @Context IAMService iamService);
+	@Mapping(source = "departement", target = "departement", qualifiedByName = "findDepartment")
+	TeacherEntity createTeacherRequestToTeacherEntity(CreateTeacherRequest createTeacherRequest);
 
-	List<TeacherDTO> teacherEntitiesToTeacherDTO(List<TeacherEntity> teacherEntities, @Context IAMService iamService);
+	TeacherDTO teacherEntityToTeacherDTO(TeacherEntity teacherEntity);
 
-	@AfterMapping
-	static void after(TeacherEntity source, @MappingTarget TeacherDTO target, @Context IAMService iamService) {
-		UserResponse user = iamService.findUser(source.getTeacherId());
-		if (user != null) {
-			target.setFullName(user.getFirstName());
-			target.setEmail(user.getEmail());
-		}
-	}
+	List<TeacherDTO> teacherEntitiesToTeacherDTO(List<TeacherEntity> teacherEntities);
 
 }

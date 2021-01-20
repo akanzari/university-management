@@ -26,75 +26,117 @@
         {{saveSuccess}}
     </div>
 
-    <div class="modal-body mb-2">
-        <div class="row pt-1" style="padding-right: 5%;">
-            <div class="col-12 px-0 mb-2">
+    <div class="modal-body pb-0">
+        <div class="row pt-1">
+            <div class="col-12 px-0">
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Designation : <span class="color-error">*</span></label>
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Module : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
-                        <input type="text" formControlName="designation" [attr.disabled]="editModule">
+                    <div class="col-4 pr-0">
+                        <input type="text" formControlName="moduleId">
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Designation : </label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <input type="text" formControlName="designation">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Nombres d'Heures : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="number" formControlName="nbrHours">
-                    </div>
-                </div>
+                <div class="hr-sect">Disponibilité <span class="color-error">&nbsp; *</span></div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Type Epreuve : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="examTypes" formControlName="examType"></ng-select>
-                    </div>
-                </div>
+                <ng-container formArrayName="assignClasses">
+                    <ng-container *ngFor="let dispo of form.get('assignClasses')['controls']; let i=index"
+                        [formGroupName]="i">
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Semestre : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="semesters" formControlName="semester"></ng-select>
-                    </div>
-                </div>
+                        <fieldset class="pt-2" style="border: 1px solid #bda671;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-bg-primary float-right mr-2"
+                                        *ngIf=" i == form.get('assignClasses')?.value.length-1"
+                                        (click)="inProgress ? false : addAssignClass(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-plus btn-plus fa-lg"></i>
+                                    </button>
+                                    <button class="btn btn-bg-primary float-right" *ngIf=" i > 0"
+                                        (click)="inProgress ? false : removeAssignClass(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-times btn-fonticon fa-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Période : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="periods" formControlName="periods" [multiple]="true"></ng-select>
-                    </div>
-                </div>
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Classes : </label>
+                                </div>
+                                <div class="col-10">
+                                    <ng-select [items]="class$ | async" formControlName="classId" bindLabel="classId"
+                                        bindValue="classId" groupBy="category"></ng-select>
+                                </div>
+                            </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Classe : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="class$ | async" formControlName="classId" bindValue="classId" [searchable]="true">
-                        </ng-select>
-                    </div>
-                </div>
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Coefficient : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <input type="number" formControlName="coefficient">
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Nombre d'heures : </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <input type="number" formControlName="nbrHour">
+                                </div>
+                            </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">Enseignant : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <ng-select [items]="teacher$ | async" formControlName="teacherId" bindValue="id"
-                            bindLabel="fullName" [searchable]="true" (change)="onChangeFullName($event)">
-                        </ng-select>
-                    </div>
-                </div>
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Semestre : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="semesters$ | async" formControlName="semesterId"
+                                        bindLabel="label" (change)="onChangeSemester($event, i)" bindValue="semestreId">
+                                    </ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Période : </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="periods" formControlName="periodId" bindLabel="label"
+                                        bindValue="periodId" [readonly]="disabledPeriod?.get(i)">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Enseignants : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="teachers" formControlName="teacherIds" bindLabel="fullName"
+                                        bindValue="teacherId" [multiple]="true" [maxSelectedItems]="2"
+                                        [virtualScroll]="true" [loading]="loading" (scroll)="onScroll($event)"
+                                        (scrollToEnd)="onScrollToEnd()">
+                                    </ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Type d'épreuve : </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="typeExam$ | async" formControlName="typeExam">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                        <br />
+
+                    </ng-container>
+                </ng-container>
 
             </div>
         </div>

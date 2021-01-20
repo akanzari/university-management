@@ -45,7 +45,7 @@ registerLocaleData(localeFr);
       provide: ConfigLoader,
       useFactory: configFactory,
       deps: [HttpClient]
-    }),
+    })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'fr-FR' },

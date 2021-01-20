@@ -1,16 +1,17 @@
 package com.esprit.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.esprit.enums.PoleEnum;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Entity
 @Table(name = "SALLE")
@@ -25,13 +26,25 @@ public class RoomEntity implements Serializable {
 
 	private int capacity;
 
-	private PoleEnum pole;
+	private String pole;
 
 	private String bloc;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "fk_room")
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<DisponibilityEntity> disponibilities;
+
+	public void addDisponibilities(List<DisponibilityEntity> disponibilityEntities) {
+		if (CollectionUtils.isEmpty(disponibilities)) {
+			disponibilities = new ArrayList<>();
+		}
+		disponibilities.addAll(disponibilityEntities);
+		disponibilityEntities.forEach(item -> item.setRoom(this));
+	}
+
+	public void removeDisponibility(DisponibilityEntity disponibilityEntity) {
+		disponibilities.remove(disponibilityEntity);
+		disponibilityEntity.setRoom(null);
+	}
 
 	public String getClassRoomId() {
 		return classRoomId;
@@ -57,11 +70,11 @@ public class RoomEntity implements Serializable {
 		this.capacity = capacity;
 	}
 
-	public PoleEnum getPole() {
+	public String getPole() {
 		return pole;
 	}
 
-	public void setPole(PoleEnum pole) {
+	public void setPole(String pole) {
 		this.pole = pole;
 	}
 

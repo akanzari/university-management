@@ -8,11 +8,12 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import com.esprit.dto.response.SpecificUserResponse;
-import com.esprit.dto.response.UserResponse;
+import com.esprit.dto.user.SpecificUserResponse;
+import com.esprit.dto.user.UserResponse;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IAMMapper {
@@ -40,6 +41,7 @@ public interface IAMMapper {
 		specificUserResponse.setFullName(userResponse.getFirstName() + " " + userResponse.getLastName());
 	}
 
+	@Named("enabledToStatus")
 	public default String enabledToStatus(final Boolean enabled) {
 		return enabled.equals(Boolean.TRUE) ? "Activer" : "Désactiver";
 	}

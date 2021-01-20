@@ -1,0 +1,152 @@
+<div class="modal-header mt-3">
+    <h2 *ngIf="!editRoom" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter une salle
+    </h2>
+    <h2 *ngIf="editRoom" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier une salle
+    </h2>
+    <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
+        <span aria-hidden="true">&times;</span>
+    </span>
+</div>
+
+<form [formGroup]="form">
+    <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-alert color-white" aria-hidden="true"></i>
+        {{saveError}}
+    </div>
+    <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+        {{saveSuccess}}
+    </div>
+
+    <div class="modal-body pb-0">
+        <div class="row pt-1">
+            <div class="col-12 px-0">
+
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Salle : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <input type="text" formControlName="label">
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Capacité : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <input type="number" formControlName="capacity">
+                    </div>
+                </div>
+
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">Site : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pr-0">
+                        <ng-select [items]="sites$" formControlName="pole" (change)="onChangeSite($event)"></ng-select>
+                    </div>
+                    <div class="col-2 py-2">
+                        <label class="float-right">Bloc : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <ng-select [items]="blocs$" [searchable]="true" formControlName="blocId" bindValue="blocId"
+                            [readonly]="disabledBloc"></ng-select>
+                    </div>
+                </div>
+
+                <div class="hr-sect">Disponibilité <span class="color-error"> *</span></div>
+
+                <ng-container formArrayName="disponibilities">
+                    <ng-container *ngFor="let dispo of form.get('disponibilities')['controls']; let i=index"
+                        [formGroupName]="i">
+
+                        <fieldset class="pt-2" style="border: 1px solid #bda671;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-bg-primary float-right mr-2"
+                                        *ngIf=" i == form.get('disponibilities')?.value.length-1"
+                                        (click)="inProgress ? false : addDisponibility(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-plus btn-plus fa-lg"></i>
+                                    </button>
+                                    <button class="btn btn-bg-primary float-right" *ngIf=" i > 0"
+                                        (click)="inProgress ? false : removeDisponibility(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-times btn-fonticon fa-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Semestre : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="semesters$ | async" formControlName="semesterId" bindLabel="label"
+                                        bindValue="semestreId" (change)="onChangeSemester($event, i)"></ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Période : </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="periods" formControlName="periodId" bindLabel="label"
+                                        bindValue="periodId" [readonly]="disabledPeriod?.get(i)" (change)="onChangePeriod($event, i)">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Semaine : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="weeks" formControlName="weekId" bindLabel="label"
+                                        bindValue="weekId" [readonly]="disabledWeek?.get(i)"></ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Jour : </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <ng-select [items]="days$ | async" formControlName="day" bindLabel="label" bindValue="label">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Séance : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <ng-select [items]="seances$ | async" formControlName="seanceId" bindLabel="label"
+                                        bindValue="seanceId"></ng-select>
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Motif: </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <input type="text" formControlName="motif">
+                                </div>
+                            </div>
+
+                        </fieldset>
+                        <br />
+
+                    </ng-container>
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+        <button type="button" class="btn btn-bg-primary" (click)="editRoom ? update() : save()"
+            [disabled]="!form.valid">Confirmer</button>
+    </div>
+</form>

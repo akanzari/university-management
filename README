@@ -10,3 +10,24 @@ SQL> ALTER USER &NEW_USER QUOTA UNLIMITED ON USERS;
 SQL> ALTER USER &NEW_USER DEFAULT TABLESPACE DEV_SPACE;
 
 SQL> connect dev_user/1234;
+
+
+drop table  CLASSE                         cascade constraints;
+drop table  DEPARTMENT                     cascade constraints;
+drop table  DEPARTMENT_UP                  cascade constraints;
+drop table  DISPONIBILITY_SALLE            cascade constraints;
+drop table  ESP_CLASSE_EPREUVE             cascade constraints;
+drop table  ESP_ENSEIGNANT                 cascade constraints;
+drop table  ESP_ETUDIANT                   cascade constraints;
+drop table  ESP_MODULE                     cascade constraints;
+drop table  ESP_MODULE_CLASS               cascade constraints;
+drop table  ESP_MODULE_CLASS_ENSEIGNANT    cascade constraints;
+drop table  PERIOD                         cascade constraints;
+
+drop table  SALLE                          cascade constraints;
+drop table  SEANCE                         cascade constraints;
+drop table  SEMAINE                        cascade constraints;
+drop table  SEMESTER                       cascade constraints;
+drop table  SPECIALITY                     cascade constraints;
+drop table  DISPONIBILITY_ENSEIGNANT       cascade constraints;
+drop table  EPREUVE_LEVELS                 cascade constraints;

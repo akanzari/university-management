@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.ClassDTO;
+import com.esprit.dto.classes.ClassDTO;
+import com.esprit.dto.classes.CreateClassRequest;
+import com.esprit.dto.classes.SearchClassDTO;
 import com.esprit.service.ClassService;
 
 @RestController
@@ -29,14 +31,14 @@ public class ClassController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createClass(@RequestBody @Valid ClassDTO classDTO) {
-		service.addClass(classDTO);
+	public ResponseEntity<Void> createClass(@RequestBody @Valid CreateClassRequest createClassRequest) {
+		service.addClass(createClassRequest);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public ResponseEntity<Void> updateClass(@RequestBody @Valid ClassDTO classDTO) {
-		service.updateClass(classDTO);
+	public ResponseEntity<Void> updateClass(@RequestBody @Valid CreateClassRequest createClassRequest) {
+		service.updateClass(createClassRequest);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
@@ -54,6 +56,12 @@ public class ClassController {
 	@GetMapping
 	public ResponseEntity<List<ClassDTO>> findClasses() {
 		return new ResponseEntity<>(service.findClasses(), HttpStatus.OK);
+	}
+
+	@PostMapping("search")
+	public ResponseEntity<List<ClassDTO>> searchClasses(@RequestBody SearchClassDTO searchClassDTO) {
+		return new ResponseEntity<>(service.searchClasses(searchClassDTO.getClassId(), searchClassDTO.getEmail(),
+				searchClassDTO.getSpeciality(), searchClassDTO.getNbrStudents()), HttpStatus.OK);
 	}
 
 	@GetMapping("moduleId/{moduleId}")

@@ -7,6 +7,7 @@ export { Department } from './departement.modal';
 export { Module } from './module.model';
 export { Bloc } from './bloc.model';
 export { Exam } from './exam.modal';
+export { PoleEnum } from './pole.enum';
 
 export { SemesterEnum } from './semester.enum';
 export { PeriodEnum } from './period.enum';

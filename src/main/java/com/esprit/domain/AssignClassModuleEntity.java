@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,8 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.esprit.enums.ExamTypeEnum;
-import com.esprit.enums.PeriodEnum;
-import com.esprit.enums.SemesterEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ESP_MODULE_CLASS")
@@ -34,9 +34,13 @@ public class AssignClassModuleEntity implements Serializable {
 
 	private int nbrHour;
 
-	private SemesterEnum semester;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "fk_semester")
+	private SemesterEntity semester;
 
-	private PeriodEnum period;
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "fk_period")
+	private PeriodEntity period;
 
 	private ExamTypeEnum typeExam;
 
@@ -47,6 +51,11 @@ public class AssignClassModuleEntity implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL, optional = true)
 	@JoinColumn(name = "fk_class")
 	private ClassEntity classs;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_module")
+	private ModuleEntity module;
 
 	public String getAssignId() {
 		return assignId;
@@ -75,20 +84,20 @@ public class AssignClassModuleEntity implements Serializable {
 		return this;
 	}
 
-	public SemesterEnum getSemester() {
+	public SemesterEntity getSemester() {
 		return semester;
 	}
 
-	public AssignClassModuleEntity semester(SemesterEnum semester) {
+	public AssignClassModuleEntity semester(SemesterEntity semester) {
 		this.semester = semester;
 		return this;
 	}
 
-	public PeriodEnum getPeriod() {
+	public PeriodEntity getPeriod() {
 		return period;
 	}
 
-	public AssignClassModuleEntity period(PeriodEnum period) {
+	public AssignClassModuleEntity period(PeriodEntity period) {
 		this.period = period;
 		return this;
 	}
@@ -117,6 +126,15 @@ public class AssignClassModuleEntity implements Serializable {
 
 	public AssignClassModuleEntity classs(ClassEntity classs) {
 		this.classs = classs;
+		return this;
+	}
+
+	public ModuleEntity getModule() {
+		return module;
+	}
+
+	public AssignClassModuleEntity module(ModuleEntity module) {
+		this.module = module;
 		return this;
 	}
 

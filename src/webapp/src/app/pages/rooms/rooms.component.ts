@@ -4,14 +4,15 @@ import { concat, EMPTY, timer } from "rxjs";
 import { switchMapTo } from "rxjs/operators";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { RoomService } from 'src/app/core/services';
+import { RefService, RoomService } from 'src/app/core/services';
 import { ActionEnum, ConfigColumn } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
 import { Bloc, CreateRoomRequest, Room, UpdateRoomRequest } from 'src/app/core/models';
 import { RemovePopupComponent } from 'src/app/shared/components/comfirmation-popup/remove/remove-popup.component';
-import { RoomModalComponent } from './room-modal/room-modal.component';
+import { RoomModalComponent } from './add-room-modal/add-room.component';
 import { Site } from 'src/app/core/models/site.modal';
-import { DisponibilityModalComponent } from './disponibility/disponibility.component';
+import { DisponibilityModalComponent } from './disponibility-modal/disponibility.component';
+import { UpdateRoomModalComponent } from './update-room-modal/update-room.component';
 
 @Component({
     selector: 'rooms',
@@ -26,6 +27,7 @@ export class RoomsComponent implements OnInit {
     public roomsLength: number;
 
     constructor(private modalService: NgbModal,
+        private refService: RefService,
         private spinner: NgxSpinnerService,
         private datePipe: DatePipe,
         private roomService: RoomService) {
@@ -40,40 +42,15 @@ export class RoomsComponent implements OnInit {
         });
     }
 
-    private initTable(rooms: Room[]): RoomTable[] {
-        let table: RoomTable[] = [];
-        rooms.forEach((room: Room) => {
-            let date;
-            let hour;
-            if (room.startDate && room.endDate) {
-                date = this.datePipe.transform(room.startDate, 'dd/MM/yyyy') + " à " + this.datePipe.transform(room.endDate, 'dd/MM/yyyy');
-            }
-            if (room.startHour != '0' && room.endHour != '0') {
-                hour = this.getHoure(+room.startHour, +room.endHour);
-            }
-            table.push(new RoomTable(room.classRoomId, room.label, room.capacity, room.site, room.bloc, date, hour, room.reason, room.startDate, room.endDate, room.startHour, room.endHour));
-        })
-        return table;
-    }
-
-    private getHoure(s: number, e: number): string {
-        let result: string;
-        if (s >= 0 && e >= 0) {
-            let str1 = s ? s.toString() : '00:00';
-            let str2 = e ? e.toString() : '00:00';
-            if (str1.length === 3) {
-                str1 = "0" + str1;
-            }
-            if (str2.length === 3) {
-                str2 = "0" + str2;
-            }
-            result = str1.substring(0, 2).concat(":").concat(str1.slice(-2)) + " à " + str2.substring(0, 2).concat(":").concat(str2.slice(-2));
-        }
-        return result;
-    }
-
     public openModal() {
-        const modal: NgbModalRef = this.initPopUp(RoomModalComponent);
+        const modal: NgbModalRef = this.modalService.open(RoomModalComponent,
+            {
+                size: 'xl',
+                ariaLabelledBy: 'modal-basic-title',
+                keyboard: false,
+                backdrop: 'static',
+                centered: true
+            });
         modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
             this.spinner.show();
             if (dataValue.action === ActionEnum.CREATE) {
@@ -84,7 +61,7 @@ export class RoomsComponent implements OnInit {
                 ).subscribe((rooms: Room[]) => {
                     this.spinner.hide();
                     this.roomsLength = rooms.length;
-                    this.config = { ...this.config, value: this.initTable(rooms) };
+                    this.config = { ...this.config, value: rooms };
                     modal.componentInstance.setIsSaved({ isSaved: true });
                 }, error => {
                     this.spinner.hide();
@@ -102,7 +79,7 @@ export class RoomsComponent implements OnInit {
             modal.componentInstance.config = { title: "Confirmation de suppression", message: "Est-ce que vous confirmez la suppression définitive ?" };
             modal.componentInstance.sendData.subscribe((data: boolean) => data ? this.deleteClass((event.value as Room)) : null);
         } else if (event.action === ActionEnum.UPDATE) {
-            const modal: NgbModalRef = this.initPopUp(RoomModalComponent);
+            const modal: NgbModalRef = this.initPopUp(UpdateRoomModalComponent);
             modal.componentInstance.editRoom = event.value as Room;
             modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
                 this.spinner.show();
@@ -114,7 +91,7 @@ export class RoomsComponent implements OnInit {
                     ).subscribe((rooms: Room[]) => {
                         this.spinner.hide();
                         this.roomsLength = rooms.length;
-                        this.config = { ...this.config, value: this.initTable(rooms) };
+                        this.config = { ...this.config, value: rooms };
                         modal.componentInstance.setIsSaved({ isSaved: true });
                     }, error => {
                         this.spinner.hide();
@@ -124,9 +101,9 @@ export class RoomsComponent implements OnInit {
                     })
                 }
             });
-        } else {
-            if (event.value.disponibilities && event.value.disponibilities.length > 0) {
-                console.log(event.value.disponibilities);
+        } else if (event.action === ActionEnum.LINK) {
+            this.spinner.show();
+            this.roomService.getDisponibilitiesByRoom(event.value.classRoomId).subscribe(items => {
                 const modal: NgbModalRef = this.modalService.open(DisponibilityModalComponent,
                     {
                         size: 'lg',
@@ -136,8 +113,9 @@ export class RoomsComponent implements OnInit {
                         backdrop: 'static',
                         centered: true
                     });
-                modal.componentInstance.disponibilities = event.value.disponibilities;
-            }
+                modal.componentInstance.disponibilities = items;
+                this.spinner.hide();
+            })
         }
     }
 
@@ -151,7 +129,7 @@ export class RoomsComponent implements OnInit {
             this.spinner.hide();
             this.roomsLength = rooms.length;
             this.modalService.dismissAll();
-            this.config = { ...this.config, value: this.initTable(rooms) };
+            this.config = { ...this.config, value: rooms };
         })
     }
 
@@ -162,7 +140,7 @@ export class RoomsComponent implements OnInit {
                 ariaLabelledBy: 'modal-basic-title',
                 keyboard: false,
                 backdrop: 'static',
-                centered: true
+                centered: false
             });
     }
 
@@ -215,14 +193,14 @@ export class RoomsComponent implements OnInit {
                 },
                 {
                     header: "Bloc",
-                    field: "blocId",
+                    field: "bloc",
                     filterable: true,
                     sortable: true,
                     width: "11"
                 },
                 {
                     header: "Disponibilités",
-                    field: "",
+                    field: "nothing",
                     link: {
                         text: "Liste disponibilités"
                     },

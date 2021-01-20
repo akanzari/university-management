@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared';
+import { DisponibilityModalComponent } from './disponibility-modal/disponibility.component';
+import { TeacherModalComponent } from './teacher-modal/teacher-modal.component';
 import { TeachersComponent } from './teachers.component';
 
 const routes: Routes = [
@@ -8,11 +10,17 @@ const routes: Routes = [
 ];
 
 const MODULE_COMPONENT = [
-    TeachersComponent
+    TeachersComponent,
+    TeacherModalComponent,
+    DisponibilityModalComponent
 ];
 
 @NgModule({
     declarations: MODULE_COMPONENT,
-    imports: [RouterModule.forChild(routes), SharedModule]
+    imports: [RouterModule.forChild(routes), SharedModule],
+    entryComponents: [
+        TeacherModalComponent,
+        DisponibilityModalComponent
+    ]
 })
 export class TeachersModule { }

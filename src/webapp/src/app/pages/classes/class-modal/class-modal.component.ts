@@ -40,12 +40,21 @@ export class ClassModalComponent implements OnInit {
         this.specialities$ = this.refService.getSpecialities();
         if (this.editClass) {
             this.form.patchValue({
-                code: this.editClass.code,
+                classId: this.editClass.classId,
+                email: this.editClass.email,
                 label: this.editClass.label,
                 nbrStudents: this.editClass.nbrStudents,
-                nbrGroups: this.editClass.nbrGroups,
-                specialityId: this.editClass.speciality.specialityId
+                speciality: this.editClass.speciality.specialityId,
+                category: this.editClass.category
             })
+        }
+    }
+
+    public setIsUpdated(event) {
+        if (event.isSaved === true) {
+            this.showLoaderSuccess = true;
+            this.saveSuccess = "La classe " + this.form.get("label").value + " modifié avec succès";
+            timer(1000).subscribe(() => this.reset());
         }
     }
 
@@ -91,10 +100,12 @@ export class ClassModalComponent implements OnInit {
 
     private initForm(): void {
         this.form = this.fb.group({
-            label: [null, Validators.required],
-            nbrStudents: [null, Validators.required],
-            nbrGroups: [null, Validators.required],
-            specialityId: [null, Validators.required]
+            classId: [null, Validators.required],
+            label: [null],
+            email: [null, [Validators.required, Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')]],
+            nbrStudents: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+            speciality: [null, Validators.required],
+            category: [null, Validators.required]
         })
     }
 

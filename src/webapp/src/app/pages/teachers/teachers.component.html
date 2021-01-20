@@ -2,8 +2,8 @@
     <div class="col-12 px-0">
         <ol class="breadcrumb d-none d-lg-block">
             <li class="breadcrumb-item">
-                <a href="/">
-                    <i class="icons icon-home size-20 color-text"></i> Accueil </a>
+                <a routerLink="/">
+                    <i class="icons icon-bar_chart size-20 color-text"></i> Accueil </a>
             </li>
             <li class="breadcrumb-item active">Enseignants</li>
         </ol>
@@ -16,9 +16,115 @@
 
 <div class="row bg-white" style="box-shadow: 10px 5px 5px #e6e6e6;">
     <div class="col-12">
-        
+
+        <div class="row border-bottom">
+            <div class="col-12">
+                <div class="search-criteria">
+
+                    <div class="py-2">
+                        <div class="float-left">
+                            <p class="bold color-title font-size-20 mb-0">Liste des enseignants</p>
+                            <label class="pt-2 my-0" *ngIf="teachersLength === 0">
+                                Vous n'avez aucun enseignant
+                            </label>
+                            <label class="pt-2 my-0" *ngIf="teachersLength > 0">
+                                Vous avez {{teachersLength}} enseignant(s)
+                            </label>
+                        </div>
+                        <div class="dropdown float-right">
+                            <button type="button" class="btn btn-bg-add font-size-12 btn-add mb-0 color-white"
+                                (click)="openModal()">
+                                <span class="pl-1">Nouveau</span>
+                            </button>
+                            <span role="tab" id="headingOne" placement="bottom" ngbTooltip="Rechercher">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
+                                    href="#search-criteria-one" aria-expanded="false" aria-controls="collapseOne">
+                                    <i aria-hidden="true" class="icon-search icons mx-2 my-1"></i>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div id="accordion" class="accordion mb-0" role="tablist" aria-multiselectable="true">
+                        <div class="card card-search">
+                            <div id="search-criteria-one" class="border-top collapse" role="tabpanel"
+                                aria-labelledby="headingOne">
+                                <div class="card-block bg-white py-4" style="overflow: visible;">
+
+                                    <form [formGroup]="form" class="mx-3">
+                                        <div class="col-12">
+
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4 py-2 px-0">
+                                                            <label class="float-right"> Identifiant :</label>
+                                                        </div>
+                                                        <div class="col-8 pr-0">
+                                                            <input type="text" formControlName="teacherId">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4 py-2 px-0">
+                                                            <label class="float-right"> CIN : </label>
+                                                        </div>
+                                                        <div class="col-8 pr-0">
+                                                            <input type="text" formControlName="cin">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4 py-2 px-0">
+                                                            <label class="float-right"> Dépatement :</label>
+                                                        </div>
+                                                        <div class="col-8 pr-0">
+                                                            <input type="text" formControlName="departement">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4 py-2 px-0">
+                                                            <label class="float-right"> Classes : </label>
+                                                        </div>
+                                                        <div class="col-8 pr-0">
+                                                            <ng-select [items]="departements$ | async"
+                                                                [dropdownPosition]="'top'" formControlName="classs"
+                                                                bindValue="teacherId">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row float-right">
+                                                <div class="col-12 pr-0">
+                                                    <button class="btn btn-primary"
+                                                        (click)="onSearch()">Rechercher</button>
+                                                    <button class="btn btn-default" (click)="reset()">Annuler</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <div class="col-12 mb-4 px-0">
-            <cm-table-container [currentConfig]="config"></cm-table-container>
+            <cm-table-container [config]="config" (sendData)="getArrayForm($event)"></cm-table-container>
         </div>
 
     </div>

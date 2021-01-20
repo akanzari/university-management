@@ -2,9 +2,9 @@ package com.esprit.service;
 
 import java.util.List;
 
-import com.esprit.dto.request.exams.CreateExamRequest;
-import com.esprit.dto.request.exams.UpdateExamRequest;
-import com.esprit.dto.response.ExamResponse;
+import com.esprit.dto.exam.CreateExamRequest;
+import com.esprit.dto.exam.ExamDTO;
+import com.esprit.dto.exam.UpdateExamRequest;
 
 public interface ExamService {
 
@@ -14,8 +14,6 @@ public interface ExamService {
 
 	void deleteExam(String examId);
 
-	ExamResponse findExam(String examId);
-
-	List<ExamResponse> findExams();
+	List<ExamDTO> findExams();
 
 }

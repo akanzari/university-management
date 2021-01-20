@@ -1,12 +1,15 @@
 package com.esprit.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import com.esprit.domain.ClassEntity;
-import com.esprit.dto.ClassDTO;
+import com.esprit.dto.classes.ClassDTO;
+import com.esprit.dto.classes.CreateClassRequest;
 import com.esprit.error.exception.EntityNotFoundException;
 import com.esprit.repository.ClassRepository;
 import com.esprit.service.ClassService;
@@ -25,20 +28,20 @@ public class ClassServiceImpl implements ClassService {
 	}
 
 	@Override
-	public void addClass(ClassDTO classDTO) {
-		ClassEntity classEntity = mapper.classDTOToClassEntity(classDTO);
+	public void addClass(CreateClassRequest createClassRequest) {
+		ClassEntity classEntity = mapper.createClassRequestToClassEntity(createClassRequest);
 		classRepository.save(classEntity);
 	}
 
 	@Override
-	public void updateClass(ClassDTO classDTO) {
+	public void updateClass(CreateClassRequest createClassRequest) {
 		ClassEntity classEntity;
-		Optional<ClassEntity> classEntityOptional = classRepository.findById(classDTO.getClassId());
+		Optional<ClassEntity> classEntityOptional = classRepository.findById(createClassRequest.getClassId());
 		if (classEntityOptional.isPresent()) {
-			classEntity = mapper.classDTOToClassEntity(classDTO);
+			classEntity = mapper.createClassRequestToClassEntity(createClassRequest);
 			classRepository.save(classEntity);
 		} else {
-			throw new EntityNotFoundException(ClassEntity.class, "Id", classDTO.getClassId());
+			throw new EntityNotFoundException(ClassEntity.class, "Id", createClassRequest.getClassId());
 		}
 	}
 
@@ -69,6 +72,25 @@ public class ClassServiceImpl implements ClassService {
 	@Override
 	public List<ClassDTO> findClassesByModule(String moduleId) {
 		return null;
+	}
+
+	@Override
+	public List<ClassDTO> searchClasses(String name, String email, String speciality, int nbrStudents) {
+		return mapper.classEntitiesToClassDTO(classRepository.searchConventions(name, email, speciality, nbrStudents));
+	}
+
+	@Override
+	public List<ClassEntity> findClassesByIds(List<String> classes) {
+		List<ClassEntity> classEntities = new ArrayList<>();
+		if (CollectionUtils.isEmpty(classes)) {
+			classes.forEach(classId -> {
+				Optional<ClassEntity> classEntityOptional = classRepository.findById(classId);
+				if (classEntityOptional.isPresent()) {
+					classEntities.add(classEntityOptional.get());
+				}
+			});
+		}
+		return classEntities;
 	}
 
 }

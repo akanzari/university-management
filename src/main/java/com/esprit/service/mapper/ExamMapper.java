@@ -2,57 +2,36 @@ package com.esprit.service.mapper;
 
 import java.util.List;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+import com.esprit.domain.AssignClassExamEntity;
 import com.esprit.domain.ExamEntity;
-import com.esprit.dto.request.exams.CreateExamRequest;
-import com.esprit.dto.request.exams.UpdateExamRequest;
-import com.esprit.dto.response.ExamResponse;
-import com.esprit.repository.ClassRepository;
-import com.esprit.repository.RoomRepository;
-import com.esprit.repository.ModuleRepository;
-import com.esprit.repository.TeacherRepository;
+import com.esprit.dto.exam.CreateAssignClassExamRequest;
+import com.esprit.dto.exam.CreateExamRequest;
+import com.esprit.service.ClassService;
+import com.esprit.service.ModuleService;
+import com.esprit.service.RoomService;
+import com.esprit.service.TeacherService;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { TeacherService.class, RoomService.class,
+		ClassService.class, ModuleService.class })
 public interface ExamMapper {
 
 	ExamMapper INSTANCE = Mappers.getMapper(ExamMapper.class);
 
-	ExamEntity createExamRequestToExamEntity(CreateExamRequest createExamRequest,
-			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
+	ExamEntity createExamRequestToExamEntity(CreateExamRequest createExamRequest);
 
-	ExamEntity updateExamRequestToExamEntity(UpdateExamRequest updateExamRequest,
-			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository);
+	@Mapping(source = "teachers", target = "teachers", qualifiedByName = "findTeachersByIds")
+	@Mapping(source = "rooms", target = "rooms", qualifiedByName = "findRoomsByIds")
+	@Mapping(source = "classes", target = "classes", qualifiedByName = "findClassesByIds")
+	@Mapping(source = "module", target = "module", qualifiedByName = "findModuleById")
+	AssignClassExamEntity createAssignClassExamRequestToAssignClassExamEntity(
+			CreateAssignClassExamRequest createAssignClassExamRequest);
 
-	ExamResponse examEntityToExamResponse(ExamEntity examEntity);
-
-	List<ExamResponse> examEntitiessToExamResponse(List<ExamEntity> examEntities);
-
-	@AfterMapping
-	static void after(CreateExamRequest source, @MappingTarget ExamEntity target,
-			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
-		target.setClasss(classRepository.getOne(source.getClassId()));
-		target.setModule(moduleRepository.getOne(source.getModuleId()));
-		target.setClassRoom(classRoomRepository.getOne(source.getClassRoomId()));
-		target.setSupervisor(teacherRepository.getOne(source.getSupervisorId()));
-	}
-
-	@AfterMapping
-	static void after(UpdateExamRequest source, @MappingTarget ExamEntity target,
-			@Context ClassRepository classRepository, @Context ModuleRepository moduleRepository,
-			@Context RoomRepository classRoomRepository, @Context TeacherRepository teacherRepository) {
-		target.setClasss(classRepository.getOne(source.getClassId()));
-		target.setModule(moduleRepository.getOne(source.getModuleId()));
-		target.setClassRoom(classRoomRepository.getOne(source.getClassRoomId()));
-		target.setSupervisor(teacherRepository.getOne(source.getSupervisorId()));
-	}
+	List<AssignClassExamEntity> createAssignClassExamRequestToAssignClassExamEntities(
+			List<CreateAssignClassExamRequest> createAssignClassExamRequest);
 
 }

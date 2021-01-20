@@ -1,0 +1,114 @@
+<div class="modal-header mt-3">
+    <h2 *ngIf="!editTeacher" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un
+        enseignant
+    </h2>
+    <h2 *ngIf="editTeacher" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un
+        enseignant
+    </h2>
+    <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
+        <span aria-hidden="true">&times;</span>
+    </span>
+</div>
+
+<form [formGroup]="form">
+    <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-alert color-white" aria-hidden="true"></i>
+        {{saveError}}
+    </div>
+    <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+        {{saveSuccess}}
+    </div>
+
+    <div class="modal-body mb-2">
+        <div class="row pt-1" style="padding-right: 5%;">
+            <div class="col-12 px-0 mb-2">
+
+                <div class="row mt-4">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">N° Enseignant: <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="teacherId">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Nom complet : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="fullName">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Téléphone : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="number" formControlName="phone">
+                        <p class="media" *ngIf="isElementNotValid('phone')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">Le téléphone doit être numérique sur 8 caractères</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">E-mail : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="email">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">CIN : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="number" formControlName="cin">
+                        <p class="media" *ngIf="isElementNotValid('cin')">
+                            <i class="icons icon-cancel color-error font-size-16"></i>
+                            <small class="color-error">Le cin doit être numérique sur 8 caractères</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Dépatement : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <ng-select [items]="departmenets$ | async" formControlName="departement" bindLabel="label"
+                            bindValue="departmenetId" (change)="onChangeDepartment($event)"></ng-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">UP : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <ng-select [items]="ups" formControlName="up" [readonly]="disabledUP"></ng-select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
+        <button type="button" class="btn btn-bg-primary" (click)="save()" [disabled]="!form.valid">Confirmer</button>
+    </div>
+</form>

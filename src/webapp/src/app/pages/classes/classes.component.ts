@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { concat, EMPTY, timer } from "rxjs";
@@ -20,7 +21,12 @@ export class ClassesComponent implements OnInit {
 
     public config: ConfigColumn;
 
-    constructor(private modalService: NgbModal,
+    public classLength: number;
+
+    public form: FormGroup;
+
+    constructor(private fb: FormBuilder,
+        private modalService: NgbModal,
         private spinner: NgxSpinnerService,
         private datePipe: DatePipe,
         private classService: ClassService) {
@@ -28,7 +34,9 @@ export class ClassesComponent implements OnInit {
 
     ngOnInit() {
         this.spinner.show();
+        this.initForm();
         this.classService.getClasses().subscribe(classes => {
+            this.classLength = classes.length;
             this.initClassesColomns(classes);
             this.spinner.hide();
         });
@@ -45,6 +53,7 @@ export class ClassesComponent implements OnInit {
                     this.classService.getClasses()
                 ).subscribe((classes: Classs[]) => {
                     this.spinner.hide();
+                    this.classLength = classes.length;
                     this.config = { ...this.config, value: classes };
                     modal.componentInstance.setIsSaved({ isSaved: true });
                 }, error => {
@@ -74,12 +83,13 @@ export class ClassesComponent implements OnInit {
                         this.classService.getClasses()
                     ).subscribe((classes: Classs[]) => {
                         this.spinner.hide();
+                        this.classLength = classes.length;
                         this.config = { ...this.config, value: classes };
                         modal.componentInstance.setIsSaved({ isSaved: true });
                     }, error => {
                         this.spinner.hide();
                         if (error.error.code === 701) {
-                            modal.componentInstance.setIsSaved({ isSaved: false, code: error.error.code });
+                            modal.componentInstance.setIsUpdated({ isSaved: false, code: error.error.code });
                         }
                     })
                 }
@@ -94,6 +104,7 @@ export class ClassesComponent implements OnInit {
             timer(1000).pipe(switchMapTo(EMPTY)),
             this.classService.getClasses()
         ).subscribe((classes: Classs[]) => {
+            this.classLength = classes.length;
             this.spinner.hide();
             this.modalService.dismissAll();
             this.config = { ...this.config, value: classes };
@@ -109,6 +120,36 @@ export class ClassesComponent implements OnInit {
                 backdrop: 'static',
                 centered: true
             });
+    }
+
+    public onSearch() {
+        if (this.form.valid) {
+            this.spinner.show();
+            this.classService.searchClass(this.form.value).subscribe(classes => {
+                this.classLength = classes.length;
+                this.config = { ...this.config, value: classes };
+                this.spinner.hide();
+            });
+        }
+    }
+
+    public reset() {
+        this.form.reset();
+        this.classService.getClasses().subscribe(classes => {
+            this.classLength = classes.length;
+            this.config = { ...this.config, value: classes };
+            this.spinner.hide();
+        });
+    }
+
+    private initForm(): void {
+        this.spinner.show();
+        this.form = this.fb.group({
+            classId: [null],
+            email: [null],
+            nbrStudents: [null],
+            speciality: [null]
+        })
     }
 
     private initClassesColomns(result): void {
@@ -152,6 +193,13 @@ export class ClassesComponent implements OnInit {
                     sortable: true,
                 },
                 {
+                    header: "Nbr d'étudiants",
+                    field: "nbrStudents",
+                    filterable: true,
+                    sortable: true,
+                    width: "10"
+                },
+                {
                     header: "E-mail",
                     field: "email",
                     filterable: true,
@@ -159,7 +207,7 @@ export class ClassesComponent implements OnInit {
                 },
                 {
                     header: "Spécialié",
-                    field: "speciality",
+                    field: "speciality.label",
                     filterable: true,
                     sortable: true
                 },

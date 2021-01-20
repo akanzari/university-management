@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared';
-import { DisponibilityModalComponent } from './disponibility/disponibility.component';
-import { RoomModalComponent } from './room-modal/room-modal.component';
+import { DisponibilityModalComponent } from './disponibility-modal/disponibility.component';
+import { RoomModalComponent } from './add-room-modal/add-room.component';
 import { RoomsComponent } from './rooms.component';
+import { UpdateRoomModalComponent } from './update-room-modal/update-room.component';
 
 const routes: Routes = [
     { path: '', component: RoomsComponent }
@@ -12,7 +13,8 @@ const routes: Routes = [
 const MODULE_COMPONENT = [
     RoomsComponent,
     RoomModalComponent,
-    DisponibilityModalComponent
+    DisponibilityModalComponent,
+    UpdateRoomModalComponent
 ];
 
 @NgModule({
@@ -20,7 +22,8 @@ const MODULE_COMPONENT = [
     imports: [RouterModule.forChild(routes), SharedModule],
     entryComponents: [
         RoomModalComponent,
-        DisponibilityModalComponent
+        DisponibilityModalComponent,
+        UpdateRoomModalComponent
     ]
 })
 export class RoomsModule { }

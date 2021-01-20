@@ -35,7 +35,25 @@
                         <label class="float-right">Nom : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
+                        <input type="text" formControlName="classId" [attr.disabled]="editClass!=null">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Description : </label>
+                    </div>
+                    <div class="col-9">
                         <input type="text" formControlName="label">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Email : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="email">
                     </div>
                 </div>
 
@@ -50,20 +68,20 @@
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Nombre des groupes : <span class="color-error">*</span></label>
+                        <label class="float-right">Spécialiés : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
-                        <input type="number" formControlName="nbrGroups">
+                        <ng-select [items]="specialities$ | async" formControlName="speciality" bindLabel="label"
+                            bindValue="specialityId"></ng-select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Spécialiés : <span class="color-error">*</span></label>
+                        <label class="float-right">Catégorie : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
-                        <ng-select [items]="specialities$ | async" formControlName="specialityId"
-                            bindValue="specialityId"></ng-select>
+                        <input type="text" formControlName="category">
                     </div>
                 </div>
 
