@@ -3,14 +3,23 @@ import { RouterModule, Routes } from '@angular/router';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { SharedModule } from 'src/app/shared';
-import { CalendarTeacherComponent } from './calendar-teacher.component';
+import { CalendarClassComponent } from './classes/calendar.class.component';
+import { CalendarRoomComponent } from './rooms/calendar-room.component';
+import { CalendarStudentComponent } from './students/calendar-student.component';
+import { CalendarTeacherComponent } from './teachers/calendar-teacher.component';
 
 const routes: Routes = [
-    { path: '', component: CalendarTeacherComponent }
+    { path: 'teachers', component: CalendarTeacherComponent },
+    { path: 'classes', component: CalendarClassComponent },
+    { path: 'rooms', component: CalendarRoomComponent },
+    { path: 'students', component: CalendarStudentComponent }
 ];
 
 const MODULE_COMPONENT = [
     CalendarTeacherComponent,
+    CalendarClassComponent,
+    CalendarRoomComponent,
+    CalendarStudentComponent
 ];
 
 @NgModule({

@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { SideBarMenu, User } from 'src/app/core/models';
 import { LayoutService, TokenService } from 'src/app/core/services';
 import { subMenuItems } from 'src/app/settings';
+import { AuthzGuardService } from 'src/app/core/guards/authz-guard.guard';
 
 @Component({
   selector: 'be-sidebar',
@@ -52,11 +53,14 @@ export class SiderbarComponent implements OnInit, AfterViewInit, OnDestroy {
   public displaySub = true;
 
   constructor(public ls: LayoutService,
-    private renderer: Renderer2) { }
+    public router: Router,
+    public tokenService: TokenService,
+    public authzGuardService: AuthzGuardService,
+    public renderer: Renderer2) { }
 
   public async ngOnInit() {
     this.items = subMenuItems;
-    this.currentAccount = null;
+    this.currentAccount = await this.tokenService.getProfile();
   }
 
   public selectMenu(menu: string): void {
@@ -83,18 +87,16 @@ export class SiderbarComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.menuClickAction = false;
     });
-    document.addEventListener('reduce', function () { }); 
+    document.addEventListener('reduce', function () { });
   }
 
   public getNavLinkRouteStyle(action): Boolean {
-    /*if (this.currentAccount && this.currentAccount.userId === "psce_user") {
-      if (!this.authzGuardService.isAuthorized(this.currentAccount, action)) {
-        this.hidden = true;
-      } else {
-        this.hidden = false;
-      }
-    }*/
-    return false;
+    if (!this.authzGuardService.isAuthorized(this.currentAccount, action)) {
+      this.hidden = true;
+    } else {
+      this.hidden = false;
+    }
+    return this.hidden;
   }
 
   search(searchValue: string) {

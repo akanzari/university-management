@@ -23,8 +23,12 @@ export class TeacherService {
         return this.httpClient.get<Teacher>(this.domain + id);
     }
 
-    getTeachers(): Observable<Teacher[]> {
-        return this.httpClient.get<Teacher[]>(this.domain);
+    getTeachers(): any {
+        return this.httpClient.get(this.domain);
+    }
+
+    getUpByTeachers(data): any {
+        return this.httpClient.post(this.domain + "up", data);
     }
 
     getTeachersByUps(data): Observable<Teacher[]> {

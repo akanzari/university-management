@@ -3,10 +3,13 @@ package com.esprit.domain;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "ESP_ETUDIANT")
@@ -15,22 +18,26 @@ public class StudentEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String userId;
+	@GeneratedValue(generator = "student-uuid")
+	@GenericGenerator(name = "student-uuid", strategy = "uuid2")
+	private String studentId;
 
 	private String fullName;
 
 	private int cin;
 
+	private String email;
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "fk_class")
 	private ClassEntity classs;
 
-	public String getUserId() {
-		return userId;
+	public String getStudentId() {
+		return studentId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
 	}
 
 	public String getFullName() {
@@ -41,12 +48,12 @@ public class StudentEntity implements Serializable {
 		this.fullName = fullName;
 	}
 
-	public int getCin() {
-		return cin;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCin(int cin) {
-		this.cin = cin;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public ClassEntity getClasss() {
@@ -55,6 +62,14 @@ public class StudentEntity implements Serializable {
 
 	public void setClasss(ClassEntity classs) {
 		this.classs = classs;
+	}
+
+	public int getCin() {
+		return cin;
+	}
+
+	public void setCin(int cin) {
+		this.cin = cin;
 	}
 
 }

@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, timer } from 'rxjs';
-import { PoleEnum, Room, UpdateRoomRequest } from 'src/app/core/models';
+import { PoleEnum, Room } from 'src/app/core/models';
 import { RefService } from 'src/app/core/services';
 import { ActionEnum } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
@@ -21,15 +21,6 @@ export class UpdateRoomModalComponent implements OnInit {
     @Input()
     public editRoom: Room;
 
-    @Input()
-    public days;
-
-    @Input()
-    public semeters;
-
-    @Input()
-    public seances;
-
     public form: FormGroup;
 
     public saveError: string;
@@ -42,7 +33,6 @@ export class UpdateRoomModalComponent implements OnInit {
 
     public sites$: string[];
     public blocs$: string[];
-    public reasonRooms$: Observable<any[]>;
 
     constructor(private fb: FormBuilder,
         private activeModal: NgbActiveModal,
@@ -53,11 +43,17 @@ export class UpdateRoomModalComponent implements OnInit {
         this.initForm();
         this.sites$ = Object.keys(PoleEnum).map(key => PoleEnum[key]);
         if (this.editRoom) {
+            this.refService.getBlocs().subscribe(item => {
+                let result = item.find(el => el.pole === Object.keys(PoleEnum)[Object.values(PoleEnum).indexOf(this.editRoom.pole as any)]);
+                this.blocs$ = result.blocs;
+            })
             this.disabledBloc = false;
+            console.log(this.editRoom);
+            
             this.form.patchValue({
-                label: this.editRoom.label,
+                classRoomId: this.editRoom.classRoomId,
                 capacity: this.editRoom.capacity,
-                siteId: this.editRoom.pole,
+                pole: this.editRoom.pole,
                 blocId: this.editRoom.bloc
             })
         }
@@ -66,12 +62,12 @@ export class UpdateRoomModalComponent implements OnInit {
     public setIsSaved(event) {
         if (event.isSaved === true) {
             this.showLoaderSuccess = true;
-            this.saveSuccess = "La Salle " + this.form.get("label").value + " ajouté avec succès";
+            this.saveSuccess = "La Salle " + this.form.get("classRoomId").value + " modifié avec succès";
             timer(1000).subscribe(() => this.reset());
         } else {
             if (event.code === 701) {
                 this.showLoaderError = true;
-                this.saveError = "La Salle " + this.form.get("label").value + "  déjà existe";
+                this.saveError = "La Salle " + this.form.get("classRoomId").value + "  déjà existe";
                 timer(2000).subscribe(() => this.showLoaderError = false);
             }
         }
@@ -80,7 +76,10 @@ export class UpdateRoomModalComponent implements OnInit {
     public update() {
         if (this.form.valid) {
             const form = this.form.value;
-            let arg: UpdateRoomRequest = new UpdateRoomRequest(this.editRoom.classRoomId, form.label, form.capacity, form.blocId, form.siteId, form.startDate, form.endDate, form.startHour, form.endHour, form.reasonId);
+            console.log(form);
+            
+            let arg: CreateRoomRequest = new CreateRoomRequest(form.classRoomId, form.capacity, form.pole, form.blocId);
+            console.log(arg);
             let dataValue: DataValue = { action: ActionEnum.UPDATE, value: arg };
             this.triggerSave.emit(dataValue);
         }
@@ -111,7 +110,7 @@ export class UpdateRoomModalComponent implements OnInit {
 
     private initForm(): void {
         this.form = this.fb.group({
-            label: [null, Validators.required],
+            classRoomId: [null, Validators.required],
             capacity: [null, Validators.required],
             pole: [null, Validators.required],
             blocId: [null, Validators.required]
@@ -122,34 +121,14 @@ export class UpdateRoomModalComponent implements OnInit {
 
 export class CreateRoomRequest {
     public classRoomId: string;
-    public label: string;
     public capacity: string;
     public pole: string;
     public bloc: string;
-    public disponibilities: CreateDisponibilityRequest[];
 
-    constructor(classRoomId: string, capacity: string, pole: any, bloc: string, disponibilities: CreateDisponibilityRequest[]) {
+    constructor(classRoomId: string, capacity: string, pole: any, bloc: string) {
         this.classRoomId = classRoomId;
-        this.label = classRoomId;
         this.capacity = capacity;
         this.pole = Object.keys(PoleEnum)[Object.values(PoleEnum).indexOf(pole)];
         this.bloc = bloc;
-        this.disponibilities = disponibilities;
-    }
-}
-
-export class CreateDisponibilityRequest {
-    public day: string;
-    public seance: string;
-    public week: string;
-    public semester: string;
-    public motif: string;
-
-    constructor(day: string, seance: string, week: string, semester: string, motif: string) {
-        this.day = day;
-        this.seance = seance;
-        this.week = week;
-        this.semester = semester;
-        this.motif = motif;
     }
 }

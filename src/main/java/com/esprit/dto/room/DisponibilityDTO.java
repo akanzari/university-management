@@ -1,27 +1,20 @@
 package com.esprit.dto.room;
 
-import com.esprit.dto.PeriodDTO;
-import com.esprit.dto.SemesterDTO;
-import com.esprit.dto.WeekDTO;
-import com.esprit.dto.seance.SeanceDTO;
+import java.util.Date;
 
 public class DisponibilityDTO {
 
 	private String disponibilityId;
-
-	private String day;
-
-	private SeanceDTO seance;
-
-	private WeekDTO week;
-
-	private SemesterDTO semester;
-
-	private PeriodDTO period;
-
-	private String year;
-
+	
 	private String motif;
+
+	private Date startDate;
+
+	private Date endDate;
+
+	private int startHour;
+
+	private int endHour;
 
 	public String getDisponibilityId() {
 		return disponibilityId;
@@ -31,60 +24,44 @@ public class DisponibilityDTO {
 		this.disponibilityId = disponibilityId;
 	}
 
-	public String getDay() {
-		return day;
-	}
-
-	public void setDay(String day) {
-		this.day = day;
-	}
-
-	public SeanceDTO getSeance() {
-		return seance;
-	}
-
-	public void setSeance(SeanceDTO seance) {
-		this.seance = seance;
-	}
-
-	public WeekDTO getWeek() {
-		return week;
-	}
-
-	public void setWeek(WeekDTO week) {
-		this.week = week;
-	}
-
-	public SemesterDTO getSemester() {
-		return semester;
-	}
-
-	public void setSemester(SemesterDTO semester) {
-		this.semester = semester;
-	}
-
-	public PeriodDTO getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(PeriodDTO period) {
-		this.period = period;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
 	public String getMotif() {
 		return motif;
 	}
 
 	public void setMotif(String motif) {
 		this.motif = motif;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public int getStartHour() {
+		return startHour;
+	}
+
+	public void setStartHour(int startHour) {
+		this.startHour = startHour;
+	}
+
+	public int getEndHour() {
+		return endHour;
+	}
+
+	public void setEndHour(int endHour) {
+		this.endHour = endHour;
 	}
 
 }

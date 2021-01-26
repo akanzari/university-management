@@ -3,7 +3,6 @@ package com.esprit.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.esprit.dto.teacher.CreateTeacherRequest;
+import com.esprit.dto.teacher.FilterAvailableTeacherDTO;
 import com.esprit.dto.teacher.SearchTeacherDTO;
 import com.esprit.dto.teacher.TeacherDTO;
 import com.esprit.service.TeacherService;
@@ -45,9 +45,15 @@ public class TeacherController {
 		return new ResponseEntity<>(service.findTeachers(), HttpStatus.OK);
 	}
 
+	@PostMapping("up")
+	public ResponseEntity<List<String>> findUpByTeachers(@RequestBody List<String> teachers) {
+		return new ResponseEntity<>(service.findUpByTeachers(teachers), HttpStatus.OK);
+	}
+
 	@PostMapping("ups")
-	public ResponseEntity<List<TeacherDTO>> findAllByUps(@RequestBody @NotEmpty List<String> ups) {
-		return new ResponseEntity<>(service.findAllByUps(ups), HttpStatus.OK);
+	public ResponseEntity<List<TeacherDTO>> findAllByUps(
+			@RequestBody FilterAvailableTeacherDTO filterAvailableTeacherDTO) {
+		return new ResponseEntity<>(service.findAllByUps(filterAvailableTeacherDTO), HttpStatus.OK);
 	}
 
 	@PostMapping("search")

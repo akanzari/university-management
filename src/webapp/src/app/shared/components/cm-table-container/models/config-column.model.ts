@@ -7,7 +7,7 @@ export class ConfigColumn {
 	id: string;
 	value?: any[];
 	actions?: Action[];
-	columns: Column[];
+	columns?: Column[];
 	globalValidaros?: any[];
 	sortableBy?: string;
 	initForm?: boolean = false;
@@ -48,7 +48,7 @@ export class Column {
 	header: string;
 	field: string;
 	width?: string;
-	type?: "monoselect" | "multiselect" | "calendar" | "icon" | "label" | "text" | "link" | "number";
+	type?: "monoselect" | "multiselect" | "calendar" | "icon" | "label" | "text" | "link" | "number" | "time";
 	monoselectConfig?: SelectConfig;
 	multiselectConfig?: SelectConfig;
 	placeholder?: string;
@@ -69,6 +69,14 @@ export class Column {
 	validationsWithCondition?: ValidationsWithCondition[]; // à voir
 	optionsWithCondition?: OptionsWithCondition[];
 	link?: Link;
+	badge?: Badge;
+	conditionClass?: any;
+}
+
+export class Badge {
+	class?: string;
+	tooltip?: string;
+	link?: boolean;
 }
 
 export class Link {

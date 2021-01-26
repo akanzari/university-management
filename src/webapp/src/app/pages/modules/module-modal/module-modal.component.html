@@ -32,20 +32,20 @@
 
                 <div class="row" style="padding-right: 5%;">
                     <div class="col-2 py-2 px-0">
-                        <label class="float-right">Module : <span class="color-error">*</span></label>
+                        <label class="float-right">Code : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-4 pr-0">
                         <input type="text" formControlName="moduleId">
                     </div>
                     <div class="col-2 py-2">
-                        <label class="float-right">Designation : </label>
+                        <label class="float-right">Module : </label>
                     </div>
                     <div class="col-4 pl-0">
                         <input type="text" formControlName="designation">
                     </div>
                 </div>
 
-                <div class="hr-sect">Disponibilité <span class="color-error">&nbsp; *</span></div>
+                <div class="hr-sect">Information complémentaire <span class="color-error">&nbsp; *</span></div>
 
                 <ng-container formArrayName="assignClasses">
                     <ng-container *ngFor="let dispo of form.get('assignClasses')['controls']; let i=index"

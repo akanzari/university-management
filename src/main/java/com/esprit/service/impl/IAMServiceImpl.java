@@ -36,6 +36,7 @@ import com.esprit.dto.user.UpdateUserRequest;
 import com.esprit.dto.user.UserResponse;
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.service.IAMService;
+import com.esprit.service.MailService;
 import com.esprit.service.mapper.IAMMapper;
 import com.esprit.util.ApiIAMUtil;
 import com.esprit.util.RandomPasswordGenerator;
@@ -43,24 +44,28 @@ import com.esprit.util.RandomPasswordGenerator;
 @Service
 public class IAMServiceImpl implements IAMService {
 
+	@Value("${keycloak.realm}")
+	String realm;
+
 	@Qualifier("keycloak-client")
 	private final Keycloak keycloakClient;
 
 	private final IAMMapper mapper;
 
-	@Value("${keycloak.realm}")
-	String realm;
+	private final MailService mailService;
 
-	public IAMServiceImpl(Keycloak keycloakClient, IAMMapper mapper) {
+	public IAMServiceImpl(Keycloak keycloakClient, IAMMapper mapper, MailService mailService) {
 		this.keycloakClient = keycloakClient;
 		this.mapper = mapper;
+		this.mailService = mailService;
 	}
 
 	@Override
 	public String addUser(CreateUserRequest createUserRequest) {
 		String result = null;
 		String username = createUserRequest.getFirstName().toLowerCase() + "_"
-				+ createUserRequest.getLastName().toLowerCase();
+				+ (!StringUtils.isBlank(createUserRequest.getLastName()) ? createUserRequest.getLastName().toLowerCase()
+						: null);
 		keycloakClient.tokenManager().getAccessToken();
 		UserRepresentation user = new UserRepresentation();
 		user.setEnabled(true);
@@ -86,8 +91,11 @@ public class IAMServiceImpl implements IAMService {
 			CredentialRepresentation passwordCred = new CredentialRepresentation();
 			passwordCred.setTemporary(false);
 			passwordCred.setType(CredentialRepresentation.PASSWORD);
-			passwordCred.setValue(createUserRequest.getPassword() != null ? createUserRequest.getPassword()
-					: RandomPasswordGenerator.generatePassayPassword());
+			String password = RandomPasswordGenerator.generatePassayPassword();
+			if (createUserRequest.getRole().equalsIgnoreCase("STUDENT")) {
+				mailService.sendEmail(createUserRequest.getEmail(), createUserRequest.getUsername() != null ? createUserRequest.getUsername() : username, password);
+			}
+			passwordCred.setValue(createUserRequest.getPassword() != null ? createUserRequest.getPassword() : password);
 			UserResource userResource = usersRessource.get(userId);
 			userResource.resetPassword(passwordCred);
 			RoleRepresentation realmRoleUser = realmResource.roles().get(createUserRequest.getRole())

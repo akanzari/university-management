@@ -24,25 +24,12 @@
                     <div class="py-2">
                         <div class="float-left">
                             <p class="bold color-title font-size-20 mb-0">Liste des utilisateurs</p>
-                        </div>
-                        <div class="dropdown float-right">
-                            <span ngbTooltip="Rechercher">
-                                <a>
-                                    <i class="icon-search icons mx-2 my-1"></i>
-                                </a>
-                            </span>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="accordion mb-0" role="tablist" aria-multiselectable="true">
-                        <div class="card card-search">
-                            <div id="search-criteria-one" class="border-top collapse" role="tabpanel"
-                                aria-labelledby="headingOne">
-                                <div class="card-block bg-white py-4" style="overflow: visible;">
-
-                                </div>
-                            </div>
+                            <label class="pt-2 my-0" *ngIf="usersLength === 0">
+                                Vous n'avez aucun utilisateur
+                            </label>
+                            <label class="pt-2 my-0" *ngIf="usersLength > 0">
+                                Vous avez {{usersLength}} utilisateur(s)
+                            </label>
                         </div>
                     </div>
 

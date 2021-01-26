@@ -3,14 +3,11 @@ package com.esprit.dto.teacher;
 import java.util.List;
 
 import com.esprit.dto.DepartmentDTO;
+import com.esprit.dto.room.DisponibilityDTO;
 
 public class TeacherDTO {
 
 	private String teacherId;
-
-	private int cin;
-
-	private String sex;
 
 	private String fullName;
 
@@ -22,78 +19,69 @@ public class TeacherDTO {
 
 	private DepartmentDTO departement;
 
-	private List<DisponibilityTeacherDTO> disponibilityTeachers;
+	private List<DisponibilityDTO> disponibilities;
 
 	public String getTeacherId() {
 		return teacherId;
 	}
 
-	public void setTeacherId(String teacherId) {
+	public TeacherDTO teacherId(String teacherId) {
 		this.teacherId = teacherId;
-	}
-
-	public int getCin() {
-		return cin;
-	}
-
-	public void setCin(int cin) {
-		this.cin = cin;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
+		return this;
 	}
 
 	public String getFullName() {
 		return fullName;
 	}
 
-	public void setFullName(String fullName) {
+	public TeacherDTO fullName(String fullName) {
 		this.fullName = fullName;
+		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public TeacherDTO email(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
+	public TeacherDTO phone(String phone) {
 		this.phone = phone;
+		return this;
 	}
 
 	public String getUp() {
 		return up;
 	}
 
-	public void setUp(String up) {
+	public TeacherDTO up(String up) {
 		this.up = up;
+		return this;
 	}
 
 	public DepartmentDTO getDepartement() {
 		return departement;
 	}
 
-	public void setDepartement(DepartmentDTO departement) {
+	public TeacherDTO departement(DepartmentDTO departement) {
 		this.departement = departement;
+		return this;
 	}
 
-	public List<DisponibilityTeacherDTO> getDisponibilityTeachers() {
-		return disponibilityTeachers;
+	public List<DisponibilityDTO> getDisponibilities() {
+		return disponibilities;
 	}
 
-	public void setDisponibilityTeachers(List<DisponibilityTeacherDTO> disponibilityTeachers) {
-		this.disponibilityTeachers = disponibilityTeachers;
+	public TeacherDTO disponibilities(List<DisponibilityDTO> disponibilities) {
+		this.disponibilities = disponibilities;
+		return this;
 	}
 
 }

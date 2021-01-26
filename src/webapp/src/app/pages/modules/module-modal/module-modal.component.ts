@@ -109,7 +109,7 @@ export class ModuleModalComponent implements OnInit {
         } else {
             if (event.code === 701) {
                 this.showLoaderError = true;
-                this.saveError = "La module " + this.form.get("designation").value + "  déjà existe";
+                this.saveError = "La module " + this.form.get("code").value + "  déjà existe";
                 timer(2000).subscribe(() => this.showLoaderError = false);
             }
         }
@@ -178,6 +178,7 @@ export class ModuleModalComponent implements OnInit {
 
     private initAssignClasses(): FormGroup {
         return this.fb.group({
+            code: [null],
             coefficient: [null],
             nbrHour: [null],
             semesterId: [null],

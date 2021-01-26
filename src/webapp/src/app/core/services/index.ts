@@ -9,3 +9,5 @@ export { StudentService } from './student-service';
 export { TeacherService } from './teacher-service';
 export { ModuleService } from './module.service';
 export { ExamService } from './exam.service';
+export { DisponibilityService } from './disponibility.service';
+export { ExcelService } from './export.service';

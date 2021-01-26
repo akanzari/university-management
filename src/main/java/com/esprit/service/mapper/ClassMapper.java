@@ -12,7 +12,7 @@ import com.esprit.dto.classes.ClassDTO;
 import com.esprit.dto.classes.CreateClassRequest;
 import com.esprit.service.SpecialityService;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = SpecialityService.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { SpecialityService.class })
 public interface ClassMapper {
 
 	ClassMapper INSTANCE = Mappers.getMapper(ClassMapper.class);
@@ -20,6 +20,9 @@ public interface ClassMapper {
 	@Mapping(source = "speciality", target = "speciality", qualifiedByName = "findSpeciality")
 	ClassEntity createClassRequestToClassEntity(CreateClassRequest createClassRequest);
 
+	@Mapping(target = "module", ignore = true)
+	@Mapping(target = "teachers", ignore = true)
+	@Mapping(target = "rooms", ignore = true)
 	ClassDTO classEntityToClassDTO(ClassEntity classEntity);
 
 	List<ClassDTO> classEntitiesToClassDTO(List<ClassEntity> classEntities);

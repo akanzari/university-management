@@ -1,12 +1,21 @@
 package com.esprit.service;
 
-import com.esprit.dto.user.CreateStudentRequest;
-import com.esprit.dto.user.StudentResponse;
+import java.security.Principal;
+import java.util.List;
+
+import com.esprit.dto.student.CreateStudentRequest;
+import com.esprit.dto.student.StudentDTO;
 
 public interface StudentService {
 
 	void addStudent(CreateStudentRequest createStudentRequest);
 
-	StudentResponse findBydId(String userId);
+	void updateStudent(CreateStudentRequest createStudentRequest);
+
+	void deleteStudent(String studentId);
+
+	StudentDTO findByPrincipal(Principal principal);
+
+	List<StudentDTO> findAll();
 
 }

@@ -14,8 +14,20 @@ export class StudentService {
         this.domain = this.config.getSettings('environment.serviceBaseUrl') + "student/";
     }
 
-    addStudent(data: CreateStudentRequest): Observable<HttpResponse<HttpResponse<Student>>> {
-        return this.httpClient.post<HttpResponse<Student>>(this.domain, data, { observe: 'response' });
+    addStudent(data: CreateStudentRequest): Observable<any> {
+        return this.httpClient.post<any>(this.domain, data, { observe: 'response' });
+    }
+
+    getStudents(): Observable<any[]> {
+        return this.httpClient.get<any[]>(this.domain);
+    }
+
+    getCurrentStudent(): Observable<any[]> {
+        return this.httpClient.get<any[]>(this.domain + "current-student");
+    }
+
+    deleteStudent(id) {
+        return this.httpClient.delete<void>(this.domain + id);
     }
 
 }

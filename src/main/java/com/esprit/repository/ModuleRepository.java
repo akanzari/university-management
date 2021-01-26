@@ -12,5 +12,5 @@ public interface ModuleRepository extends JpaRepository<ModuleEntity, String> {
 
 	@Query("SELECT new com.esprit.dto.module.ModuleWithoutAssignClassesDTO(m.moduleId, m.designation) FROM ModuleEntity as m")
 	List<ModuleWithoutAssignClassesDTO> findAllWithoutAssignClasses();
-
+	
 }

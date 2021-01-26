@@ -1,15 +1,3 @@
-<div class="row bg-default-200">
-    <div class="col-12 px-0">
-        <ol class="breadcrumb d-none d-lg-block">
-            <li class="breadcrumb-item">
-                <a routerLink="/">
-                    <i class="icons icon-bar_chart size-20 color-text"></i> Accueil </a>
-            </li>
-            <li class="breadcrumb-item active">Épreuves</li>
-        </ol>
-    </div>
-</div>
-
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ccb581" type="ball-circus" [fullScreen]="true">
     <p class="color-white"> Loading... </p>
 </ngx-spinner>
@@ -26,8 +14,8 @@
                             <p class="bold color-title font-size-20 mb-0">Liste des épreuves</p>
                         </div>
                         <div class="dropdown float-right">
-                            <button type="button" class="btn btn-bg-add font-size-12 btn-add mb-0 color-white"
-                                (click)="openModal()">
+                            <button *ngIf="!isStudent && !isTeacher" type="button"
+                                class="btn btn-bg-add font-size-12 btn-add mb-0 color-white" (click)="openModal()">
                                 <span class="pl-1">Nouveau</span>
                             </button>
                             <span ngbTooltip="Rechercher">
@@ -36,7 +24,7 @@
                                 </a>
                             </span>
                             <span ngbTooltip="Télécharger">
-                                <a>
+                                <a (click)="export()">
                                     <i class="icon-download icons mx-2 my-1"></i>
                                 </a>
                             </span>
@@ -65,3 +53,55 @@
 
     </div>
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header mt-3">
+        <span class="close" aria-label="Close" data-dismiss="modal" (click)="modal.close()" style="cursor: pointer;">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body py-0 text-center ">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Groupe 1</th>
+                            <th scope="col">Groupe 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td>{{ teachers.g1 }}</td>
+                        <td>{{ teachers.g2 }}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content1 let-modal>
+    <div class="modal-header mt-3">
+        <span class="close" aria-label="Close" data-dismiss="modal" (click)="modal.close()" style="cursor: pointer;">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body py-0 text-center ">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Groupe 1</th>
+                            <th scope="col">Groupe 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td>{{ rooms.g1 }}</td>
+                        <td>{{ rooms.g2 }}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>

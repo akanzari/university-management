@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, timer } from 'rxjs';
 import { Teacher } from 'src/app/core/models/teacher.model';
@@ -27,6 +27,7 @@ export class TeacherModalComponent implements OnInit {
     public disabledUP: boolean = true;
     public showLoaderError: boolean = false;
     public showLoaderSuccess: boolean = false;
+    public inProgress: boolean = false;
 
     public ups: string[];
 
@@ -67,7 +68,15 @@ export class TeacherModalComponent implements OnInit {
 
     public save() {
         if (this.form.valid) {
-            let dataValue: DataValue = { action: ActionEnum.CREATE, value: this.form.value };
+            let form = this.form.value;
+            let result: CreateDisponibilityRequest[] = [];
+            if (form.disponibilities && form.disponibilities.length > 0) {
+                form.disponibilities.forEach(element => {
+                    result.push(new CreateDisponibilityRequest(element.startDate, element.endDate, +element.startHour.replace(":", ""), +element.endHour.replace(":", ""), element.motif));
+                });
+            }
+            let arg = new CreateTeacherRequest(form.teacherId, form.fullName, form.email, form.phone, form.up, form.departement, result);
+            let dataValue: DataValue = { action: ActionEnum.CREATE, value: arg };
             this.triggerSave.emit(dataValue);
         }
     }
@@ -111,16 +120,76 @@ export class TeacherModalComponent implements OnInit {
         return this.form.get(field) && !this.form.get(field).hasError("required") && this.form.get(field).invalid;
     }
 
+    public addDisponibility(index) {
+        const disponibilityControl: FormArray = <FormArray>this.form.controls['disponibilities'];
+        disponibilityControl.push(this.initDisponibilities());
+    }
+
+    public removeDisponibility(index: number): void {
+        const disponibilityControl: FormArray = <FormArray>this.form.controls['disponibilities'];
+        if (disponibilityControl.length > 1) {
+            disponibilityControl.removeAt(index);
+        }
+    }
+
     private initForm(): void {
         this.form = this.fb.group({
             teacherId: [null, Validators.required],
             fullName: [null, Validators.required],
             phone: [null, [Validators.required, Validators.maxLength(8), Validators.minLength(8), Validators.pattern("^[0-9]*$")]],
             email: [null, [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
-            cin: [null, [Validators.required, Validators.maxLength(8), Validators.minLength(8), Validators.pattern("^[0-9]*$")]],
             departement: [null, Validators.required],
-            up: [null, Validators.required]
+            up: [null, Validators.required],
+            disponibilities: this.fb.array([
+                this.initDisponibilities()
+            ])
         })
     }
 
+    private initDisponibilities(): FormGroup {
+        return this.fb.group({
+            startDate: [null],
+            endDate: [null],
+            startHour: [null],
+            endHour: [null],
+            motif: [null]
+        })
+    }
+
+}
+
+export class CreateTeacherRequest {
+    public teacherId: string;
+    public fullName: string;
+    public email: string;
+    public phone: string;
+    public up: string;
+    public departement: string;
+    public disponibilities: CreateDisponibilityRequest[];
+
+    constructor(teacherId: string, fullName: string, email: any, phone: string, up: string, departement: string, disponibilities: CreateDisponibilityRequest[]) {
+        this.teacherId = teacherId;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.up = up;
+        this.departement = departement;
+        this.disponibilities = disponibilities;
+    }
+}
+
+export class CreateDisponibilityRequest {
+    public startDate: Date;
+    public endDate: Date;
+    public startHour: number;
+    public endHour: number;
+    public motif: string;
+
+    constructor(startDate: Date, endDate: Date, startHour: number, endHour: number, motif: string) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startHour = startHour;
+        this.endHour = endHour;
+        this.motif = motif;
+    }
 }

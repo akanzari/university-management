@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, Renderer2, ElementRef, QueryList, ViewChildren } from "@angular/core";
+import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, Renderer2, ElementRef, QueryList, ViewChildren, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn, FormControl } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { DisplayPipe } from "./pipes/display.pipe";
@@ -382,6 +382,7 @@ export class CmTbaleContainerComponent implements OnChanges {
             }
         })
         Object.keys(data).forEach(key => {
+
             if (data[key]) {
 
                 let optionsConditionColumns = this.columns.filter(element => element.hasOwnProperty("optionsWithCondition"));
@@ -399,6 +400,8 @@ export class CmTbaleContainerComponent implements OnChanges {
                     if (moment(data[key], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid()) {
                         this.formGroup.get(key).setValue(this.datePipe.transform(new Date(data[key]), "yyyy-MM-dd"));
                         this.labelMap.set(key, this.datePipe.transform(new Date(data[key]), "yyyy-MM-dd"));
+                    } else if (!Array.isArray(data[key]) && Object.prototype.toString.call(data[key]) != "[object Object]" && data[key].toString().includes("H:")) {
+                        this.formGroup.get(key).setValue(data[key].replace("H", ""));
                     } else {
                         this.validationsWithCondition(data, key);
                         let column = this.columns.find(element => element.type === "label" && element.field === key);
@@ -431,11 +434,11 @@ export class CmTbaleContainerComponent implements OnChanges {
         }
     }
 
-    public sendItem(action: ActionEnum, data: any, index: number) {
+    public sendItem(action: ActionEnum, data: any, index: number, field?: string) {
         if (action == null) {
             action = ActionEnum.LINK;
         }
-        let dataValue: DataValue = { action: action, value: data };
+        let dataValue: DataValue = { action: action, field: field, value: data };
         this.sendData.emit(dataValue);
         if (action === ActionEnum.UPDATE && this.columns.every(column => column.hasOwnProperty("type"))) {
             this.selectItem(index, data, this.currentConfig.id + '-' + this.getIndex(index));
@@ -559,7 +562,15 @@ export class CmTbaleContainerComponent implements OnChanges {
                         return this.getDataPipe(column.pipe, value[column.field]);
                     }
                 } else if (column.monoselectConfig) {
-                    return this.getDataPipe(column.pipe, value[column.field]);
+                    if (column.monoselectConfig.type == 'objects') {
+                        if (column.monoselectConfig.bindValue) {
+                            return this.getDataPipe(column.pipe, value[column.field]);
+                        } else {
+                            return this.getDataPipe(column.pipe, value[column.field] ? value[column.field][column.monoselectConfig.bindLabel] : null);
+                        }
+                    } else {
+                        return this.getDataPipe(column.pipe, value[column.field]);
+                    }
                 } else if (column.defaultValue && (column.defaultValue as DefaultValue).value) {
                     return this.getDataPipe(column.pipe, this.getDefaultValue(value[column.field], column));
                 } else if (moment(value[column.field], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid() || moment(value[column.field], "YYYY-MM-DD", true).isValid()) {

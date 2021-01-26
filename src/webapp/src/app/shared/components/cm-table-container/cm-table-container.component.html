@@ -139,6 +139,12 @@
                                                 </p>
                                             </ng-container>
 
+                                            <ng-container *ngIf="column?.type === 'time'">
+                                                <input type="time" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled" />
+                                            </ng-container>
+
                                             <ng-container *ngIf="column?.type === 'label'">
                                                 <label class=" my-2"
                                                     [title]="labelMap?.get(column?.field)">{{labelMap?.get(column?.field)}}</label>
@@ -177,15 +183,23 @@
                                         <td *ngFor="let column of columns; let i = index" [style.overflow]="'hidden'"
                                             [ngStyle]="{'cursor': editableWithSelectMode && notEditableCondition(value[currentConfig?.notEditableCondition?.field]) && !displayLine ? 'pointer' : 'default'}"
                                             (click)="editableWithSelectMode && notEditableCondition(value[currentConfig?.notEditableCondition?.field]) && !displayLine ? selectItem(getIndex(j), value, currentConfig?.id +'-'+ getIndex(j)) : 'false'">
-                                            <!-- icon -->
-                                            <ng-container *ngIf="column?.link;else other_display">
-                                                <a href="javascript:void(0)" [title]="column?.link.text" [class.disabled]="column?.field !== 'nothing' && value[column?.field]?.length < 1"
-                                                    (click)="sendItem(null, value, getIndex(j))">{{column?.link.text}}</a>
+
+                                            <ng-container *ngIf="column?.badge;else other_display">
+                                                <a href="javascript:void(0)" [title]="displayValue(value, column)" 
+                                                    [class]="column?.badge?.class"
+                                                    (click)="sendItem(null, value, getIndex(j), column?.field)">{{displayValue(value, column)}}</a>
                                             </ng-container>
-                                            <!-- text -->
+
                                             <ng-template #other_display>
-                                                <span [title]="displayValue(value, column)">
-                                                    {{displayValue(value, column)}}</span>
+                                                <ng-container *ngIf="column?.link;else other_display1">
+                                                    <a href="javascript:void(0)" [title]="column?.link.text"
+                                                        (click)="sendItem(null, value, getIndex(j), column?.field)">{{column?.link.text}}</a>
+                                                </ng-container>
+                                                <ng-template #other_display1>
+                                                    <span [class]="column?.conditionClass?.get(value[column.field])"
+                                                        [title]="displayValue(value, column)">
+                                                        {{displayValue(value, column)}}</span>
+                                                </ng-template>
                                             </ng-template>
                                         </td>
                                         <!-- actions -->
@@ -293,6 +307,12 @@
                                                     <small
                                                         class="color-error">{{validationError.get(column?.field)}}</small>
                                                 </p>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="column?.type === 'time'">
+                                                <input type="time" [formControlName]="column?.field"
+                                                    [placeholder]="column?.placeholder ? column?.placeholder : ''"
+                                                    [disabled]="columnsEditable.get(column?.field) || column?.disabled" />
                                             </ng-container>
 
                                             <ng-container *ngIf="column?.type === 'label'">

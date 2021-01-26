@@ -18,32 +18,20 @@ export class RoomService {
         return this.httpClient.post<HttpResponse<Room>>(this.domain, data, { observe: 'response' });
     }
 
-    addDisponibility(data): Observable<any> {
-        return this.httpClient.post<any>(this.domain + "disponibility", data, { observe: 'response' });
-    }
-
     updateRoom(data): Observable<any> {
         return this.httpClient.put<any>(this.domain, data, { observe: 'response' });
-    }
-
-    updateDisponibility(classRoomId: string, data): Observable<any> {
-        return this.httpClient.post<any>(this.domain + "disponibility/" + classRoomId, data, { observe: 'response' });
     }
 
     deleteRoom(id) {
         return this.httpClient.delete<void>(this.domain + id);
     }
 
-    deleteDisponibility(id) {
-        return this.httpClient.delete<void>(this.domain + "disponibility/" + id);
-    }
-
-    getDisponibilitiesByRoom(id): Observable<any> {
-        return this.httpClient.get<any>(this.domain + "disponibility/" + id);
-    }
-
     getRooms(): Observable<Room[]> {
-        return this.httpClient.get<Room[]>(this.domain + "without-disponibilities");
+        return this.httpClient.get<Room[]>(this.domain );
+    }
+
+    getBlocByRooms(data): any {
+        return this.httpClient.post(this.domain + "bloc", data);
     }
 
     getRoomsByBlocs(data): Observable<Room[]> {

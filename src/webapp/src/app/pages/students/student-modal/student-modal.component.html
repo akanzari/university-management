@@ -1,7 +1,5 @@
 <div class="modal-header mt-3">
-    <h2 *ngIf="!editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un étudiant
-    </h2>
-    <h2 *ngIf="editUser" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier un étudiant
+    <h2 class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter un étudiant
     </h2>
     <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
         <span aria-hidden="true">&times;</span>
@@ -9,35 +7,61 @@
 </div>
 
 <form [formGroup]="form">
+    <div *ngIf="showLoaderError" class="alert alert-error alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-alert color-white" aria-hidden="true"></i>
+        {{saveError}}
+    </div>
+    <div *ngIf="showLoaderSuccess" class="alert alert-valid alert-icon alert-dismissible width-450" role="alert"
+        style="margin-left: auto; margin-right: auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <i class="icons icon-arrow_circle_down color-white" aria-hidden="true"></i>
+        {{saveSuccess}}
+    </div>
+
     <div class="modal-body mb-2">
         <div class="row pt-1" style="padding-right: 5%;">
             <div class="col-12 px-0 mb-2">
 
                 <div class="row mt-4">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Nom et Prénom: </label>
+                        <label class="float-right">Nom et Prénom: <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
-                        <ng-select [items]="users$ | async" formControlName="role" bindLabel="fullName"
-                        (change)="onChangeFullName($event)"></ng-select>
+                        <input type="text" formControlName="fullName">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">E-mail : </label>
+                        <label class="float-right">E-mail : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
-                        <input type="text" formControlName="email" [attr.disabled]="true">
+                        <input type="text" formControlName="email">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-3 py-2 px-0">
-                        <label class="float-right">Classe : </label>
+                        <label class="float-right">CIN : <span class="color-error">*</span></label>
                     </div>
                     <div class="col-9">
+                        <input type="number" formControlName="cin">
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-3 py-2 px-0">
+                        <label class="float-right">Classe : <span class="color-error">*</span></label>
+                    </div>
+                    <div class="col-9">
+                        <ng-select [items]="classes" [searchable]="true" formControlName="classId" bindValue="classId"
+                            bindLabel="label"></ng-select>
                     </div>
                 </div>
 
@@ -46,7 +70,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-        <button type="button" class="btn btn-bg-primary" (click)="editUser ? update() : save()"
-            [disabled]="!form.valid">Confirmer</button>
+        <button type="button" class="btn btn-bg-primary" (click)="save()" [disabled]="!form.valid">Confirmer</button>
     </div>
 </form>

@@ -60,21 +60,25 @@ export class TeachersComponent implements OnInit {
         if (event.action === ActionEnum.LINK) {
             const modal: NgbModalRef = this.modalService.open(DisponibilityModalComponent,
                 {
-                    size: 'lg',
-                    windowClass: 'modal-adaptive',
+                    size: 'xl',
                     ariaLabelledBy: 'modal-basic-title',
                     keyboard: false,
                     backdrop: 'static',
                     centered: true
                 });
-            if (event.value.disponibilityTeachers && event.value.disponibilityTeachers.length > 0) {
-                modal.componentInstance.disponibilities = event.value.disponibilityTeachers;
-            }
+                modal.componentInstance.teacherId = event.value.teacherId;
         }
     }
 
     public openModal() {
-        const modal: NgbModalRef = this.initPopUp(TeacherModalComponent);
+        const modal: NgbModalRef = this.modalService.open(TeacherModalComponent,
+            {
+                size: 'xl',
+                ariaLabelledBy: 'modal-basic-title',
+                keyboard: false,
+                backdrop: 'static',
+                centered: true
+            });
         modal.componentInstance.triggerSave.subscribe((dataValue: DataValue) => {
             this.spinner.show();
             if (dataValue.action === ActionEnum.CREATE) {
@@ -165,13 +169,6 @@ export class TeachersComponent implements OnInit {
                     sortable: true
                 },
                 {
-                    header: "CIN",
-                    field: "cin",
-                    filterable: true,
-                    sortable: true,
-                    width: "10"
-                },
-                {
                     header: "UP",
                     field: "up",
                     filterable: true,
@@ -180,7 +177,7 @@ export class TeachersComponent implements OnInit {
                 },
                 {
                     header: "Disponibilités",
-                    field: "disponibilityTeachers",
+                    field: "disponibilities",
                     link: {
                         text: "Liste disponibilités"
                     },

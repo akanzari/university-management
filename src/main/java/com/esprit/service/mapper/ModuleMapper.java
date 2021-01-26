@@ -20,7 +20,6 @@ import com.esprit.domain.TeacherEntity;
 import com.esprit.dto.module.CreateModuleRequest;
 import com.esprit.dto.module.ModuleDTO;
 import com.esprit.dto.module.ModuleWithoutAssignClassesDTO;
-import com.esprit.enums.ExamTypeEnum;
 import com.esprit.repository.ClassRepository;
 import com.esprit.repository.PeriodRepository;
 import com.esprit.repository.SemesterRepository;
@@ -36,10 +35,12 @@ public interface ModuleMapper {
 			@Context SemesterRepository semesterRepository, @Context PeriodRepository periodRepository);
 
 	ModuleDTO moduleEntityToModuleDTO(ModuleEntity moduleEntity);
-	
-	ModuleDTO moduleWithoutAssignClassesDTOToModuleResponse(ModuleWithoutAssignClassesDTO moduleWithoutAssignClassesDTO);
-	
-	List<ModuleDTO> moduleWithoutAssignClassesDTOsToModuleResponse(List<ModuleWithoutAssignClassesDTO> moduleWithoutAssignClassesDTOs);
+
+	ModuleDTO moduleWithoutAssignClassesDTOToModuleResponse(
+			ModuleWithoutAssignClassesDTO moduleWithoutAssignClassesDTO);
+
+	List<ModuleDTO> moduleWithoutAssignClassesDTOsToModuleResponse(
+			List<ModuleWithoutAssignClassesDTO> moduleWithoutAssignClassesDTOs);
 
 	List<ModuleDTO> moduleEntitiesToModuleDTO(List<ModuleEntity> moduleEntities);
 
@@ -55,7 +56,7 @@ public interface ModuleMapper {
 			AssignClassModuleEntity assignClassEntity = new AssignClassModuleEntity();
 
 			assignClassEntity.coefficient(item.getCoefficient()).nbrHour(item.getNbrHour())
-					.typeExam(toExamTypeEnum(item.getTypeExam()));
+					.typeExam(item.getTypeExam());
 
 			if (!StringUtils.isBlank(item.getSemesterId())) {
 				assignClassEntity.semester(semesterRepository.getOne(item.getSemesterId()));
@@ -87,12 +88,9 @@ public interface ModuleMapper {
 			}
 			assignClassEntities.add(assignClassEntity);
 		});
+
 		target.setAssignClasses(assignClassEntities);
 
-	}
-
-	public static ExamTypeEnum toExamTypeEnum(final String examType) {
-		return ExamTypeEnum.forValue(examType);
 	}
 
 }

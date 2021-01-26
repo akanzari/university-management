@@ -14,24 +14,27 @@ public class ModuleDTO {
 		return moduleId;
 	}
 
-	public void setModuleId(String moduleId) {
+	public ModuleDTO moduleId(String moduleId) {
 		this.moduleId = moduleId;
+		return this;
 	}
 
 	public String getDesignation() {
 		return designation;
 	}
 
-	public void setDesignation(String designation) {
+	public ModuleDTO designation(String designation) {
 		this.designation = designation;
+		return this;
 	}
 
 	public List<AssignClassModuleDTO> getAssignClasses() {
 		return assignClasses;
 	}
 
-	public void setAssignClasses(List<AssignClassModuleDTO> assignClasses) {
+	public ModuleDTO assignClasses(List<AssignClassModuleDTO> assignClasses) {
 		this.assignClasses = assignClasses;
+		return this;
 	}
 
 }

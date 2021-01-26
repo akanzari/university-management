@@ -6,7 +6,10 @@ public enum CustomHttpStatus {
 
 	BAD_REQUEST(700, "Bad request"), 
 	ENTITY_NOT_FOUND(701, "Entity not found request"), 
-	ENTITY_ALREADY_EXISTS(702, "Entity already exists request");
+	ENTITY_ALREADY_EXISTS(702, "Entity already exists request"), 
+	ROOM_SIZE_REQUEST(703, "room size request"), 
+	MODULE_EXIST_REQUEST(705, "module exist request"), 
+	TEACHER_SIZE_REQUEST(704, "teacher size request");
 
 	private final int value;
 

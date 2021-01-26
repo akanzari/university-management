@@ -1,15 +1,3 @@
-@media screen {
-    .modal-adaptive .modal-lg {
-        width: 60% !important;
-        max-width: calc(90%);
-    }
-}
-
-:host ::ng-deep .modal-adaptive .modal-lg {
-  width: 80% !important;
-  max-width: calc(90%) !important;
-}
-
 .close {
     font-size: 2.5rem !important;
 }
@@ -80,7 +68,6 @@
 }
 
  .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-  border-left: 2px solid #ccb581;
   background-color: unset !important;
   font-size: 11px;
 }

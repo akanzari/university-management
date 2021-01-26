@@ -12,7 +12,7 @@ import com.esprit.dto.teacher.CreateTeacherRequest;
 import com.esprit.dto.teacher.TeacherDTO;
 import com.esprit.service.DepartmentService;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = DepartmentService.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { DepartmentService.class, DisponibilityMapper.class })
 public interface TeacherMapper {
 
 	TeacherMapper INSTANCE = Mappers.getMapper(TeacherMapper.class);

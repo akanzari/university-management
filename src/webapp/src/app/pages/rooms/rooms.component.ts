@@ -102,20 +102,16 @@ export class RoomsComponent implements OnInit {
                 }
             });
         } else if (event.action === ActionEnum.LINK) {
-            this.spinner.show();
-            this.roomService.getDisponibilitiesByRoom(event.value.classRoomId).subscribe(items => {
-                const modal: NgbModalRef = this.modalService.open(DisponibilityModalComponent,
-                    {
-                        size: 'lg',
-                        windowClass: 'modal-adaptive',
-                        ariaLabelledBy: 'modal-basic-title',
-                        keyboard: false,
-                        backdrop: 'static',
-                        centered: true
-                    });
-                modal.componentInstance.disponibilities = items;
-                this.spinner.hide();
-            })
+            const modal: NgbModalRef = this.modalService.open(DisponibilityModalComponent,
+                {
+                    size: 'lg',
+                    windowClass: 'modal-adaptive',
+                    ariaLabelledBy: 'modal-basic-title',
+                    keyboard: false,
+                    backdrop: 'static',
+                    centered: true
+                });
+                modal.componentInstance.roomId = event.value.classRoomId;
         }
     }
 
@@ -209,35 +205,5 @@ export class RoomsComponent implements OnInit {
                 }
             ]
         }
-    }
-}
-
-export class RoomTable {
-    public classRoomId: string;
-    public label: string;
-    public capacity: string;
-    public site: Site;
-    public bloc: Bloc;
-    public dates: string;
-    public hours: string;
-    public startDate: string;
-    public endDate: string;
-    public startHour: string;
-    public endHour: string;
-    public reason: any;
-
-    constructor(classRoomId: string, label: string, capacity: string, site: Site, bloc: Bloc, dates: string, hours: string, reason: any, startDate: string, endDate: string, startHour: string, endHour: string) {
-        this.classRoomId = classRoomId;
-        this.label = label;
-        this.capacity = capacity;
-        this.site = site;
-        this.bloc = bloc;
-        this.dates = dates;
-        this.hours = hours;
-        this.reason = reason;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startHour = startHour;
-        this.endHour = endHour;
     }
 }

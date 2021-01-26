@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +13,8 @@ import { TSMap } from 'typescript-map';
 @Component({
     templateUrl: './exam-modal.component.html',
     styleUrls: ['./exam-modal.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe]
 })
 export class ExamModalComponent implements OnInit {
 
@@ -20,10 +22,11 @@ export class ExamModalComponent implements OnInit {
     public triggerSave: EventEmitter<DataValue> = new EventEmitter();
 
     @Input()
-    public editExam: Exam;
+    public editExam: any;
 
     public form: FormGroup;
 
+    public endHourExam: string;
     public saveError: string;
     public saveSuccess: string;
 
@@ -34,14 +37,16 @@ export class ExamModalComponent implements OnInit {
 
     public levels: any[];
 
-    public disabled: TSMap<number, boolean> = new TSMap<number, boolean>();
-    public disabledRoom: TSMap<number, boolean> = new TSMap<number, boolean>();
-    public disabledTeacher: TSMap<number, boolean> = new TSMap<number, boolean>();
+    public disabled: boolean = true;
+    public disabledRoom: boolean = true;
+    public disabledTeacher: boolean = true;
 
     public disabledClass: boolean = true;
     public showLoaderError: boolean = false;
     public showLoaderSuccess: boolean = false;
     public inProgress: boolean = false;
+
+    public groupValueFn;
 
     public rooms: Room[];
     public teachers: Teacher[];
@@ -65,6 +70,7 @@ export class ExamModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private classService: ClassService,
         private refService: RefService,
+        private datePipe: DatePipe,
         private moduleService: ModuleService,
         private roomService: RoomService,
         private teacherService: TeacherService) {
@@ -72,9 +78,6 @@ export class ExamModalComponent implements OnInit {
 
     ngOnInit() {
         this.initForm();
-        this.disabled.set(0, true);
-        this.disabledRoom.set(0, true);
-        this.disabledTeacher.set(0, true);
         this.department$ = this.refService.getDepartements();
         this.blocs$ = this.refService.getBlocs();
         this.refService.getLevels().subscribe(levels => {
@@ -82,25 +85,54 @@ export class ExamModalComponent implements OnInit {
             let sessions: any[] = [];
             this.levels.forEach(level => sessions.push(level.session));
             this.sessions = [...new Set([].concat.apply([], sessions))];
+            if (this.editExam) {
+                this.levels.filter(item => item.id == this.editExam.class.substring(0, 1)).map(item => item.id);
+                this.form.get("levels").setValue(this.levels.filter(item => item.id == this.editExam.class.substring(0, 1)).map(item => item.id));
+                this.onChangeLavel(this.levels.filter(item => item.id == this.editExam.class.substring(0, 1)));
+            }
         })
         this.moduleService.getModules().subscribe(modules => {
             this.modules = modules;
             this.modulesBuffer = this.modules.slice(0, this.bufferSize);
         })
         if (this.editExam) {
+            this.teacherService.getUpByTeachers(this.editExam.teachersNames).subscribe(items => {
+                this.form.get("up").setValue(items);
+                this.disabledTeacher = false;
+                let arg = { ups: items, effectDate: this.editExam.examDate, hour: this.editExam.examHour.replace("H:", "") };
+                this.teacherService.getTeachersByUps(arg).subscribe(teachers => {
+                    this.teachers = this.editExam.teachersC.concat(teachers);
+                })
+            });
+            this.roomService.getBlocByRooms(this.editExam.roomsNames).subscribe(items => {
+                this.form.get("bloc").setValue(items);
+                this.disabledRoom = false;
+                let arg = { blocs: items, effectDate: this.editExam.examDate, hour: this.editExam.examHour.replace("H:", "") };
+                this.roomService.getRoomsByBlocs(arg).subscribe(rooms => {
+                    this.rooms = this.editExam.roomsC.concat(rooms);
+                })
+            });
+            this.onChangeSession(this.editExam.sessionT);
+            let date = this.datePipe.transform(this.editExam.examDate.toLocaleString().substring(0, 10), "yyyy-MM-dd");
             this.form.patchValue({
-                classId: this.editExam.classs.classId,
-                moduleId: this.editExam.module.moduleId,
-                date: this.editExam.examDate,
-                hour: this.editExam.examHour,
-                duration: this.editExam.examDuration,
-                dsex: this.editExam.dsex,
-                examType: this.editExam.examType,
-                semester: this.editExam.semester,
-                session: this.editExam.examSession,
-                classRoomId: this.editExam.classRoom.classRoomId,
-                supervisorId: this.editExam.supervisor.teacherId
+                session: this.editExam.sessionT,
+                module: this.editExam.moduleI,
+                classes: [this.editExam.classC.classId],
+                teachers: this.editExam.teachersC.map(item => item.teacherId),
+                examDate: date,
+                examHour: this.editExam.examHour.replace("H", ""),
+                examDuration: this.editExam.examDuration.replace(" min", ""),
+                rooms: this.editExam.roomsC.map(item => item.classRoomId)
             })
+            if (this.form.get("examDate").value && this.form.get("examHour").value && this.form.get("examDuration").value) {
+                let form = Object.assign(this.form.value);
+                const examHour = +form.examHour.replace(':', '');
+                const hour = String((form.examDuration / 60).toString().split('.')[0]);
+                const min = String(form.examDuration % 60);
+                const result = examHour + (+hour.concat(min === "0" ? "00" : min));
+                this.endHourExam = result.toString().substring(0, 2) + "H:" + result.toString().substring(2, 4);
+                this.disabled = false;
+            }
         }
     }
 
@@ -155,125 +187,138 @@ export class ExamModalComponent implements OnInit {
     public setIsSaved(event) {
         if (event.isSaved === true) {
             this.showLoaderSuccess = true;
-            this.saveSuccess = "L'examen est ajouté avec succès";
+            this.saveSuccess = "L'épreuve est ajouté avec succès";
             timer(1000).subscribe(() => this.reset());
         } else {
-            if (event.code === 701) {
+            if (event.code === 703) {
                 this.showLoaderError = true;
-                this.saveError = "L'examen est déjà existe";
-                timer(2000).subscribe(() => this.showLoaderError = false);
+                this.saveError = "Le nombre des salles est insuffisant";
+                timer(3000).subscribe(() => this.showLoaderError = false);
+            } else if (event.code === 704) {
+                this.showLoaderError = true;
+                this.saveError = "Le nombre des enseignant est insuffisant";
+                timer(3000).subscribe(() => this.showLoaderError = false);
+            } else if (event.code === 705) {
+                this.showLoaderError = true;
+                this.saveError = "La module seléctionnée déja existe dans cette session";
+                timer(3000).subscribe(() => this.showLoaderError = false);
             }
         }
     }
 
     public save() {
         if (this.form.valid) {
-            let arg = this.form.value;
-            arg.assignClasses.forEach(element => {
-                element.examHour = +element.examHour.replace(":", "");
-            })
-            let dataValue: DataValue = { action: ActionEnum.CREATE, value: this.form.value };
+            let arg = Object.assign(this.form.value);
+            arg.examHour = +arg.examHour.toString().replace(":", "");
+            let dataValue: DataValue = { action: ActionEnum.CREATE, value: arg };
             this.triggerSave.emit(dataValue);
         }
     }
 
     public update() {
         if (this.form.valid) {
-            let arg = this.form.value as UpdateExamRequest;
-            arg.classId = this.editExam.examId;
+            let arg = this.form.value;
+            arg.examId = this.editExam.examId;
+            arg.examHour = +arg.examHour.toString().replace(":", "");
             let dataValue: DataValue = { action: ActionEnum.UPDATE, value: arg };
             this.triggerSave.emit(dataValue);
         }
     }
 
-    public onChangeClass(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        let classes = assignClassControl.get("classes").value
+    public onChangeModule(event) {
+        if (this.form.get("module").value) {
+            this.classService.getClassesByModule(this.form.get("module").value).subscribe(items => {
+                this.classes = items;
+            })
+        }
+    }
+
+    public onChangeClass(event) {
+        let classes = this.form.get("classes").value
         this.selectedClassesLenght = classes.length;
     }
 
-    public onRemoveClass(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        assignClassControl.get("rooms").setValue(null);
-        assignClassControl.get("teachers").setValue(null);
+    public onRemoveClass(event) {
+        this.form.get("rooms").setValue(null);
+        this.form.get("teachers").setValue(null);
     }
 
-    public onClearClass(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        assignClassControl.get("rooms").setValue(null);
-        assignClassControl.get("teachers").setValue(null);
+    public onClearClass(event) {
+        this.form.get("rooms").setValue(null);
+        this.form.get("teachers").setValue(null);
     }
 
-    public onChangeDate(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        if (assignClassControl.get("examDate").value && assignClassControl.get("examHour").value && assignClassControl.get("examDuration").value) {
-            this.disabled.set(index, false);
+    public onChangeDate(event) {
+        if (this.form.get("examDate").value && this.form.get("examHour").value && this.form.get("examDuration").value) {
+            this.disabled = false;
         } else {
-
-            this.disabled.set(index, true);
+            this.disabled = true;
         }
     }
 
-    public onChangeHour(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        if (assignClassControl.get("examDate").value && assignClassControl.get("examHour").value && assignClassControl.get("examDuration").value) {
-            this.disabled.set(index, false);
+    public onChangeHour(event) {
+        if (this.form.get("examDate").value && this.form.get("examHour").value && this.form.get("examDuration").value) {
+            this.disabled = false;
         } else {
-
-            this.disabled.set(index, true);
+            this.disabled = true;
         }
     }
 
-    public onChangeDuration(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        if (assignClassControl.get("examDate").value && assignClassControl.get("examHour").value && assignClassControl.get("examDuration").value) {
-            this.disabled.set(index, false);
+    public onChangeDuration(event) {
+        if (this.form.get("examDate").value && this.form.get("examHour").value && this.form.get("examDuration").value) {
+            let form = Object.assign(this.form.value);
+            const examHour = +form.examHour.replace(':', '');
+            const hour = String((form.examDuration / 60).toString().split('.')[0]);
+            const min = String(form.examDuration % 60);
+            const result = examHour + (+hour.concat(min === "0" ? "00" : min));
+            this.endHourExam = result.toString().substring(0, 2) + "H:" + result.toString().substring(2, 4);
+            this.disabled = false;
         } else {
-
-            this.disabled.set(index, true);
+            this.disabled = true;
+            this.endHourExam = null;
         }
     }
 
-    public onChangeBoc(event, index) {
-        this.onClearBloc(event, index);
+    public onChangeBoc(event) {
+        this.onClearBloc(event);
     }
 
-    public onRemoveBloc(event, index) {
-        this.onClearBloc(event, index);
+    public onRemoveBloc(event) {
+        this.onClearBloc(event);
     }
 
-    public onClearBloc(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        let examHour = +assignClassControl.get("examHour").value.replace(":", "");
-        let arg = { blocs: assignClassControl.get("bloc").value, effectDate: assignClassControl.get("examDate").value, hour: examHour };
+    public onClearBloc(event) {
+        let examHour = +this.form.get("examHour").value.replace(":", "");
+        let arg = { blocs: this.form.get("bloc").value, effectDate: this.form.get("examDate").value, hour: examHour };
         this.roomService.getRoomsByBlocs(arg).subscribe(rooms => {
             this.rooms = rooms;
-            assignClassControl.get("rooms").setValue(null);
+            this.form.get("rooms").setValue(null);
             if (this.rooms.length > 0) {
-                this.disabledRoom.set(index, false);
+                this.disabledRoom = false;
             } else {
-                this.disabledRoom.set(index, true);
+                this.disabledRoom = true;
             }
         });
     }
 
-    public onChangeDepartmenet(event, index) {
-        this.onClearDepartmenet(event, index);
+    public onChangeDepartmenet(event) {
+        this.onClearDepartmenet(event);
     }
 
-    public onRemoveDepartmenet(event, index) {
-        this.onClearDepartmenet(event, index);
+    public onRemoveDepartmenet(event) {
+        this.onClearDepartmenet(event);
     }
 
-    public onClearDepartmenet(event, index) {
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        this.teacherService.getTeachersByUps(assignClassControl.get("up").value).subscribe(teachers => {
+    public onClearDepartmenet(event) {
+        let examHour = +this.form.get("examHour").value.replace(":", "");
+        let arg = { ups: this.form.get("up").value, effectDate: this.form.get("examDate").value, hour: examHour };
+        this.teacherService.getTeachersByUps(arg).subscribe(teachers => {
             this.teachers = teachers;
-            assignClassControl.get("teachers").setValue(null);
-            if (this.teachers.length > 0) {
-                this.disabledTeacher.set(index, false);
+            this.form.get("teachers").setValue(null);
+            if (this.teachers && this.teachers.length > 0) {
+                this.disabledTeacher = false;
             } else {
-                this.disabledTeacher.set(index, true);
+                this.disabledTeacher = true;
             }
         });
     }
@@ -365,52 +410,17 @@ export class ExamModalComponent implements OnInit {
         this.activeModal.close();
     }
 
-    public addAssignClass(index: number): void {
-        this.disabled.set(index + 1, true);
-        this.disabledRoom.set(index + 1, true);
-        this.disabledTeacher.set(index + 1, true);
-        const assignClassControl: FormArray = <FormArray>this.form.controls['assignClasses'];
-        assignClassControl.push(this.initAssignClasses());
-    }
-
-    public removeAssignClass(index: number): void {
-        this.disabled.delete(index + 1);
-        this.disabledRoom.delete(index + 1);
-        this.disabledTeacher.delete(index + 1);
-        const assignClassControl: FormArray = <FormArray>this.form.controls['assignClasses'];
-        if (assignClassControl.length > 1) {
-            assignClassControl.removeAt(index);
-        }
-    }
-
-    public isDisabledAssignClass(index: number): Boolean {
-        let disabled: Boolean = true;
-        const assignClassControl = (<FormArray>this.form.controls['assignClasses']).at(index);
-        if (assignClassControl.valid) {
-            disabled = false;
-        }
-        return disabled;
-    }
-
     private initForm(): void {
         this.form = this.fb.group({
             levels: [null, Validators.required],
             session: [null, Validators.required],
-            assignClasses: this.fb.array([
-                this.initAssignClasses()
-            ])
-        })
-    }
-
-    private initAssignClasses(): FormGroup {
-        return this.fb.group({
             module: [null, Validators.required],
             classes: [null, Validators.required],
-            teachers: [null, Validators.required],
+            teachers: [null],
             examDate: [null, Validators.required],
             examHour: [null, Validators.required],
-            rooms: [null, Validators.required],
             examDuration: [null, Validators.required],
+            rooms: [null],
             bloc: [null, Validators.required],
             up: [null, Validators.required]
         })

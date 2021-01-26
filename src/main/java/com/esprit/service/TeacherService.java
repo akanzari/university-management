@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 
 import com.esprit.domain.TeacherEntity;
 import com.esprit.dto.teacher.CreateTeacherRequest;
+import com.esprit.dto.teacher.FilterAvailableTeacherDTO;
 import com.esprit.dto.teacher.TeacherDTO;
 
 public interface TeacherService {
@@ -20,11 +21,13 @@ public interface TeacherService {
 
 	List<TeacherDTO> findTeachers();
 
-	List<TeacherDTO> findAllByUps(List<String> ups);
+	List<TeacherDTO> findAllByUps(FilterAvailableTeacherDTO filterAvailableTeacherDTO);
 
 	List<TeacherDTO> searcheachers(String teacherId, int cin, String departement, String classs);
 
 	void addDisponibilityToTeacher(String teacherId, Date supervisionDate, int supervisionHour,
 			int supervisionDuration);
+	
+	List<String> findUpByTeachers(List<String> teachers);
 
 }

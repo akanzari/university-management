@@ -27,64 +27,72 @@ public class CreateUserRequest {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	public CreateUserRequest firstName(String firstName) {
 		this.firstName = firstName;
+		return this;
 	}
 
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public CreateUserRequest lastName(String lastName) {
 		this.lastName = lastName;
+		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public CreateUserRequest email(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public String getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public CreateUserRequest role(String role) {
 		this.role = role;
+		return this;
 	}
 
 	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public CreateUserRequest userId(String userId) {
 		this.userId = userId;
+		return this;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public CreateUserRequest username(String username) {
 		this.username = username;
+		return this;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public CreateUserRequest password(String password) {
 		this.password = password;
+		return this;
 	}
 
 	public String getPole() {
 		return pole;
 	}
 
-	public void setPole(String pole) {
+	public CreateUserRequest pole(String pole) {
 		this.pole = pole;
+		return this;
 	}
 
 }

@@ -1,7 +1,5 @@
 <div class="modal-header mt-3">
-    <h2 *ngIf="!editRoom" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter une salle
-    </h2>
-    <h2 *ngIf="editRoom" class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Modifier une salle
+    <h2 class="h3 modal-title text-center font-size-24 bold" style="width: 100%;">Ajouter une salle
     </h2>
     <span class="close" aria-label="Close" data-dismiss="modal" (click)="closeModal()" style="cursor: pointer;">
         <span aria-hidden="true">&times;</span>
@@ -86,51 +84,39 @@
 
                             <div class="row" style="padding-right: 5%;">
                                 <div class="col-2 py-2 px-0">
-                                    <label class="float-right">Semestre : </label>
+                                    <label class="float-right">Date début : </label>
                                 </div>
                                 <div class="col-4 pr-0">
-                                    <ng-select [items]="semesters$ | async" formControlName="semesterId" bindLabel="label"
-                                        bindValue="semestreId" (change)="onChangeSemester($event, i)"></ng-select>
+                                    <input type="date" formControlName="startDate">
                                 </div>
                                 <div class="col-2 py-2">
-                                    <label class="float-right">Période : </label>
+                                    <label class="float-right">Date fin: </label>
                                 </div>
                                 <div class="col-4 pl-0">
-                                    <ng-select [items]="periods" formControlName="periodId" bindLabel="label"
-                                        bindValue="periodId" [readonly]="disabledPeriod?.get(i)" (change)="onChangePeriod($event, i)">
-                                    </ng-select>
+                                    <input type="date" formControlName="endDate">
                                 </div>
                             </div>
 
                             <div class="row" style="padding-right: 5%;">
                                 <div class="col-2 py-2 px-0">
-                                    <label class="float-right">Semaine : </label>
+                                    <label class="float-right">Heure début : </label>
                                 </div>
                                 <div class="col-4 pr-0">
-                                    <ng-select [items]="weeks" formControlName="weekId" bindLabel="label"
-                                        bindValue="weekId" [readonly]="disabledWeek?.get(i)"></ng-select>
+                                    <input type="time" formControlName="startHour">
                                 </div>
                                 <div class="col-2 py-2">
-                                    <label class="float-right">Jour : </label>
+                                    <label class="float-right">Heure fin: </label>
                                 </div>
                                 <div class="col-4 pl-0">
-                                    <ng-select [items]="days$ | async" formControlName="day" bindLabel="label" bindValue="label">
-                                    </ng-select>
+                                    <input type="time" formControlName="endHour">
                                 </div>
                             </div>
 
                             <div class="row" style="padding-right: 5%;">
                                 <div class="col-2 py-2 px-0">
-                                    <label class="float-right">Séance : </label>
+                                    <label class="float-right">Motif fin : <span class="color-error">*</span></label>
                                 </div>
-                                <div class="col-4 pr-0">
-                                    <ng-select [items]="seances$ | async" formControlName="seanceId" bindLabel="label"
-                                        bindValue="seanceId"></ng-select>
-                                </div>
-                                <div class="col-2 py-2">
-                                    <label class="float-right">Motif: </label>
-                                </div>
-                                <div class="col-4 pl-0">
+                                <div class="col-10">
                                     <input type="text" formControlName="motif">
                                 </div>
                             </div>
@@ -146,7 +132,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="reset()">Annuler</button>
-        <button type="button" class="btn btn-bg-primary" (click)="editRoom ? update() : save()"
-            [disabled]="!form.valid">Confirmer</button>
+        <button type="button" class="btn btn-bg-primary" (click)="save()" [disabled]="!form.valid">Confirmer</button>
     </div>
 </form>

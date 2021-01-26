@@ -1,12 +1,12 @@
 package com.esprit.dto.teacher;
 
+import java.util.List;
+
+import com.esprit.dto.CreateDisponibilityRequest;
+
 public class CreateTeacherRequest {
 
 	private String teacherId;
-
-	private int cin;
-
-	private String sex;
 
 	private String fullName;
 
@@ -18,28 +18,14 @@ public class CreateTeacherRequest {
 
 	private String departement;
 
+	private List<CreateDisponibilityRequest> disponibilities;
+
 	public String getTeacherId() {
 		return teacherId;
 	}
 
 	public void setTeacherId(String teacherId) {
 		this.teacherId = teacherId;
-	}
-
-	public int getCin() {
-		return cin;
-	}
-
-	public void setCin(int cin) {
-		this.cin = cin;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
 	}
 
 	public String getFullName() {
@@ -80,6 +66,14 @@ public class CreateTeacherRequest {
 
 	public void setDepartement(String departement) {
 		this.departement = departement;
+	}
+
+	public List<CreateDisponibilityRequest> getDisponibilities() {
+		return disponibilities;
+	}
+
+	public void setDisponibilities(List<CreateDisponibilityRequest> disponibilities) {
+		this.disponibilities = disponibilities;
 	}
 
 }

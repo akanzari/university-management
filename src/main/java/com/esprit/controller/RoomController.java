@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.esprit.dto.CreateDisponibilityRequest;
 import com.esprit.dto.room.CreateRoomRequest;
-import com.esprit.dto.room.DisponibilityDTO;
 import com.esprit.dto.room.FilterAvailableRoomDTO;
 import com.esprit.dto.room.RoomDTO;
 import com.esprit.service.RoomService;
@@ -50,13 +48,6 @@ public class RoomController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PostMapping("disponibility/{classRoomId}")
-	public ResponseEntity<Void> createDisponibility(@PathVariable String classRoomId,
-			@RequestBody @Valid CreateDisponibilityRequest createDispoibilityRequest) {
-		service.addDisponibility(classRoomId, createDispoibilityRequest);
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
 	@GetMapping("bloc/{blocId}")
 	public ResponseEntity<List<RoomDTO>> findByBloc(@PathVariable String blocId) {
 		return new ResponseEntity<>(service.findByBloc(blocId), HttpStatus.OK);
@@ -67,38 +58,19 @@ public class RoomController {
 		return new ResponseEntity<>(service.findClassRoom(classRoomId), HttpStatus.OK);
 	}
 
-	@PostMapping("blocs")
-	public ResponseEntity<List<RoomDTO>> findAllByBlocs(@RequestBody FilterAvailableRoomDTO filterAvailableRoomDTO) {
-		return new ResponseEntity<>(service.findAllByBlocs(filterAvailableRoomDTO.getEffectDate(),
-				filterAvailableRoomDTO.getHour(), filterAvailableRoomDTO.getBlocs()), HttpStatus.OK);
+	@PostMapping("bloc")
+	public ResponseEntity<List<String>> findBlocByRooms(@RequestBody List<String> rooms) {
+		return new ResponseEntity<>(service.findBlocByRooms(rooms), HttpStatus.OK);
 	}
 
-	@GetMapping("without-disponibilities")
-	public ResponseEntity<List<RoomDTO>> findRoomsWithoutDisponibilities() {
-		return new ResponseEntity<>(service.findRoomsWithoutDisponibilities(), HttpStatus.OK);
+	@PostMapping("blocs")
+	public ResponseEntity<List<RoomDTO>> findAllByBlocs(@RequestBody FilterAvailableRoomDTO filterAvailableRoomDTO) {
+		return new ResponseEntity<>(service.findAllByBlocs(filterAvailableRoomDTO), HttpStatus.OK);
 	}
 
 	@GetMapping
 	public ResponseEntity<List<RoomDTO>> findRooms() {
 		return new ResponseEntity<>(service.findRooms(), HttpStatus.OK);
-	}
-
-	@PutMapping("disponibility")
-	public ResponseEntity<Void> updateDisponibility(
-			@RequestBody @Valid CreateDisponibilityRequest createDispoibilityRequest) {
-		service.updateDisponibility(createDispoibilityRequest);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@DeleteMapping("disponibility/{disponibilityId}")
-	public ResponseEntity<Void> deleteDisponibility(@PathVariable String disponibilityId) {
-		service.deleteDisponibility(disponibilityId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@GetMapping("disponibility/{classRoomId}")
-	public ResponseEntity<List<DisponibilityDTO>> findDisponibilitiesByRoomId(@PathVariable String classRoomId) {
-		return new ResponseEntity<>(service.findDisponibilitiesByRoomId(classRoomId), HttpStatus.OK);
 	}
 
 }

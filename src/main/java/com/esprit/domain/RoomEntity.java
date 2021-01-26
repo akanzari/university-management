@@ -36,14 +36,29 @@ public class RoomEntity implements Serializable {
 	public void addDisponibilities(List<DisponibilityEntity> disponibilityEntities) {
 		if (CollectionUtils.isEmpty(disponibilities)) {
 			disponibilities = new ArrayList<>();
+			disponibilities.addAll(disponibilityEntities);
+			disponibilityEntities.forEach(item -> item.room(this));
+		} else {
+			disponibilities.forEach(item -> item.room(this));
 		}
-		disponibilities.addAll(disponibilityEntities);
-		disponibilityEntities.forEach(item -> item.setRoom(this));
+	}
+
+	public void addDisponibility(DisponibilityEntity disponibilityEntity) {
+		if (CollectionUtils.isEmpty(disponibilities)) {
+			disponibilities = new ArrayList<>();
+		}
+		disponibilities.add(disponibilityEntity);
+		disponibilityEntity.room(this);
+	}
+
+	public void removeDisponibilities(List<DisponibilityEntity> disponibilityEntities) {
+		disponibilities.removeAll(disponibilityEntities);
+		disponibilityEntities.forEach(item -> item.room(null));
 	}
 
 	public void removeDisponibility(DisponibilityEntity disponibilityEntity) {
 		disponibilities.remove(disponibilityEntity);
-		disponibilityEntity.setRoom(null);
+		disponibilityEntity.room(null);
 	}
 
 	public String getClassRoomId() {

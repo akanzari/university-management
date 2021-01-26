@@ -20,7 +20,13 @@ public class CreateDisponibilityRequest {
 
 	private String motif;
 
-	private Date exactDate;
+	private int startHour;
+
+	private int endHour;
+
+	private Date startDate;
+
+	private Date endDate;
 
 	public String getDisponibilityId() {
 		return disponibilityId;
@@ -86,12 +92,36 @@ public class CreateDisponibilityRequest {
 		this.motif = motif;
 	}
 
-	public Date getExactDate() {
-		return exactDate;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setExactDate(Date exactDate) {
-		this.exactDate = exactDate;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public int getStartHour() {
+		return startHour;
+	}
+
+	public void setStartHour(int startHour) {
+		this.startHour = startHour;
+	}
+
+	public int getEndHour() {
+		return endHour;
+	}
+
+	public void setEndHour(int endHour) {
+		this.endHour = endHour;
 	}
 
 }

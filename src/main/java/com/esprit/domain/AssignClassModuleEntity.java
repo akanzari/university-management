@@ -16,7 +16,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.esprit.enums.ExamTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -42,7 +41,7 @@ public class AssignClassModuleEntity implements Serializable {
 	@JoinColumn(name = "fk_period")
 	private PeriodEntity period;
 
-	private ExamTypeEnum typeExam;
+	private String typeExam;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "ESP_MODULE_CLASS_ENSEIGNANT", joinColumns = @JoinColumn(name = "fk_assign_class"), inverseJoinColumns = @JoinColumn(name = "fk_teacher"))
@@ -102,11 +101,11 @@ public class AssignClassModuleEntity implements Serializable {
 		return this;
 	}
 
-	public ExamTypeEnum getTypeExam() {
+	public String getTypeExam() {
 		return typeExam;
 	}
 
-	public AssignClassModuleEntity typeExam(ExamTypeEnum typeExam) {
+	public AssignClassModuleEntity typeExam(String typeExam) {
 		this.typeExam = typeExam;
 		return this;
 	}

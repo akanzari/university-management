@@ -11,12 +11,9 @@ import com.esprit.dto.room.RoomWithoutDisponibilityDTO;
 
 public interface RoomRepository extends JpaRepository<RoomEntity, String> {
 	
-	public static String query = "SELECT * FROM salle s \n" + 
-			"  LEFT JOIN DISPONIBILITY_SALLE ds ON ds.fk_room = s.classRoomId\n" + 
-			"  LEFT JOIN SEMAINE sm ON ds.fk_week = sm.weekId\n" + 
-			"  LEFT JOIN SEANCE sc ON ds.fk_seance = sc.seanceId\n" + 
-			"  WHERE (?1 BETWEEN sm.STARTDATE AND sm.ENDDATE) AND (?2 BETWEEN sc.startHour AND sc.endHour)\n" + 
-			"  AND s.bloc IN ?3";
+	public static String query = "SELECT * FROM salle sl where sl.classRoomId NOT IN\n" + 
+			"(SELECT disp.fk_room FROM DISPONIBILITY disp where ?1 BETWEEN disp.STARTDATE and disp.ENDDATE and ?2 >= disp.startHour and ?2 < disp.endHour )\n" +
+			"AND sl.bloc IN ?3";
 
 	@Query("SELECT new com.esprit.dto.room.RoomWithoutDisponibilityDTO(r.classRoomId, r.label, r.capacity, r.pole, r.bloc) FROM RoomEntity as r")
 	List<RoomWithoutDisponibilityDTO> findRoomsWithoutDisponibilities();
@@ -26,5 +23,10 @@ public interface RoomRepository extends JpaRepository<RoomEntity, String> {
 
 	@Query(nativeQuery = true, value = query)
 	List<RoomEntity> findAllByBlocs(Date effectDate, int hour, List<String> blocs);
+
+	List<RoomEntity> findByClassRoomIdIn(List<String> roomIds);
+	
+	@Query(nativeQuery = true, value = "select DISTINCT bloc from salle where classRoomId IN ?1")
+	List<String> findBlocByRooms(List<String> rooms);
 
 }

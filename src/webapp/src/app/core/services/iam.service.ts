@@ -39,6 +39,10 @@ export class IAMService {
         return this.httpClient.get<UserResponse[]>(this.domain + 'users');
     }
 
+    getCurrentUser(): Observable<UserResponse[]> {
+        return this.httpClient.get<UserResponse[]>(this.domain + 'current-user');
+    }
+
     getSingleUser(username: string): Observable<UserResponse> {
         return this.httpClient.get<UserResponse>(this.domain + 'user/' + username);
     }

@@ -2,46 +2,41 @@ package com.esprit.dto.exam;
 
 import java.util.List;
 
+import com.esprit.dto.classes.ClassDTO;
+
 public class ExamDTO {
 
 	private String examId;
 
-	private List<Integer> levels;
-
 	private String session;
 
-	private List<AssignClassExamDTO> assignClasses;
+	private List<ClassDTO> classes;
 
 	public String getExamId() {
 		return examId;
 	}
 
-	public void setExamId(String examId) {
+	public ExamDTO examId(String examId) {
 		this.examId = examId;
-	}
-
-	public List<Integer> getLevels() {
-		return levels;
-	}
-
-	public void setLevels(List<Integer> levels) {
-		this.levels = levels;
+		return this;
 	}
 
 	public String getSession() {
 		return session;
 	}
 
-	public void setSession(String session) {
+	public ExamDTO session(String session) {
 		this.session = session;
+		return this;
 	}
 
-	public List<AssignClassExamDTO> getAssignClasses() {
-		return assignClasses;
+	public List<ClassDTO> getClasses() {
+		return classes;
 	}
 
-	public void setAssignClasses(List<AssignClassExamDTO> assignClasses) {
-		this.assignClasses = assignClasses;
+	public ExamDTO classes(List<ClassDTO> classes) {
+		this.classes = classes;
+		return this;
 	}
 
 }

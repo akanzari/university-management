@@ -49,7 +49,7 @@ export class AssignClassesModalComponent implements OnInit {
                 this.assignClasses.forEach(item => {
                     let semester = (item.semester.code == "1" ? "S1" : "S2") + " - " + this.datePipe.transform(item.semester.startDate, "dd/MM/yyyy") + " à " + this.datePipe.transform(item.semester.endDate, "dd/MM/yyyy");
                     let period = item.period && item.period.code ? (item.period.code == "1" ? "P1" : "P2") + " - " + this.datePipe.transform(item.period.startDate, "dd/MM/yyyy") + " à " + this.datePipe.transform(item.period.endDate, "dd/MM/yyyy") : null;
-                    table.push(new DisponibilityTable(item.classs.classId, item.coefficient, item.nbrHour, semester, period, item.typeExam, item.teachers));
+                    table.push(new DisponibilityTable(item.classs ? item.classs.classId : null, item.coefficient, item.nbrHour, semester, period, item.typeExam, item.teachers));
                 });
                 this.initDisponibiliesColomns(table, result[0], result[2], result[1], result[3]);
             });
@@ -71,8 +71,8 @@ export class AssignClassesModalComponent implements OnInit {
                 column.monoselectConfig.options = data.event.periods;
                 if (disabledColumns) {
                     disabledColumns.forEach(element => element.disabled = false);
-                }                console.log(data.event.periods);
-                
+                } console.log(data.event.periods);
+
             } else {
                 if (disabledColumns) {
                     let form: FormGroup = data.form;
@@ -116,7 +116,7 @@ export class AssignClassesModalComponent implements OnInit {
                     field: "classe",
                     type: "monoselect",
                     placeholder: "-- Classe --",
-                    monoselectConfig: { type: "objects", options: classes, bindLabel: "classId" },
+                    monoselectConfig: { type: "objects", options: classes, bindLabel: "classId", bindValue: "classId" },
                     filterable: true,
                     sortable: true,
                     width: "11"
@@ -153,7 +153,7 @@ export class AssignClassesModalComponent implements OnInit {
                     field: "semester",
                     type: "monoselect",
                     placeholder: "-- Semester --",
-                    monoselectConfig: { type: "objects", options: semeters, bindLabel: "label" },
+                    monoselectConfig: { type: "objects", options: semeters, bindLabel: "label", bindValue: "label" },
                     event: true,
                     filterable: true,
                     sortable: true
@@ -163,7 +163,7 @@ export class AssignClassesModalComponent implements OnInit {
                     field: "period",
                     type: "monoselect",
                     placeholder: "-- Période --",
-                    monoselectConfig: { type: "objects", options: null, bindLabel: "label" },
+                    monoselectConfig: { type: "objects", options: null, bindLabel: "label", bindValue: "label" },
                     disabled: true,
                     editable: true,
                     filterable: true,

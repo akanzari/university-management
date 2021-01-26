@@ -70,11 +70,6 @@ public class ClassServiceImpl implements ClassService {
 	}
 
 	@Override
-	public List<ClassDTO> findClassesByModule(String moduleId) {
-		return null;
-	}
-
-	@Override
 	public List<ClassDTO> searchClasses(String name, String email, String speciality, int nbrStudents) {
 		return mapper.classEntitiesToClassDTO(classRepository.searchConventions(name, email, speciality, nbrStudents));
 	}
@@ -91,6 +86,11 @@ public class ClassServiceImpl implements ClassService {
 			});
 		}
 		return classEntities;
+	}
+
+	@Override
+	public List<ClassDTO> findByModule(String module) {
+		return mapper.classEntitiesToClassDTO(classRepository.findByModule(module));
 	}
 
 }

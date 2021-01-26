@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "DISPONIBILITY_SALLE")
+@Table(name = "DISPONIBILITY")
 public class DisponibilityEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -27,29 +27,15 @@ public class DisponibilityEntity implements Serializable {
 	@GenericGenerator(name = "disponibility-uuid", strategy = "uuid2")
 	private String disponibilityId;
 
-	private String day;
-
-	private String year;
-
 	private String motif;
 
-	private Date exactDate;
+	private Date startDate;
 
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "fk_seance")
-	private SeanceEntity seance;
+	private Date endDate;
 
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "fk_week")
-	private WeekEntity week;
+	private int startHour;
 
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "fk_semester")
-	private SemesterEntity semester;
-
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "fk_period")
-	private PeriodEntity period;
+	private int endHour;
 
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -65,88 +51,72 @@ public class DisponibilityEntity implements Serializable {
 		return disponibilityId;
 	}
 
-	public void setDisponibilityId(String disponibilityId) {
+	public DisponibilityEntity disponibilityId(String disponibilityId) {
 		this.disponibilityId = disponibilityId;
-	}
-
-	public String getDay() {
-		return day;
-	}
-
-	public void setDay(String day) {
-		this.day = day;
-	}
-
-	public Date getExactDate() {
-		return exactDate;
-	}
-
-	public void setExactDate(Date exactDate) {
-		this.exactDate = exactDate;
-	}
-
-	public SeanceEntity getSeance() {
-		return seance;
-	}
-
-	public void setSeance(SeanceEntity seance) {
-		this.seance = seance;
-	}
-
-	public WeekEntity getWeek() {
-		return week;
-	}
-
-	public void setWeek(WeekEntity week) {
-		this.week = week;
-	}
-
-	public SemesterEntity getSemester() {
-		return semester;
-	}
-
-	public void setSemester(SemesterEntity semester) {
-		this.semester = semester;
-	}
-
-	public PeriodEntity getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(PeriodEntity period) {
-		this.period = period;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
+		return this;
 	}
 
 	public String getMotif() {
 		return motif;
 	}
 
-	public void setMotif(String motif) {
+	public DisponibilityEntity motif(String motif) {
 		this.motif = motif;
+		return this;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public DisponibilityEntity startDate(Date startDate) {
+		this.startDate = startDate;
+		return this;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public DisponibilityEntity endDate(Date endDate) {
+		this.endDate = endDate;
+		return this;
+	}
+
+	public int getStartHour() {
+		return startHour;
+	}
+
+	public DisponibilityEntity startHour(int startHour) {
+		this.startHour = startHour;
+		return this;
+	}
+
+	public int getEndHour() {
+		return endHour;
+	}
+
+	public DisponibilityEntity endHour(int endHour) {
+		this.endHour = endHour;
+		return this;
 	}
 
 	public RoomEntity getRoom() {
 		return room;
 	}
 
-	public void setRoom(RoomEntity room) {
+	public DisponibilityEntity room(RoomEntity room) {
 		this.room = room;
+		return this;
 	}
 
 	public TeacherEntity getTeacher() {
 		return teacher;
 	}
 
-	public void setTeacher(TeacherEntity teacher) {
+	public DisponibilityEntity teacher(TeacherEntity teacher) {
 		this.teacher = teacher;
+		return this;
 	}
 
 }

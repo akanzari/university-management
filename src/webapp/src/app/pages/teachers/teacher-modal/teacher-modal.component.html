@@ -28,81 +28,126 @@
         {{saveSuccess}}
     </div>
 
-    <div class="modal-body mb-2">
-        <div class="row pt-1" style="padding-right: 5%;">
-            <div class="col-12 px-0 mb-2">
+    <div class="modal-body pb-0">
+        <div class="row pt-1">
+            <div class="col-12 px-0">
 
-                <div class="row mt-4">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">N° Enseignant: <span class="color-error">*</span></label>
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
+                        <label class="float-right">N° Enseignant : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pr-0">
                         <input type="text" formControlName="teacherId">
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2">
                         <label class="float-right">Nom complet : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pl-0">
                         <input type="text" formControlName="fullName">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
                         <label class="float-right">Téléphone : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pr-0">
                         <input type="number" formControlName="phone">
                         <p class="media" *ngIf="isElementNotValid('phone')">
                             <i class="icons icon-cancel color-error font-size-16"></i>
                             <small class="color-error">Le téléphone doit être numérique sur 8 caractères</small>
                         </p>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2">
                         <label class="float-right">E-mail : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pl-0">
                         <input type="text" formControlName="email">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
-                        <label class="float-right">CIN : <span class="color-error">*</span></label>
-                    </div>
-                    <div class="col-9">
-                        <input type="number" formControlName="cin">
-                        <p class="media" *ngIf="isElementNotValid('cin')">
-                            <i class="icons icon-cancel color-error font-size-16"></i>
-                            <small class="color-error">Le cin doit être numérique sur 8 caractères</small>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                <div class="row" style="padding-right: 5%;">
+                    <div class="col-2 py-2 px-0">
                         <label class="float-right">Dépatement : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pr-0">
                         <ng-select [items]="departmenets$ | async" formControlName="departement" bindLabel="label"
                             bindValue="departmenetId" (change)="onChangeDepartment($event)"></ng-select>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 py-2 px-0">
+                    <div class="col-2 py-2">
                         <label class="float-right">UP : <span class="color-error">*</span></label>
                     </div>
-                    <div class="col-9">
+                    <div class="col-4 pl-0">
                         <ng-select [items]="ups" formControlName="up" [readonly]="disabledUP"></ng-select>
                     </div>
                 </div>
+
+                <div class="hr-sect">Disponibilité <span class="color-error"> *</span></div>
+
+                <ng-container formArrayName="disponibilities">
+                    <ng-container *ngFor="let dispo of form.get('disponibilities')['controls']; let i=index"
+                        [formGroupName]="i">
+
+                        <fieldset class="pt-2" style="border: 1px solid #bda671;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-bg-primary float-right mr-2"
+                                        *ngIf=" i == form.get('disponibilities')?.value.length-1"
+                                        (click)="inProgress ? false : addDisponibility(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-plus btn-plus fa-lg"></i>
+                                    </button>
+                                    <button class="btn btn-bg-primary float-right" *ngIf=" i > 0"
+                                        (click)="inProgress ? false : removeDisponibility(i)"
+                                        [ngClass]="{'disabled': inProgress}">
+                                        <i class="fa fa-times btn-fonticon fa-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Date début : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <input type="date" formControlName="startDate">
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Date fin: </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <input type="date" formControlName="endDate">
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Heure début : </label>
+                                </div>
+                                <div class="col-4 pr-0">
+                                    <input type="time" formControlName="startHour">
+                                </div>
+                                <div class="col-2 py-2">
+                                    <label class="float-right">Heure fin: </label>
+                                </div>
+                                <div class="col-4 pl-0">
+                                    <input type="time" formControlName="endHour">
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-right: 5%;">
+                                <div class="col-2 py-2 px-0">
+                                    <label class="float-right">Motif fin : <span class="color-error">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" formControlName="motif">
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                    </ng-container>
+                </ng-container>
 
             </div>
         </div>

@@ -22,6 +22,8 @@ export class UsersComponent implements OnInit {
 
     public users: UserResponse[];
 
+    public usersLength: number;
+
     constructor(private spinner: NgxSpinnerService,
         private datePipe: DatePipe,
         private iamService: IAMService) {
@@ -32,6 +34,7 @@ export class UsersComponent implements OnInit {
         this.iamService.getUsers().subscribe(users => {
             this.users = users;
             this.initUserColomns(users);
+            this.usersLength = users.length;
             this.spinner.hide();
         });
     }
@@ -95,18 +98,9 @@ export class UsersComponent implements OnInit {
                     sortable: true
                 },
                 {
-                    header: "Date de création",
-                    field: "createdTimestamp",
-                    pipe: {
-                        function: this.datePipe
-                    },
-                    filterable: true,
-                    sortable: true
-                },
-                {
                     header: "Statut",
                     field: "status",
-                    //conditionClass: statusMap,
+                    conditionClass: statusMap,
                     width: "10",
                     filterable: true,
                     sortable: true

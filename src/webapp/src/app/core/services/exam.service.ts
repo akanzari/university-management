@@ -22,12 +22,12 @@ export class ExamService {
         return this.httpClient.put<Exam>(this.domain, data, { observe: 'response' });
     }
 
-    deleteExam(id: string) {
-        return this.httpClient.delete<void>(this.domain + id);
+    deleteExam(data) {
+        return this.httpClient.patch<void>(this.domain, data);
     }
 
-    getExams(): Observable<Exam[]> {
-        return this.httpClient.get<Exam[]>(this.domain);
+    getExams(): Observable<any[]> {
+        return this.httpClient.get<any[]>(this.domain);
     }
 
     getSingleExam(id: string): Observable<Exam> {

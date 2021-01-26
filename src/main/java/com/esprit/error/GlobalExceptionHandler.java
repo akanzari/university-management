@@ -22,6 +22,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.esprit.error.exception.EntityAlreadyExistsExeption;
 import com.esprit.error.exception.EntityNotFoundException;
+import com.esprit.error.exception.ModuleExistInSessionException;
+import com.esprit.error.exception.RoomSizeExecption;
+import com.esprit.error.exception.TeacherSizeExecption;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice()
@@ -62,6 +65,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(EntityAlreadyExistsExeption.class)
 	public ResponseEntity<Object> entityAlreadyExistsExeption(EntityAlreadyExistsExeption ex) {
 		return buildResponseEntity(new ApiError(CustomHttpStatus.ENTITY_NOT_FOUND, new Date(), ex.getMessage()),
+				HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(RoomSizeExecption.class)
+	public ResponseEntity<Object> roomSizeExecption(RoomSizeExecption ex) {
+		return buildResponseEntity(new ApiError(CustomHttpStatus.ROOM_SIZE_REQUEST, new Date(), ex.getMessage()),
+				HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(TeacherSizeExecption.class)
+	public ResponseEntity<Object> teacherSizeExecption(TeacherSizeExecption ex) {
+		return buildResponseEntity(new ApiError(CustomHttpStatus.TEACHER_SIZE_REQUEST, new Date(), ex.getMessage()),
+				HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ModuleExistInSessionException.class)
+	public ResponseEntity<Object> moduleExistInSessionException(ModuleExistInSessionException ex) {
+		return buildResponseEntity(new ApiError(CustomHttpStatus.MODULE_EXIST_REQUEST, new Date(), ex.getMessage()),
 				HttpStatus.BAD_REQUEST);
 	}
 

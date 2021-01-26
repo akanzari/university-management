@@ -186,9 +186,8 @@ export class ModulesComponent implements OnInit {
                 }
             ],
             columns: [
-
                 {
-                    header: "Module",
+                    header: "Code module",
                     field: "moduleId",
                     filterable: true,
                     sortable: true

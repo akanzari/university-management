@@ -7,13 +7,13 @@ spring:
       name: university-management
    jpa:
       hibernate:
-         ddl-auto: none
+         ddl-auto: create
          naming: 
            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       generate-ddl: true
       properties:
          hibernate:
-            show_sql: true
+            #show_sql: true
             dialect: org.hibernate.dialect.Oracle10gDialect
             jdbc:
                lob:
@@ -22,6 +22,17 @@ spring:
       url: jdbc:oracle:thin:@localhost:1529:xe
       username: dev_user
       password: 1234
+   mail:
+      host: smtp.gmail.com
+      port: 587
+      username: Kanzari90@gmail.com
+      password: Welcome$01
+      properties:
+         mail.smtp.auth: true
+         mail.smtp.connectiontimeout: 5000
+         mail.smtp.timeout: 5000
+         mail.smtp.writetimeout: 5000
+         mail.smtp.starttls.enable: true
         
 # --- server
 server:
@@ -39,8 +50,8 @@ management:
 keycloak:
   use-resource-role-mappings: true
   credentials:
-    secret: 158da796-ac58-44aa-8450-35469dec4f96
-  auth-server-url: http://localhost:8089/auth/
+    secret: ce64498e-d004-4d1e-aeb2-3110a94d9100
+  auth-server-url: http://localhost:8180/auth/
   realm: esprit-realm
   resource: university-api
   bearer-only: true
@@ -56,9 +67,9 @@ info:
       production: false
       env: local
       keycloak: 
-         url: http://localhost:8089/auth/
+         url: http://localhost:8180/auth/
          realm: esprit-realm
          clientId: university-web
+         redirectUri: http://localhost:4200
       serviceBaseUrl: http://localhost:8997/
       serviceBaseUrlMigration: http://localhost:8998/
-  

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import { CreateUserRequest, SpecificUserResponse, UpdateUserRequest, User } from 'src/app/core/models';
-import { IAMService } from 'src/app/core/services';
+import { timer } from 'rxjs';
+import { CreateUserRequest, User } from 'src/app/core/models';
+import { ClassService } from 'src/app/core/services';
 import { ActionEnum } from 'src/app/shared/components/cm-table-container/models/config-column.model';
 import { DataValue } from 'src/app/shared/components/cm-table-container/models/data-value.model';
 
@@ -21,22 +21,37 @@ export class StudentModalComponent implements OnInit {
 
     public form: FormGroup;
 
-    public users$: Observable<SpecificUserResponse[]>;
+    public saveError: string;
+    public saveSuccess: string;
+
+    public showLoaderSuccess: boolean = false;
+    public showLoaderError: boolean = false;
+
+    public classes: any[];
 
     constructor(private fb: FormBuilder,
-        private activeModal: NgbActiveModal,
-        private iamService: IAMService) {
+        private classService: ClassService,
+        private activeModal: NgbActiveModal) {
     }
 
     ngOnInit() {
         this.initForm();
-        this.users$ = this.iamService.getUserByRole('STUDENT');
-        if (this.editUser) {
-            this.form.patchValue({
-                fullName: this.editUser.firstName,
-                email: this.editUser.lastName,
-                class: this.editUser.email
-            })
+        this.classService.getClasses().subscribe(classes => this.classes = classes);
+    }
+
+    public setIsSaved(event) {
+        console.log(event);
+        
+        if (event.isSaved === true) {
+            this.showLoaderSuccess = true;
+            this.saveSuccess = "L'étudiant " + this.form.get("fullName").value + " ajouté avec succès";
+            timer(1000).subscribe(() => this.reset());
+        } else {
+            if (event.code === 701) {
+                this.showLoaderError = true;
+                this.saveError = "L'étudiant " + this.form.get("fullName").value + "  déjà existe";
+                timer(2000).subscribe(() => this.showLoaderError = false);
+            }
         }
     }
 
@@ -46,23 +61,6 @@ export class StudentModalComponent implements OnInit {
             this.triggerSave.emit(dataValue);
         }
     }
-
-    public update() {
-        if (this.form.valid) {
-            let arg = new UpdateUserRequest(this.editUser.id, this.form.get("email").value, this.form.get("role").value);
-            let dataValue: DataValue = { action: ActionEnum.UPDATE, value: arg };
-            this.triggerSave.emit(dataValue);
-        }
-    }
-
-    public onChangeFullName($event): void {
-        if ($event) {
-            this.form.get("email").setValue($event.email);
-        } else {
-            this.form.get("email").setValue(null);
-        }
-    }
-
     public reset() {
         this.form.reset();
         this.closeModal();
@@ -75,8 +73,9 @@ export class StudentModalComponent implements OnInit {
     private initForm(): void {
         this.form = this.fb.group({
             fullName: [null, Validators.required],
-            email: [null, Validators.required],
-            class: [null, [Validators.required]]
+            email: [null, [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+            cin: [null, Validators.required],
+            classId: [null, [Validators.required]]
         })
     }
 

@@ -20,10 +20,10 @@ public interface ClassService {
 
 	@Named("findClassesByIds")
 	List<ClassEntity> findClassesByIds(List<String> classes);
+	
+	List<ClassDTO> findByModule(String module);
 
 	List<ClassDTO> findClasses();
-
-	List<ClassDTO> findClassesByModule(String moduleId);
 
 	List<ClassDTO> searchClasses(String name, String email, String speciality, int nbrStudents);
 

@@ -11,23 +11,32 @@ SQL> ALTER USER &NEW_USER DEFAULT TABLESPACE DEV_SPACE;
 
 SQL> connect dev_user/1234;
 
+select 'drop table '||table_name||' cascade constraints;' from user_tables;
 
-drop table  CLASSE                         cascade constraints;
-drop table  DEPARTMENT                     cascade constraints;
-drop table  DEPARTMENT_UP                  cascade constraints;
-drop table  DISPONIBILITY_SALLE            cascade constraints;
-drop table  ESP_CLASSE_EPREUVE             cascade constraints;
-drop table  ESP_ENSEIGNANT                 cascade constraints;
-drop table  ESP_ETUDIANT                   cascade constraints;
-drop table  ESP_MODULE                     cascade constraints;
-drop table  ESP_MODULE_CLASS               cascade constraints;
-drop table  ESP_MODULE_CLASS_ENSEIGNANT    cascade constraints;
-drop table  PERIOD                         cascade constraints;
+drop table EPREUVE cascade constraints;
+drop table EPREUVE_CLASSE cascade constraints;
+drop table CLASSE cascade constraints;
+drop table DEPARTMENT cascade constraints;
+drop table DISPONIBILITY cascade constraints;
+drop table ESP_ENSEIGNANT cascade constraints;
+drop table ESP_ETUDIANT cascade constraints;
+drop table ESP_MODULE cascade constraints;
+drop table ESP_MODULE_CLASS cascade constraints;
+drop table ESP_MODULE_CLASS_ENSEIGNANT cascade constraints;
+drop table PERIOD cascade constraints;
+drop table SALLE cascade constraints;
+drop table SEANCE cascade constraints;
+drop table SEMAINE cascade constraints;
+drop table SEMESTER cascade constraints;
+drop table SPECIALITY cascade constraints;
+drop table DEPARTMENT_UP cascade constraints;
 
-drop table  SALLE                          cascade constraints;
-drop table  SEANCE                         cascade constraints;
-drop table  SEMAINE                        cascade constraints;
-drop table  SEMESTER                       cascade constraints;
-drop table  SPECIALITY                     cascade constraints;
-drop table  DISPONIBILITY_ENSEIGNANT       cascade constraints;
-drop table  EPREUVE_LEVELS                 cascade constraints;
+
+
+By default Gmail account is highly secured. When we use gmail smtp from non gmail tool, email is blocked. To test in our local environment, make your gmail account less secure as
+
+Login to Gmail.
+Access the URL as https://www.google.com/settings/security/lesssecureapps
+
+Select “Turn on”
+

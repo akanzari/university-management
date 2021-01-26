@@ -66,7 +66,7 @@ public class ClassController {
 
 	@GetMapping("moduleId/{moduleId}")
 	public ResponseEntity<List<ClassDTO>> findClassesByModule(@PathVariable String moduleId) {
-		return new ResponseEntity<>(service.findClassesByModule(moduleId), HttpStatus.OK);
+		return new ResponseEntity<>(service.findByModule(moduleId), HttpStatus.OK);
 	}
 
 }

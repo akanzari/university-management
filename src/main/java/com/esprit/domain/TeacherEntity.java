@@ -27,10 +27,6 @@ public class TeacherEntity implements Serializable {
 	@Id
 	private String teacherId;
 
-	private int cin;
-
-	private String sex;
-
 	private String fullName;
 
 	private String email;
@@ -53,14 +49,29 @@ public class TeacherEntity implements Serializable {
 	public void addDisponibilities(List<DisponibilityEntity> disponibilityEntities) {
 		if (CollectionUtils.isEmpty(disponibilities)) {
 			disponibilities = new ArrayList<>();
+			disponibilities.addAll(disponibilityEntities);
+			disponibilityEntities.forEach(item -> item.teacher(this));
+		} else {
+			disponibilities.forEach(item -> item.teacher(this));
 		}
-		disponibilities.addAll(disponibilityEntities);
-		disponibilityEntities.forEach(item -> item.setTeacher(this));
+	}
+
+	public void addDisponibility(DisponibilityEntity disponibilityEntity) {
+		if (CollectionUtils.isEmpty(disponibilities)) {
+			disponibilities = new ArrayList<>();
+		}
+		disponibilities.add(disponibilityEntity);
+		disponibilityEntity.teacher(this);
 	}
 
 	public void removeDisponibility(DisponibilityEntity disponibilityEntity) {
 		disponibilities.remove(disponibilityEntity);
-		disponibilityEntity.setRoom(null);
+		disponibilityEntity.teacher(null);
+	}
+
+	public void removeDisponibilities(List<DisponibilityEntity> disponibilityEntities) {
+		disponibilities.removeAll(disponibilityEntities);
+		disponibilityEntities.forEach(item -> item.teacher(null));
 	}
 
 	public String getTeacherId() {
@@ -69,24 +80,6 @@ public class TeacherEntity implements Serializable {
 
 	public TeacherEntity teacherId(String teacherId) {
 		this.teacherId = teacherId;
-		return this;
-	}
-
-	public int getCin() {
-		return cin;
-	}
-
-	public TeacherEntity cin(int cin) {
-		this.cin = cin;
-		return this;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public TeacherEntity sex(String sex) {
-		this.sex = sex;
 		return this;
 	}
 

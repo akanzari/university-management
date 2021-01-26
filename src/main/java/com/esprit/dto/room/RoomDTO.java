@@ -20,48 +20,54 @@ public class RoomDTO {
 		return classRoomId;
 	}
 
-	public void setClassRoomId(String classRoomId) {
+	public RoomDTO classRoomId(String classRoomId) {
 		this.classRoomId = classRoomId;
+		return this;
 	}
 
 	public String getLabel() {
 		return label;
 	}
 
-	public void setLabel(String label) {
+	public RoomDTO label(String label) {
 		this.label = label;
+		return this;
 	}
 
 	public int getCapacity() {
 		return capacity;
 	}
 
-	public void setCapacity(int capacity) {
+	public RoomDTO capacity(int capacity) {
 		this.capacity = capacity;
+		return this;
 	}
 
 	public String getPole() {
 		return pole;
 	}
 
-	public void setPole(String pole) {
+	public RoomDTO pole(String pole) {
 		this.pole = pole;
+		return this;
 	}
 
 	public String getBloc() {
 		return bloc;
 	}
 
-	public void setBloc(String bloc) {
+	public RoomDTO bloc(String bloc) {
 		this.bloc = bloc;
+		return this;
 	}
 
 	public List<DisponibilityDTO> getDisponibilities() {
 		return disponibilities;
 	}
 
-	public void setDisponibilities(List<DisponibilityDTO> disponibilities) {
+	public RoomDTO disponibilities(List<DisponibilityDTO> disponibilities) {
 		this.disponibilities = disponibilities;
+		return this;
 	}
 
 }

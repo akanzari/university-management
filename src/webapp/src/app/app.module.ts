@@ -14,6 +14,7 @@ import { LayoutModule } from './layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppRoutingModule } from './app.routes';
 import { registerLocaleData } from '@angular/common';
+import { HoùeModule } from './pages/home/home.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -38,6 +39,7 @@ registerLocaleData(localeFr);
     BrowserAnimationsModule,
     AppRoutingModule,
     LayoutModule,
+    HoùeModule,
     CoreModule.forRoot(),
     TranslateModule.forRoot(),
     KeycloakAngularModule,
